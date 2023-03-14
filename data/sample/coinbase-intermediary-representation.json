@@ -1,0 +1,110 @@
+[
+    {
+        "Timestamp": "2020-06-16T19:21:02Z",
+        "Transaction Type": "Buy",
+        "Asset": "BTC",
+        "Quantity Transacted": "0.00094589",
+        "Spot Price Currency": "USD",
+        "Spot Price at Transaction": "9525.42",
+        "Subtotal": "9.01",
+        "Total (inclusive of fees and/or spread)": "10.00",
+        "Fees and/or Spread": "0.990000",
+        "Notes": "Bought 0.00094589 BTC for $10.00 USD"
+    },
+    {
+        "Timestamp": "2020-07-23T18:50:22Z",
+        "Transaction Type": "Send",
+        "Asset": "BTC",
+        "Quantity Transacted": "0.00188372",
+        "Spot Price Currency": "USD",
+        "Spot Price at Transaction": "9586.08",
+        "Subtotal": "",
+        "Total (inclusive of fees and/or spread)": "",
+        "Fees and/or Spread": "",
+        "Notes": "Sent 0.00188372 BTC to xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx7Qih"
+    },
+    {
+        "Timestamp": "2020-10-03T00:27:45Z",
+        "Transaction Type": "Receive",
+        "Asset": "BTC",
+        "Quantity Transacted": "0.00321806",
+        "Spot Price Currency": "USD",
+        "Spot Price at Transaction": "10545.34",
+        "Subtotal": "",
+        "Total (inclusive of fees and/or spread)": "",
+        "Fees and/or Spread": "",
+        "Notes": "Received 0.00321806 BTC from an external account"
+    },
+    {
+        "Timestamp": "2021-12-23T21:14:49Z",
+        "Transaction Type": "Receive",
+        "Asset": "BTC",
+        "Quantity Transacted": "4.92e-06",
+        "Spot Price Currency": "USD",
+        "Spot Price at Transaction": "50781.68",
+        "Subtotal": "",
+        "Total (inclusive of fees and/or spread)": "",
+        "Fees and/or Spread": "",
+        "Notes": "Received 0.00000492 BTC from Coinbase Card"
+    },
+    {
+        "Timestamp": "2022-02-08T03:38:51Z",
+        "Transaction Type": "Advanced Trade Buy",
+        "Asset": "BTC",
+        "Quantity Transacted": "0.00045096",
+        "Spot Price Currency": "USD",
+        "Spot Price at Transaction": "44110.19",
+        "Subtotal": "19.89",
+        "Total (inclusive of fees and/or spread)": "19.99",
+        "Fees and/or Spread": "0.099460",
+        "Notes": "Bought 0.00045096 BTC for $19.99 USD on BTC-USD"
+    },
+    {
+        "Timestamp": "2022-09-16T23:38:22Z",
+        "Transaction Type": "CardSpend",
+        "Asset": "BTC",
+        "Quantity Transacted": "0.0005142",
+        "Spot Price Currency": "USD",
+        "Spot Price at Transaction": "19622.71",
+        "Subtotal": "",
+        "Total (inclusive of fees and/or spread)": "",
+        "Fees and/or Spread": "",
+        "Notes": "xxxxxxxxxxxxxxxxxxxx68dd"
+    },
+    {
+        "Timestamp": "2022-05-15T00:23:51Z",
+        "Transaction Type": "Convert",
+        "Asset": "USDC",
+        "Quantity Transacted": "9.4",
+        "Spot Price Currency": "USD",
+        "Spot Price at Transaction": "1.00",
+        "Subtotal": "8.35",
+        "Total (inclusive of fees and/or spread)": "9.40",
+        "Fees and/or Spread": "1.05",
+        "Notes": "Converted 9.4000 USDC to 0.00027696 BTC"
+    },
+    {
+        "Timestamp": "2020-10-01T16:38:37Z",
+        "Transaction Type": "Learning Reward",
+        "Asset": "MKR",
+        "Quantity Transacted": "0.0035332",
+        "Spot Price Currency": "USD",
+        "Spot Price at Transaction": "568.91",
+        "Subtotal": "2.01",
+        "Total (inclusive of fees and/or spread)": "2.01",
+        "Fees and/or Spread": "0.00",
+        "Notes": "Received 0.0035332 MKR from Coinbase as a learning reward"
+    },
+    {
+        "Timestamp": "2022-06-05T04:33:00Z",
+        "Transaction Type": "Rewards Income",
+        "Asset": "USDC",
+        "Quantity Transacted": "0.004247",
+        "Spot Price Currency": "USD",
+        "Spot Price at Transaction": "1.00",
+        "Subtotal": "0.00",
+        "Total (inclusive of fees and/or spread)": "0.00",
+        "Fees and/or Spread": "0.00",
+        "Notes": "Received 0.004247 USDC from Coinbase Rewards"
+    }
+]
