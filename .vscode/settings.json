@@ -1,5 +1,5 @@
 {
-    "editor.defaultFormatter": null,
+    // "editor.defaultFormatter": null,
     "editor.formatOnPaste": true,
     "editor.formatOnSave": false, // enable per language
     "editor.formatOnType": true,
@@ -36,5 +36,6 @@
             "source.organizeImports": true
         }
     },
-    "isort.args": ["--profile", "black"]
+    "isort.args": ["--profile", "black"],
+    "editor.defaultFormatter": "ms-python.black-formatter"
 }

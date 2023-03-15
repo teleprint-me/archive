@@ -1,4 +1,16 @@
 from dataclasses import dataclass
+from enum import Enum
+
+
+class CoinbaseNoteColumns(Enum):
+    VERB = 0
+    SIZE = 1
+    BASE = 2
+    PREPOSITION = 3
+    DETERMINER = 4
+    QUOTE = 5
+    PRODUCT = 6
+    TRANSACTION_TYPE = 7
 
 
 @dataclass(frozen=True)
@@ -16,20 +28,6 @@ class CoinbaseNote:
     quote: str = ""
     product: str = ""
     transaction_type: str = ""
-
-    @property
-    def to_str(self) -> str:
-        """Return the note as a string in the format 'verb size base preposition determiner quote'"""
-        note_parts = [
-            self.verb,
-            self.size,
-            self.base,
-            self.preposition,
-            self.determiner,
-            self.quote,
-        ]
-        filtered_note_parts = filter(str, note_parts)
-        return " ".join(filtered_note_parts)
 
     @property
     def currency_pair(self) -> str:

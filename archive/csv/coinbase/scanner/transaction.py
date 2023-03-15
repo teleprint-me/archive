@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from archive.csv.scanner.coinbase import CoinbaseNote
+from archive.csv.coinbase.scanner.note import CoinbaseNote
 
 
 class CoinbaseColumns(Enum):
@@ -30,16 +30,7 @@ class CoinbaseTransaction:
     fee: str
     notes: CoinbaseNote
 
-    def to_list(self) -> list[str]:
-        return [
-            self.timestamp,
-            self.transaction_type,
-            self.asset,
-            str(self.quantity),
-            self.currency,
-            str(self.spot_price),
-            str(self.subtotal),
-            str(self.total),
-            str(self.fee),
-            self.notes.to_str,
-        ]
+    @property
+    def currency_pair(self) -> str:
+        """Return the asset and currency pair in a string format of 'base-quote'"""
+        return f"{self.asset}-{self.currency}"
