@@ -13,7 +13,7 @@ class CoinbaseNoteColumns(Enum):
     TRANSACTION_TYPE = 7
 
 
-@dataclass(frozen=True)
+@dataclass
 class CoinbaseNote:
     """Class representing a Coinbase transaction note.
 
@@ -36,15 +36,15 @@ class CoinbaseNote:
             return f"{self.base}-{self.quote}"
         return self.base
 
-    def should_skip(self, types: list[str]) -> bool:
+    def should_skip(self, excluded_types: list[str]) -> bool:
         """Return True if the note should be skipped based on the specified transaction types, else False"""
         match_exception = "an external account" == self.determiner
-        match_type = types and (self.transaction_type in types)
+        match_type = self.transaction_type in excluded_types
         return bool(match_exception or match_type)
 
-    def should_keep(self, products: list[str]) -> bool:
+    def should_keep(self, included_assets: list[str]) -> bool:
         """Return True if the note should be kept based on the specified products, else False"""
-        has_product = self.product in products
-        has_quote = self.quote in products
-        has_currency_pair = self.currency_pair in products
-        return has_product or has_quote or has_currency_pair
+        has_product = self.product in included_assets
+        has_quote = self.quote in included_assets
+        has_currency_pair = self.currency_pair in included_assets
+        return bool(has_product or has_quote or has_currency_pair)

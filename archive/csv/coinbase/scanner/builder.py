@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Any
 
 from archive.csv.coinbase.scanner.note import CoinbaseNote, CoinbaseNoteColumns
 from archive.csv.coinbase.scanner.transaction import (
@@ -88,7 +87,7 @@ def get_coinbase_note_as_string(coinbase_note: CoinbaseNote) -> str:
     return " ".join(filtered_note_parts)
 
 
-def get_coinbase_transaction(csv_row: list[Any]) -> CoinbaseTransaction:
+def get_coinbase_transaction(csv_row: list[str]) -> CoinbaseTransaction:
     """Build a CoinbaseTransaction from a CSV row and a notes row.
 
     Args:
@@ -102,11 +101,11 @@ def get_coinbase_transaction(csv_row: list[Any]) -> CoinbaseTransaction:
         transaction_type=csv_row[CoinbaseColumns.TRANSACTION_TYPE.value],
         asset=csv_row[CoinbaseColumns.ASSET.value],
         quantity=csv_row[CoinbaseColumns.QUANTITY.value],
-        currency=csv_row[CoinbaseColumns.SPOT_PRICE_CURRENCY.value],
-        spot_price=csv_row[CoinbaseColumns.SPOT_PRICE_AT_TRANSACTION.value],
+        currency=csv_row[CoinbaseColumns.CURRENCY.value],
+        spot_price=csv_row[CoinbaseColumns.SPOT_PRICE.value],
         subtotal=csv_row[CoinbaseColumns.SUBTOTAL.value],
         total=csv_row[CoinbaseColumns.TOTAL.value],
-        fee=csv_row[CoinbaseColumns.FEES.value],
+        fees=csv_row[CoinbaseColumns.FEES.value],
         notes=get_coinbase_note(csv_row),
     )
 
@@ -118,18 +117,18 @@ def get_coinbase_transaction_as_list(
         coinbase_transaction.timestamp,
         coinbase_transaction.transaction_type,
         coinbase_transaction.asset,
-        str(coinbase_transaction.quantity),
+        f"{float(coinbase_transaction.quantity):.8f}",
         coinbase_transaction.currency,
-        str(coinbase_transaction.spot_price),
-        str(coinbase_transaction.subtotal),
-        str(coinbase_transaction.total),
-        str(coinbase_transaction.fee),
+        f"{float(coinbase_transaction.spot_price):.2f}",
+        f"{float(coinbase_transaction.subtotal):.2f}",
+        f"{float(coinbase_transaction.total):.2f}",
+        f"{float(coinbase_transaction.fees):.2f}",
         get_coinbase_note_as_string(coinbase_transaction.notes),
     ]
 
 
 def build_coinbase_tokens(
-    table: list[list[Any]],
+    table: list[list[str]],
 ) -> list[CoinbaseTransaction]:
     # omit the header from the conversion process
     return [get_coinbase_transaction(row) for row in table[1:]]
