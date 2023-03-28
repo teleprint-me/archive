@@ -2,11 +2,9 @@
 # Local
 #
 main.py
-scratch.py
-settings.json
 chat/
+data/
 output.txt
-tests/data
 
 #
 # Visual Studio Code
