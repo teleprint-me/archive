@@ -128,17 +128,29 @@ def get_coinbase_transaction_as_list(
 
 
 def build_coinbase_tokens(
-    table: list[list[str]],
+    csv_table: list[list[str]],
 ) -> list[CoinbaseTransaction]:
+    transactions = []
     # omit the header from the conversion process
-    return [get_coinbase_transaction(row) for row in table[1:]]
+    for csv_row in csv_table[1:]:
+        transaction = get_coinbase_transaction(csv_row)
+        transactions.append(transaction)
+    return transactions
 
 
-def build_coinbase_lists(
-    table: list[CoinbaseTransaction],
+def build_coinbase_transactions(
+    filepath: str | Path,
+) -> list[CoinbaseTransaction]:
+    """Scan the CSV file and extract Coinbase transaction data."""
+    csv_table = read_csv(filepath)
+    return build_coinbase_tokens(csv_table)
+
+
+def build_coinbase_csv(
+    transactions: list[CoinbaseTransaction],
 ) -> list[list[str]]:
     # include the header in the conversion process
-    header = [
+    csv_header = [
         [
             "Timestamp",
             "Transaction Type",
@@ -152,12 +164,8 @@ def build_coinbase_lists(
             "Notes",
         ]
     ]
-    transactions = [get_coinbase_transaction_as_list(row) for row in table]
-    return header + transactions
-
-
-def build_coinbase_transactions(
-    filepath: str | Path,
-) -> list[CoinbaseTransaction]:
-    """Scan the CSV file and extract Coinbase transaction data."""
-    return build_coinbase_tokens(read_csv(filepath))
+    csv_table = []
+    for row in transactions:
+        transaction = get_coinbase_transaction_as_list(row)
+        csv_table.append(transaction)
+    return csv_header + csv_table

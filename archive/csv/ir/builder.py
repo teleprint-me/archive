@@ -31,5 +31,5 @@ def build_ir_csv_table(
             "Order Note",
         ]
     ]
-    transactions = [build_ir_csv_row(tx) for tx in ir_table]
+    transactions = [build_ir_csv_row(ir_tx) for ir_tx in ir_table]
     return header + transactions
