@@ -1,11 +1,11 @@
 from pathlib import Path
 
-from archive.csv.coinbase.scanner.note import CoinbaseNote, CoinbaseNoteColumns
-from archive.csv.coinbase.scanner.transaction import (
+from archive.csv.coinbase.note import CoinbaseNote, CoinbaseNoteColumns
+from archive.csv.coinbase.transaction import (
     CoinbaseColumns,
     CoinbaseTransaction,
 )
-from archive.csv.tools import read_csv
+from archive.csv.tools.io import read_csv
 
 
 def get_coinbase_note(csv_row: list[str]) -> CoinbaseNote:
@@ -110,7 +110,7 @@ def get_coinbase_transaction(csv_row: list[str]) -> CoinbaseTransaction:
     )
 
 
-def get_coinbase_transaction_as_list(
+def get_coinbase_csv_row(
     coinbase_transaction: CoinbaseTransaction,
 ) -> list[str]:
     return [
@@ -125,25 +125,6 @@ def get_coinbase_transaction_as_list(
         f"{float(coinbase_transaction.fees):.2f}",
         get_coinbase_note_as_string(coinbase_transaction.notes),
     ]
-
-
-def build_coinbase_tokens(
-    csv_table: list[list[str]],
-) -> list[CoinbaseTransaction]:
-    transactions = []
-    # omit the header from the conversion process
-    for csv_row in csv_table[1:]:
-        transaction = get_coinbase_transaction(csv_row)
-        transactions.append(transaction)
-    return transactions
-
-
-def build_coinbase_transactions(
-    filepath: str | Path,
-) -> list[CoinbaseTransaction]:
-    """Scan the CSV file and extract Coinbase transaction data."""
-    csv_table = read_csv(filepath)
-    return build_coinbase_tokens(csv_table)
 
 
 def build_coinbase_csv(
@@ -166,6 +147,25 @@ def build_coinbase_csv(
     ]
     csv_table = []
     for row in transactions:
-        transaction = get_coinbase_transaction_as_list(row)
+        transaction = get_coinbase_csv_row(row)
         csv_table.append(transaction)
     return csv_header + csv_table
+
+
+def build_coinbase_transactions(
+    csv_table: list[list[str]],
+) -> list[CoinbaseTransaction]:
+    transactions = []
+    # omit the header from the conversion process
+    for csv_row in csv_table[1:]:
+        transaction = get_coinbase_transaction(csv_row)
+        transactions.append(transaction)
+    return transactions
+
+
+def scan_coinbase(
+    filepath: str | Path,
+) -> list[CoinbaseTransaction]:
+    """Scan the CSV file and extract Coinbase transaction data."""
+    csv_table = read_csv(filepath)
+    return build_coinbase_transactions(csv_table)

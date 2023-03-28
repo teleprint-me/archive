@@ -1,17 +1,52 @@
-from archive.csv.coinbase.ir import get_coinbase_ir_list
-from archive.csv.coinbase.scanner.builder import build_coinbase_transactions
-from archive.csv.ir.builder import build_ir_csv_table
-from archive.csv.tools import print_csv, sort_csv
+import argparse
+import sys
+from pathlib import Path
 
-if __name__ == "__main__":
-    file_path = "data/in/coinbase-transactions.csv"
-    included_assets = ["BTC"]
-    excluded_types = ["Send", "Receive"]
+from archive.csv.config import exchanges
+from archive.csv.ir.builder import build_ir_csv
+from archive.csv.tools.io import print_csv, write_csv
+from archive.csv.tools.sort import sort_csv
 
-    transactions = build_coinbase_transactions(file_path)
-    ir_transactions = get_coinbase_ir_list(
-        transactions, included_assets, excluded_types
-    )
-    csv_ir_transactions = build_ir_csv_table(ir_transactions)
+
+def main(exchange, file_path, included_assets, excluded_types):
+    scan_transactions = exchanges[exchange]["scan"]
+    build_ir = exchanges[exchange]["build_ir"]
+
+    transactions = scan_transactions(file_path)
+    ir_transactions = build_ir(transactions, included_assets, excluded_types)
+    csv_ir_transactions = build_ir_csv(ir_transactions)
     csv_sorted = sort_csv(csv_ir_transactions, column=2)
     print_csv(csv_sorted)
+
+    # Write transactions to CSV in the data/ir directory
+    output_file_path = Path("data/ir") / f"{exchange.lower()}-transactions.csv"
+    write_csv(output_file_path, csv_sorted)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Process exchange CSV files.")
+    parser.add_argument(
+        "exchange", choices=exchanges.keys(), help="Name of the exchange."
+    )
+    parser.add_argument("file_path", help="Path to the input CSV file.")
+    parser.add_argument(
+        "--included-assets",
+        nargs="+",
+        default=["BTC"],
+        help="List of assets to include.",
+    )
+    parser.add_argument(
+        "--excluded-types",
+        nargs="+",
+        default=["Send", "Receive"],
+        help="List of transaction types to exclude.",
+    )
+
+    args = parser.parse_args(sys.argv[1:])
+
+    main(
+        args.exchange,
+        args.file_path,
+        args.included_assets,
+        args.excluded_types,
+    )

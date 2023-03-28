@@ -16,7 +16,7 @@ def build_ir_csv_row(
     ]
 
 
-def build_ir_csv_table(
+def build_ir_csv(
     ir_table: list[IRTransaction],
 ) -> list[list[str]]:
     header = [
