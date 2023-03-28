@@ -9,7 +9,7 @@ def filter_transactions(
     included_assets: list[str],
     excluded_types: Optional[list[str]] = None,
 ) -> list[CoinbaseTransaction]:
-    """Filter the transactions based on product and type.
+    """Filter transactions based on product and type.
 
     Args:
         transactions: A list of CoinbaseTransactions.

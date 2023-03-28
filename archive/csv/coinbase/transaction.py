@@ -5,7 +5,7 @@ from archive.csv.coinbase.note import CoinbaseNote
 
 
 class CoinbaseColumns(Enum):
-    """An enumeration representing the different columns in a Coinbase transaction CSV."""
+    """Enumeration representing columns in a Coinbase CSV dataset."""
 
     TIMESTAMP = 0
     TRANSACTION_TYPE = 1
@@ -21,20 +21,7 @@ class CoinbaseColumns(Enum):
 
 @dataclass
 class CoinbaseTransaction:
-    """A dataclass representing a Coinbase transaction.
-
-    Attributes:
-        timestamp (str): The timestamp of the transaction.
-        transaction_type (str): The type of transaction.
-        asset (str): The asset involved in the transaction.
-        quantity (str): The quantity of the asset involved in the transaction.
-        currency (str): The currency used in the transaction.
-        spot_price (str): The spot price of the asset at the time of the transaction.
-        subtotal (str): The subtotal of the transaction.
-        total (str): The total amount of the transaction.
-        fee (str): The fee charged for the transaction.
-        notes (CoinbaseNote): The note associated with the transaction.
-    """
+    """A dataclass representing a Coinbase transaction."""
 
     timestamp: str
     transaction_type: str
