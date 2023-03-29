@@ -29,18 +29,18 @@ def build_coinbase_ir(
     ir_transactions = []
 
     if excluded_types and "Convert" in excluded_types:
-        selected_transactions = parse_coinbase(
+        parsed_transactions = parse_coinbase(
             transactions,
             included_assets,
             excluded_types,
             include_missing=False,
         )
     else:
-        selected_transactions = parse_coinbase(
+        parsed_transactions = parse_coinbase(
             transactions, included_assets, excluded_types
         )
 
-    for transaction in selected_transactions:
+    for transaction in parsed_transactions:
         ir_transaction = get_coinbase_ir_row(transaction)
         ir_transactions.append(ir_transaction)
 

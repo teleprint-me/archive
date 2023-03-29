@@ -9,11 +9,28 @@ from archive.csv.tools.sort import sort_csv
 
 
 def main(exchange, file_path, included_assets, excluded_types):
+    # get the exchange scanner
     scan_transactions = exchanges[exchange]["scan"]
+    # get the exchange ir builder
     build_ir = exchanges[exchange]["build_ir"]
 
+    # scan transaction using given filepath
     transactions = scan_transactions(file_path)
-    ir_transactions = build_ir(transactions, included_assets, excluded_types)
+
+    # build the ir according to the dataset structure.
+    # this is specific to each dataset for each exchange
+    if exchange.lower() == "coinbase":
+        ir_transactions = build_ir(
+            transactions, included_assets, excluded_types
+        )
+
+    elif exchange.lower() == "coinbase_pro":
+        ir_transactions = build_ir(transactions, included_assets)
+
+    else:
+        raise ValueError(f"Invalid exchange {exchange}")
+
+    # Print formatted csv transactions
     csv_ir_transactions = build_ir_csv(ir_transactions)
     csv_sorted = sort_csv(csv_ir_transactions, column=2)
     print_csv(csv_sorted)
