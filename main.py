@@ -13,7 +13,6 @@ def main(exchange, file_path, included_assets, excluded_types):
     scan_transactions = exchanges[exchange]["scan"]
     # get the exchange ir builder
     build_ir = exchanges[exchange]["build_ir"]
-
     # scan transaction using given filepath
     transactions = scan_transactions(file_path)
 
@@ -25,6 +24,9 @@ def main(exchange, file_path, included_assets, excluded_types):
         )
 
     elif exchange.lower() == "coinbase_pro":
+        ir_transactions = build_ir(transactions, included_assets)
+
+    elif exchange.lower() == "kraken":
         ir_transactions = build_ir(transactions, included_assets)
 
     else:
