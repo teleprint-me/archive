@@ -9,7 +9,7 @@ def get_coinbase_pro_ir_row(
     transaction: CoinbaseProTransaction,
 ) -> IRTransaction:
     return IRTransaction(
-        exchange="coinbase",
+        exchange="coinbase_pro",
         product=transaction.product,
         datetime=transaction.created_at,
         transaction_type=transaction.side,

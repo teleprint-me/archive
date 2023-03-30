@@ -157,7 +157,7 @@ def get_missing_transactions(
 
 def parse_coinbase_pro(
     transactions: list[CoinbaseProTransaction],
-    included_products: list[str],
+    included_assets: list[str],
     include_missing: Optional[bool] = True,
 ) -> list[CoinbaseProTransaction]:
     """Get filtered transactions from CoinbaseProTransaction's dataset.
@@ -171,9 +171,7 @@ def parse_coinbase_pro(
         A list of filtered CoinbaseProTransaction's.
     """
 
-    filtered_transactions = filter_transactions(
-        transactions, included_products
-    )
+    filtered_transactions = filter_transactions(transactions, included_assets)
 
     if include_missing:
         missing_transactions = get_missing_transactions(filtered_transactions)

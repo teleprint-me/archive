@@ -24,7 +24,7 @@ def get_coinbase_pro_transaction(csv_row: list[str]) -> CoinbaseProTransaction:
     )
 
 
-def get_coinbase_csv_row(
+def get_coinbase_pro_csv_row(
     coinbase_pro_transaction: CoinbaseProTransaction,
 ) -> list[str]:
     return [
@@ -63,7 +63,7 @@ def build_coinbase_pro_csv(
     ]
     csv_table = []
     for row in transactions:
-        transaction = get_coinbase_csv_row(row)
+        transaction = get_coinbase_pro_csv_row(row)
         csv_table.append(transaction)
     return csv_header + csv_table
 
