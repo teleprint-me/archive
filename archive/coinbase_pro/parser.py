@@ -62,6 +62,16 @@ def get_missing_transaction(
     base_size = transaction.size
     quote_size = transaction.total
 
+    missing_buy_notes = (
+        f"Bought {base_size:.8f} {transaction.base} "
+        f"with {quote_size:.8f} {transaction.quote}"
+    )
+
+    missing_sell_notes = (
+        f"Sold {base_size:.8f} {transaction.base} "
+        f"for {quote_size:.8f} {transaction.quote}"
+    )
+
     # 6. Create CoinbaseProTransaction for the missing BUY or SELL side
     if transaction.side == "BUY":
         # BUY side is missing selling the quote product for fiat
@@ -78,6 +88,7 @@ def get_missing_transaction(
             fee=quote_fee,
             total=quote_total,
             total_unit="USD",
+            notes=missing_sell_notes,
         )
         missing_buy = CoinbaseProTransaction(
             portfolio=transaction.portfolio,
@@ -91,6 +102,7 @@ def get_missing_transaction(
             fee=base_fee,
             total=base_total,
             total_unit="USD",
+            notes=missing_buy_notes,
         )
     elif transaction.side == "SELL":
         # SELL side is missing selling the base product for fiat
@@ -107,6 +119,7 @@ def get_missing_transaction(
             fee=base_fee,
             total=base_total,
             total_unit="USD",
+            notes=missing_sell_notes,
         )
         missing_buy = CoinbaseProTransaction(
             portfolio=transaction.portfolio,
@@ -120,6 +133,7 @@ def get_missing_transaction(
             fee=quote_fee,
             total=quote_total,
             total_unit="USD",
+            notes=missing_buy_notes,
         )
     else:
         raise ValueError(f"Invalid side {transaction.side}")
@@ -155,6 +169,27 @@ def get_missing_transactions(
     return missing_transactions
 
 
+def exclude_crypto_to_crypto_transactions(
+    transactions: list[CoinbaseProTransaction],
+) -> list[CoinbaseProTransaction]:
+    """Exclude crypto-to-crypto transactions from the list of transactions.
+
+    Args:
+        transactions: A list of CoinbaseProTransaction's.
+
+    Returns:
+        A list of CoinbaseProTransaction's with crypto-to-crypto transactions excluded.
+    """
+
+    processed_transactions = []
+
+    for transaction in transactions:
+        if transaction.is_fiat:
+            processed_transactions.append(transaction)
+
+    return processed_transactions
+
+
 def parse_coinbase_pro(
     transactions: list[CoinbaseProTransaction],
     included_assets: list[str],
@@ -177,4 +212,4 @@ def parse_coinbase_pro(
         missing_transactions = get_missing_transactions(filtered_transactions)
         filtered_transactions.extend(missing_transactions)
 
-    return filtered_transactions
+    return exclude_crypto_to_crypto_transactions(filtered_transactions)

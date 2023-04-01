@@ -12,7 +12,7 @@ def get_coinbase_pro_ir_row(
         exchange="coinbase_pro",
         product=transaction.product,
         datetime=transaction.created_at,
-        transaction_type=transaction.side,
+        transaction_type=transaction.side.capitalize(),
         order_size=float(transaction.size),
         market_price=float(transaction.price),
         order_fee=float(transaction.fee),
