@@ -2,8 +2,8 @@ import argparse
 import sys
 from pathlib import Path
 
-from archive.csv.config import exchanges
 from archive.csv.ir.builder import build_ir_csv
+from archive.csv.ir.config import exchanges
 from archive.csv.tools.io import print_csv, write_csv
 from archive.csv.tools.sort import sort_csv
 
