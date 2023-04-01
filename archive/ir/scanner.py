@@ -1,8 +1,8 @@
 from os import scandir
 from pathlib import Path
 
-from archive.csv.ir.transaction import IRColumns
-from archive.csv.tools.io import read_csv
+from archive.ir.transaction import IRColumns
+from archive.tools.io import read_csv
 
 
 def get_merged_ir_dataset(dir_path: str | Path) -> list[list[str]]:

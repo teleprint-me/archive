@@ -1,9 +1,9 @@
 from typing import Optional
 
-from archive.csv.coinbase.parser import parse_coinbase
-from archive.csv.coinbase.scanner import get_coinbase_note_as_string
-from archive.csv.coinbase.transaction import CoinbaseTransaction
-from archive.csv.ir.transaction import IRTransaction
+from archive.coinbase.parser import parse_coinbase
+from archive.coinbase.scanner import get_coinbase_note_as_string
+from archive.coinbase.transaction import CoinbaseTransaction
+from archive.ir.transaction import IRTransaction
 
 
 def get_coinbase_ir_row(

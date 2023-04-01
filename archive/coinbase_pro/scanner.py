@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from archive.csv.coinbase_pro.transaction import (
+from archive.coinbase_pro.transaction import (
     CoinbaseProColumns,
     CoinbaseProTransaction,
 )
-from archive.csv.tools.io import read_csv
+from archive.tools.io import read_csv
 
 
 def get_coinbase_pro_transaction(csv_row: list[str]) -> CoinbaseProTransaction:

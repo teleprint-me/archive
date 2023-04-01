@@ -1,4 +1,4 @@
-from archive.csv.ir.transaction import IRTransaction
+from archive.ir.transaction import IRTransaction
 
 
 def build_ir_csv_row(

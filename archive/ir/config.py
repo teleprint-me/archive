@@ -1,9 +1,9 @@
-from archive.csv.coinbase.ir import build_coinbase_ir
-from archive.csv.coinbase.scanner import scan_coinbase
-from archive.csv.coinbase_pro.ir import build_coinbase_pro_ir
-from archive.csv.coinbase_pro.scanner import scan_coinbase_pro
-from archive.csv.kraken.ir import build_kraken_ir
-from archive.csv.kraken.scanner import scan_kraken
+from archive.coinbase.ir import build_coinbase_ir
+from archive.coinbase.scanner import scan_coinbase
+from archive.coinbase_pro.ir import build_coinbase_pro_ir
+from archive.coinbase_pro.scanner import scan_coinbase_pro
+from archive.kraken.ir import build_kraken_ir
+from archive.kraken.scanner import scan_kraken
 
 # Configuration dictionary for each exchange
 exchanges = {

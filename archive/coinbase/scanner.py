@@ -1,11 +1,11 @@
 from pathlib import Path
 
-from archive.csv.coinbase.note import CoinbaseNote, CoinbaseNoteColumns
-from archive.csv.coinbase.transaction import (
+from archive.coinbase.note import CoinbaseNote, CoinbaseNoteColumns
+from archive.coinbase.transaction import (
     CoinbaseColumns,
     CoinbaseTransaction,
 )
-from archive.csv.tools.io import read_csv
+from archive.tools.io import read_csv
 
 
 def get_coinbase_note(csv_row: list[str]) -> CoinbaseNote:

@@ -1,8 +1,8 @@
 from typing import Optional
 
-from archive.csv.coinbase_pro.parser import parse_coinbase_pro
-from archive.csv.coinbase_pro.transaction import CoinbaseProTransaction
-from archive.csv.ir.transaction import IRTransaction
+from archive.coinbase_pro.parser import parse_coinbase_pro
+from archive.coinbase_pro.transaction import CoinbaseProTransaction
+from archive.ir.transaction import IRTransaction
 
 
 def get_coinbase_pro_ir_row(

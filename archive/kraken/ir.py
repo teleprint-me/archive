@@ -1,8 +1,8 @@
 from typing import Optional
 
-from archive.csv.ir.transaction import IRTransaction
-from archive.csv.kraken.parser import parse_kraken
-from archive.csv.kraken.transaction import KrakenTransaction
+from archive.ir.transaction import IRTransaction
+from archive.kraken.parser import parse_kraken
+from archive.kraken.transaction import KrakenTransaction
 
 
 def get_kraken_ir_row(transaction: KrakenTransaction) -> IRTransaction:
