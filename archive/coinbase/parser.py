@@ -95,6 +95,64 @@ def get_missing_transactions(
     return missing_transactions
 
 
+def process_special_transactions(
+    transactions: list[CoinbaseTransaction],
+) -> list[CoinbaseTransaction]:
+    transaction_types = [
+        "CardBuyBack",
+        "CardSpend",
+        "Rewards Income",
+        "Learning Reward",
+    ]
+
+    for transaction in transactions:
+        if transaction.transaction_type in transaction_types:
+            spot_price = float(transaction.spot_price)
+            quantity = float(transaction.quantity)
+            total = spot_price * quantity
+            transaction.subtotal = "0.00"
+            transaction.fees = "0.00"
+            transaction.total = f"{total:.2f}"
+
+    return transactions
+
+
+def simplify_transaction_types(
+    transactions: list[CoinbaseTransaction],
+) -> list[CoinbaseTransaction]:
+    buy_types = [
+        "Advanced Trade Buy",
+        "Buy",
+        "CardBuyBack",
+        "Learning Reward",
+        "Rewards Income",
+    ]
+    sell_types = [
+        "Advanced Trade Sell",
+        "CardSpend",
+        "Convert",
+        "Sell",
+    ]
+    skip_types = [
+        "Send",
+        "Receive",
+    ]
+
+    for transaction in transactions:
+        original_type = transaction.transaction_type
+
+        if original_type in buy_types:
+            transaction.transaction_type = "Buy"
+        elif original_type in sell_types:
+            transaction.transaction_type = "Sell"
+        elif original_type in skip_types:
+            continue
+        else:
+            raise ValueError(f"Unknown transaction type: {original_type}")
+
+    return transactions
+
+
 def parse_coinbase(
     transactions: list[CoinbaseTransaction],
     included_products: list[str],
@@ -123,13 +181,8 @@ def parse_coinbase(
         missing_transactions = get_missing_transactions(filtered_transactions)
         filtered_transactions.extend(missing_transactions)
 
-    for transaction in filtered_transactions:
-        if transaction.transaction_type == "CardSpend":
-            spot_price = float(transaction.spot_price)
-            quantity = float(transaction.quantity)
-            total = spot_price * quantity
-            transaction.subtotal = "0.00"
-            transaction.fees = "0.00"
-            transaction.total = f"{total:.2f}"
+    processed_transactions = process_special_transactions(
+        filtered_transactions
+    )
 
-    return filtered_transactions
+    return simplify_transaction_types(processed_transactions)
