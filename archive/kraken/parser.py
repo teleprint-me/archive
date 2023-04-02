@@ -66,6 +66,16 @@ def get_missing_transaction(
     base_size = transaction.vol
     quote_size = transaction.cost
 
+    missing_buy_notes = (
+        f"Bought {base_size:.8f} {transaction.base} "
+        f"with {quote_size:.8f} {transaction.quote}"
+    )
+
+    missing_sell_notes = (
+        f"Sold {base_size:.8f} {transaction.base} "
+        f"for {quote_size:.8f} {transaction.quote}"
+    )
+
     # 6. Create KrakenTransaction for the missing BUY or SELL side
     if transaction.type == "buy":
         # BUY side is missing selling the quote product for fiat
@@ -84,6 +94,7 @@ def get_missing_transaction(
             margin=transaction.margin,
             misc=transaction.misc,
             ledgers=transaction.ledgers,
+            notes=missing_sell_notes,
         )
         missing_buy = KrakenTransaction(
             txid=transaction.txid,
@@ -99,6 +110,7 @@ def get_missing_transaction(
             margin=transaction.margin,
             misc=transaction.misc,
             ledgers=transaction.ledgers,
+            notes=missing_buy_notes,
         )
     elif transaction.type == "sell":
         # SELL side is missing selling the base product for fiat
@@ -117,6 +129,7 @@ def get_missing_transaction(
             margin=transaction.margin,
             misc=transaction.misc,
             ledgers=transaction.ledgers,
+            notes=missing_sell_notes,
         )
         missing_buy = KrakenTransaction(
             txid=transaction.txid,
@@ -132,6 +145,7 @@ def get_missing_transaction(
             margin=transaction.margin,
             misc=transaction.misc,
             ledgers=transaction.ledgers,
+            notes=missing_buy_notes,
         )
     else:
         raise ValueError(f"Invalid transaction type {transaction.type}")
@@ -167,6 +181,27 @@ def get_missing_transactions(
     return missing_transactions
 
 
+def exclude_crypto_to_crypto_transactions(
+    transactions: list[KrakenTransaction],
+) -> list[KrakenTransaction]:
+    """Exclude crypto-to-crypto transactions from the list of transactions.
+
+    Args:
+        transactions: A list of KrakenTransaction's.
+
+    Returns:
+        A list of KrakenTransaction's with crypto-to-crypto transactions excluded.
+    """
+
+    processed_transactions = []
+
+    for transaction in transactions:
+        if transaction.is_fiat:
+            processed_transactions.append(transaction)
+
+    return processed_transactions
+
+
 def parse_kraken(
     transactions: list[KrakenTransaction],
     included_assets: list[str],
@@ -189,4 +224,4 @@ def parse_kraken(
         missing_transactions = get_missing_transactions(filtered_transactions)
         filtered_transactions.extend(missing_transactions)
 
-    return filtered_transactions
+    return exclude_crypto_to_crypto_transactions(filtered_transactions)

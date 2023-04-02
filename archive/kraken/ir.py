@@ -18,7 +18,7 @@ def get_kraken_ir_row(transaction: KrakenTransaction) -> IRTransaction:
         exchange="kraken",
         product=transaction.product,
         datetime=transaction.time,
-        transaction_type=transaction.type,
+        transaction_type=transaction.type.capitalize(),
         order_size=transaction.vol,
         market_price=transaction.price,
         order_fee=transaction.fee,
