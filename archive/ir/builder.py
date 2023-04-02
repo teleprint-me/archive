@@ -1,4 +1,8 @@
-from archive.ir.transaction import IRTransaction
+from os import scandir
+from pathlib import Path
+
+from archive.ir.transaction import IRColumns, IRTransaction
+from archive.tools.io import read_csv
 
 
 def build_ir_csv_row(
@@ -33,3 +37,37 @@ def build_ir_csv(
     ]
     transactions = [build_ir_csv_row(ir_tx) for ir_tx in ir_table]
     return header + transactions
+
+
+def scan_ir_dataset(dir_path: str | Path) -> list[list[str]]:
+    header: list[list[str]] = []
+    table: list[list[str]] = []
+
+    for entry in scandir(dir_path):
+        if entry.is_file:
+            csv_table = read_csv(entry.path)
+            if not header:
+                header = [csv_table[0]]
+            table.extend(csv_table[1:])
+
+    sorted_table = sorted(table, key=lambda row: row[IRColumns.DATETIME.value])
+
+    return header + sorted_table
+
+
+def build_ir_transactions(csv_table: list[list[str]]) -> list[IRTransaction]:
+    transactions = []
+    for row in csv_table[1:]:  # Skip the header row
+        transaction = IRTransaction(
+            exchange=row[IRColumns.EXCHANGE.value],
+            product=row[IRColumns.PRODUCT.value],
+            datetime=row[IRColumns.DATETIME.value],
+            transaction_type=row[IRColumns.TRANSACTION_TYPE.value],
+            order_size=float(row[IRColumns.ORDER_SIZE.value]),
+            market_price=float(row[IRColumns.MARKET_PRICE.value]),
+            order_fee=float(row[IRColumns.ORDER_FEE.value]),
+            order_note=row[IRColumns.ORDER_NOTE.value],
+        )
+        transactions.append(transaction)
+
+    return transactions
