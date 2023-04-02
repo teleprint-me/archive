@@ -39,7 +39,7 @@ def build_ir_csv(
     return header + transactions
 
 
-def scan_ir_dataset(dir_path: str | Path) -> list[list[str]]:
+def read_ir_transactions(dir_path: str | Path) -> list[list[str]]:
     header: list[list[str]] = []
     table: list[list[str]] = []
 
