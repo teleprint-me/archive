@@ -38,3 +38,11 @@ class IRTransaction:
     market_price: float
     order_fee: float = 0.0
     order_note: str = str()
+
+    @property
+    def is_buy(self) -> bool:
+        return self.transaction_type == "Buy"
+
+    @property
+    def is_sell(self) -> bool:
+        return self.transaction_type == "Sell"
