@@ -17,7 +17,7 @@ def calculate_sell_cost_basis(transaction: GLTransaction) -> GLTransaction:
     return transaction
 
 
-def calculate_acb(transaction: GLTransaction) -> GLTransaction:
+def calculate_adjusted_cost_basis(transaction: GLTransaction) -> GLTransaction:
     # NOTE: This is only used on the buy side of a transaction.
     # The sell side always inherits the last calculated ACB
     # from the last known `total_acb_per_share` which is out of
@@ -35,15 +35,15 @@ def calculate_sales_proceeds(transaction: GLTransaction) -> GLTransaction:
     return transaction
 
 
-def calculate_gl(transaction: GLTransaction) -> GLTransaction:
-    sales_proceeds = transaction.market_price
+def calculate_gain_or_loss(transaction: GLTransaction) -> GLTransaction:
+    sales_proceeds = transaction.sales_proceeds
     cost_basis = transaction.cost_or_other_basis
     exchange_fee = transaction.exchange_fee
     transaction.gain_or_loss = sales_proceeds - cost_basis - exchange_fee
     return transaction
 
 
-def calculate_total(
+def calculate_total_transaction(
     total: GLTotalTransaction,
     block: list[GLTransaction],
 ) -> GLTotalTransaction:
@@ -62,10 +62,28 @@ def calculate_total(
         total.cost_or_other_basis += sum(
             -tx.cost_or_other_basis for tx in block
         )
+        total.gain_or_loss += sum(tx.gain_or_loss for tx in block)
 
     total.acb_per_share = total.cost_or_other_basis / total.order_size
 
     return total
+
+
+def build_total_transaction(
+    total: GLTotalTransaction,
+) -> GLTransaction:
+    return GLTransaction(
+        additional_description="total",
+        description="",
+        date_acquired="",
+        transaction_type="",
+        order_size=total.order_size,
+        market_price=0.0,
+        exchange_fee=0.0,
+        cost_or_other_basis=total.cost_or_other_basis,
+        acb_per_share=total.acb_per_share,
+        gain_or_loss=total.gain_or_loss,
+    )
 
 
 def build_transaction_blocks(
@@ -89,44 +107,31 @@ def build_transaction_blocks(
     return transaction_blocks
 
 
-def build_total_transaction(
-    total: GLTotalTransaction,
-) -> GLTransaction:
-    return GLTransaction(
-        additional_description="total",
-        description="",
-        date_acquired="",
-        transaction_type="",
-        order_size=total.order_size,
-        market_price=0.0,
-        exchange_fee=0.0,
-        cost_or_other_basis=total.cost_or_other_basis,
-        acb_per_share=total.acb_per_share,
-        gain_or_loss=total.gain_or_loss,
-    )
-
-
 def parse_gl(transactions: list[GLTransaction]) -> list[GLTransaction]:
-    transaction_blocks = build_transaction_blocks(transactions)
-    gl_total = GLTotalTransaction()
     gl_transactions = []
+    total = GLTotalTransaction()
+    blocks = build_transaction_blocks(transactions)
 
-    for block in transaction_blocks:
+    for block in blocks:
         processed_transactions = []
+
         for transaction in block:
             if transaction.is_buy:
                 transaction = calculate_buy_cost_basis(transaction)
-                transaction = calculate_acb(transaction)
+                transaction = calculate_adjusted_cost_basis(transaction)
+
             else:
-                transaction.acb_per_share = gl_total.acb_per_share
+                transaction.acb_per_share = total.acb_per_share
                 transaction = calculate_sell_cost_basis(transaction)
                 transaction = calculate_sales_proceeds(transaction)
-                transaction = calculate_gl(transaction)
+                transaction = calculate_gain_or_loss(transaction)
+
             processed_transactions.append(transaction)
 
-        gl_total = calculate_total(gl_total, block)
-        total_gl_transaction = build_total_transaction(gl_total)
+        total = calculate_total_transaction(total, block)
+        total_transaction = build_total_transaction(total)
+
         gl_transactions.extend(processed_transactions)
-        gl_transactions.append(total_gl_transaction)
+        gl_transactions.append(total_transaction)
 
     return gl_transactions
