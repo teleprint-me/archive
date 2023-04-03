@@ -1,9 +1,13 @@
 #
 # Local
 #
-chat/
-data/
+# local files
 output.txt
+
+# local directories
+docs/
+data/
+chat/
 
 #
 # Visual Studio Code
