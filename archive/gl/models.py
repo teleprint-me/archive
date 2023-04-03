@@ -56,7 +56,7 @@ class GLTransaction:
 
 @dataclass
 class GLTotalTransaction:
-    total_order_size: float = float()
-    total_cost_or_other_basis: float = float()
-    total_acb_per_share: float = float()
-    total_gain_or_loss: float = float()
+    order_size: float = float()
+    cost_or_other_basis: float = float()
+    acb_per_share: float = float()
+    gain_or_loss: float = float()
