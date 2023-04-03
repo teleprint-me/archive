@@ -14,15 +14,15 @@ def get_gl_csv_row(
         transaction.description,
         transaction.date_acquired,
         transaction.transaction_type,
-        str(transaction.order_size),
-        str(transaction.market_price),
-        str(transaction.exchange_fee),
-        str(transaction.cost_or_other_basis),
-        str(transaction.acb_per_share),
+        f"{transaction.order_size:.8f}",
+        f"{transaction.market_price:.2f}",
+        f"{transaction.exchange_fee:.2f}",
+        f"{transaction.cost_or_other_basis:.2f}",
+        f"{transaction.acb_per_share:.2f}",
         transaction.date_sold,
-        str(transaction.sales_proceeds),
-        str(transaction.gain_or_loss),
-        str(transaction.order_note),
+        f"{transaction.sales_proceeds:.2f}",
+        f"{transaction.gain_or_loss:.2f}",
+        transaction.order_note,
     ]
 
 
@@ -85,6 +85,16 @@ def get_gl_transactions(
     return transactions
 
 
+def filter_transactions(
+    asset: str, transactions: list[IRTransaction]
+) -> list[IRTransaction]:
+    filtered_transactions = []
+    for transaction in transactions:
+        if transaction.product.startswith(asset):
+            filtered_transactions.append(transaction)
+    return filtered_transactions
+
+
 def build_gl_transactions(
     ir_transactions: list[IRTransaction],
 ) -> list[GLTransaction]:
@@ -124,7 +134,10 @@ def build_gl_transactions(
     return transactions
 
 
-def scan_gl_transactions(directory: Union[str, Path]) -> list[GLTransaction]:
+def scan_gl_transactions(
+    asset: str, directory: Union[str, Path]
+) -> list[GLTransaction]:
     csv_table = read_ir_transactions(directory)
-    ir_transactions = build_ir_transactions(csv_table)
-    return build_gl_transactions(ir_transactions)
+    transactions = build_ir_transactions(csv_table)
+    filtered_transactions = filter_transactions(asset, transactions)
+    return build_gl_transactions(filtered_transactions)
