@@ -3,30 +3,17 @@ import sys
 from pathlib import Path
 from typing import Union
 
-from archive.gl.builder import build_gl_csv, build_gl_transactions
-from archive.ir.builder import build_ir_transactions, read_ir_transactions
+from archive.gl.parser import parse_gl
+from archive.gl.scanner import get_gl_csv_table, scan_gl_transactions
 from archive.tools.io import print_csv, write_csv
 
 
-def main(directory: Union[str, Path]):
-    # Get the consolidated dataset as a CSV table.
-    # read_ir_transactions(dir_path: str | Path) -> list[list[str]]
-    csv_table = read_ir_transactions(directory)
-    # Rebuild the IRTransactions from the CSV dataset.
-    # build_ir_transactions(csv_table: list[list[str]]) -> list[IRTransaction]
-    ir_transactions = build_ir_transactions(csv_table)
-    # Build the GLTransactions from the IRTransaction dataset
-    # build_gl_transactions(transactions: list[IRTransaction]) -> list[GLTransaction]
-    gl_transactions = build_gl_transactions(ir_transactions)
-    # Build the GL CSV dataset.
-    # build_gl_csv(transactions: list[GLTransaction]) -> list[list[str]]
-    csv_gl_transactions = build_gl_csv(gl_transactions)
-    # Print the GL CSV dataset to stdout.
-    # print_csv(csv_table: list[list[str]]) -> None
+def main(asset: str, directory: Union[str, Path]):
+    gl_transactions = scan_gl_transactions(asset, directory)
+    gl_transactions = parse_gl(gl_transactions)
+    csv_gl_transactions = get_gl_csv_table(gl_transactions)
     print_csv(csv_gl_transactions)
-    # Write transactions to CSV in the data/gl directory
     output_file_path = Path("data/gl/gains-and-losses.csv")
-    # write_csv(path: str | Path, csv_table: list[list[str]]) -> None
     write_csv(output_file_path, csv_gl_transactions)
 
 
@@ -41,6 +28,13 @@ if __name__ == "__main__":
         help="The directory containing the IR CSV files.",
     )
 
+    parser.add_argument(
+        "--asset",
+        type=str,
+        default="BTC",
+        help="The base asset symbol to be calculated (e.g., BTC, ETH).",
+    )
+
     args = parser.parse_args(sys.argv[1:])
 
-    main(args.directory)
+    main(args.asset, args.directory)
