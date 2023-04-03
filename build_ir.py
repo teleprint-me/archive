@@ -38,7 +38,7 @@ def main(exchange, file_path, included_assets, excluded_types):
     print_csv(csv_sorted)
 
     # Write transactions to CSV in the data/ir directory
-    output_file_path = Path("data/ir") / f"{exchange.lower()}-transactions.csv"
+    output_file_path = Path("data/ir") / f"ir-{exchange.lower()}.csv"
     write_csv(output_file_path, csv_sorted)
 
 
