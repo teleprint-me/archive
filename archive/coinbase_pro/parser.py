@@ -62,18 +62,12 @@ def get_missing_transaction(
     base_size = transaction.size
     quote_size = transaction.total
 
-    missing_buy_notes = (
-        f"Bought {base_size:.8f} {transaction.base} "
-        f"with {quote_size:.8f} {transaction.quote}"
-    )
-
-    missing_sell_notes = (
-        f"Sold {base_size:.8f} {transaction.base} "
-        f"for {quote_size:.8f} {transaction.quote}"
-    )
-
     # 6. Create CoinbaseProTransaction for the missing BUY or SELL side
     if transaction.side == "BUY":
+        missing_buy_notes = (
+            f"Bought {base_size:.8f} {transaction.base} "
+            f"with {quote_size:.8f} {transaction.quote}"
+        )
         # BUY side is missing selling the quote product for fiat
         # and buying the base product with fiat
         missing_sell = CoinbaseProTransaction(
@@ -88,7 +82,7 @@ def get_missing_transaction(
             fee=quote_fee,
             total=quote_total,
             total_unit="USD",
-            notes=missing_sell_notes,
+            notes=missing_buy_notes,
         )
         missing_buy = CoinbaseProTransaction(
             portfolio=transaction.portfolio,
@@ -105,6 +99,10 @@ def get_missing_transaction(
             notes=missing_buy_notes,
         )
     elif transaction.side == "SELL":
+        missing_sell_notes = (
+            f"Sold {base_size:.8f} {transaction.base} "
+            f"for {quote_size:.8f} {transaction.quote}"
+        )
         # SELL side is missing selling the base product for fiat
         # and buying the quote product with fiat
         missing_sell = CoinbaseProTransaction(
@@ -133,7 +131,7 @@ def get_missing_transaction(
             fee=quote_fee,
             total=quote_total,
             total_unit="USD",
-            notes=missing_buy_notes,
+            notes=missing_sell_notes,
         )
     else:
         raise ValueError(f"Invalid side {transaction.side}")
