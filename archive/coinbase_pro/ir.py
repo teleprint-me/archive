@@ -1,8 +1,8 @@
 from typing import Optional
 
+from archive.coinbase_pro.models import CoinbaseProTransaction
 from archive.coinbase_pro.parser import parse_coinbase_pro
-from archive.coinbase_pro.transaction import CoinbaseProTransaction
-from archive.ir.transaction import IRTransaction
+from archive.ir.models import IRTransaction
 
 
 def get_coinbase_pro_ir_row(

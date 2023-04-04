@@ -1,7 +1,7 @@
 from os import scandir
 from pathlib import Path
 
-from archive.ir.transaction import IRColumns, IRTransaction
+from archive.ir.models import IRColumns, IRTransaction
 from archive.tools.io import read_csv
 
 

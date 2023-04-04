@@ -3,7 +3,7 @@ from typing import Union
 
 from archive.gl.models import GLColumns, GLTransaction
 from archive.ir.builder import build_ir_transactions, read_ir_transactions
-from archive.ir.transaction import IRTransaction
+from archive.ir.models import IRTransaction
 
 
 def get_gl_csv_row(

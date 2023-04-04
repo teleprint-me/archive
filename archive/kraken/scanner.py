@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from archive.kraken.transaction import KrakenColumns, KrakenTransaction
+from archive.kraken.models import KrakenColumns, KrakenTransaction
 from archive.tools.io import read_csv
 
 

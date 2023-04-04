@@ -1,7 +1,7 @@
 from typing import Optional
 
 from archive.kraken.api import get_asset_info, get_spot_price
-from archive.kraken.transaction import KrakenTransaction
+from archive.kraken.models import KrakenTransaction
 
 
 def filter_transactions(

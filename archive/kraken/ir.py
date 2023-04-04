@@ -1,8 +1,8 @@
 from typing import Optional
 
-from archive.ir.transaction import IRTransaction
+from archive.ir.models import IRTransaction
+from archive.kraken.models import KrakenTransaction
 from archive.kraken.parser import parse_kraken
-from archive.kraken.transaction import KrakenTransaction
 
 
 def get_kraken_ir_row(transaction: KrakenTransaction) -> IRTransaction:

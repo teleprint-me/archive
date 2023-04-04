@@ -1,7 +1,7 @@
 from typing import Optional
 
 from archive.coinbase.api import get_spot_price
-from archive.coinbase_pro.transaction import CoinbaseProTransaction
+from archive.coinbase_pro.models import CoinbaseProTransaction
 
 
 def filter_transactions(
