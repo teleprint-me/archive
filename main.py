@@ -1,32 +1,13 @@
-import argparse
 import sys
-from typing import Optional
+from argparse import ArgumentParser, Namespace
 
 from archive.f8949.process import process_f8949
 from archive.gl.process import process_gl
 from archive.ir.process import process_ir
 
 
-def main(
-    exchange_file_list: list[tuple[str, str]],
-    asset: str,
-    label: str,
-    start_date: Optional[str] = "",
-    end_date: Optional[str] = "",
-):
-    # Step 1: Process exchange CSV files for each exchange
-    for exchange, file_path in exchange_file_list:
-        process_ir(asset, label, exchange, file_path)
-
-    # Step 2: Process IR transactions and generate GL transactions
-    gl_file_path = process_gl(asset, label, "data/ir/")
-
-    # Step 3: Process GL transactions and generate Form 8949 CSV
-    process_f8949(gl_file_path, label, start_date, end_date)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
+def get_arguments() -> Namespace:
+    parser = ArgumentParser(
         description="Process transactions and generate Form 8949."
     )
 
@@ -64,12 +45,22 @@ if __name__ == "__main__":
         help="The end date for transactions to be included (YYYY-MM-DD).",
     )
 
-    args = parser.parse_args(sys.argv[1:])
+    return parser.parse_args(sys.argv[1:])
 
-    main(
-        args.exchange_file,
-        args.asset,
-        args.label,
-        args.start_date,
-        args.end_date,
-    )
+
+def main() -> None:
+    args = get_arguments()
+
+    # Step 1: Process exchange CSV files for each exchange
+    for exchange, file_path in args.exchange_file:
+        process_ir(args.asset, args.label, exchange, file_path)
+
+    # Step 2: Process IR transactions and generate GL transactions
+    gl_file_path = process_gl(args.asset, args.label, "data/ir/")
+
+    # Step 3: Process GL transactions and generate Form 8949 CSV
+    process_f8949(gl_file_path, args.label, args.start_date, args.end_date)
+
+
+if __name__ == "__main__":
+    main()
