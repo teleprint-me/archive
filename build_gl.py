@@ -1,24 +1,11 @@
-import argparse
 import sys
-from pathlib import Path
-from typing import Union
+from argparse import ArgumentParser, Namespace
 
-from archive.gl.parser import parse_gl
-from archive.gl.scanner import get_gl_csv_table, scan_gl_transactions
-from archive.tools.io import print_csv, write_csv
+from archive.gl.process import process_gl
 
 
-def main(asset: str, directory: Union[str, Path]):
-    gl_transactions = scan_gl_transactions(asset, directory)
-    gl_transactions = parse_gl(gl_transactions)
-    csv_gl_transactions = get_gl_csv_table(gl_transactions)
-    print_csv(csv_gl_transactions)
-    output_file_path = Path("data/gl/gains-and-losses.csv")
-    write_csv(output_file_path, csv_gl_transactions)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
+def get_arguments() -> Namespace:
+    parser = ArgumentParser(
         description="Process IR transactions and generate GL transactions."
     )
 
@@ -35,6 +22,21 @@ if __name__ == "__main__":
         help="The base asset symbol to be calculated (e.g., BTC, ETH).",
     )
 
-    args = parser.parse_args(sys.argv[1:])
+    parser.add_argument(
+        "--label",
+        type=str,
+        default="bitcoin",
+        help="A label to be appended to the output file name.",
+    )
 
-    main(args.asset, args.directory)
+    return parser.parse_args(sys.argv[1:])
+
+
+def main():
+    args = get_arguments()
+
+    process_gl(args.asset, args.label, args.directory)
+
+
+if __name__ == "__main__":
+    main()

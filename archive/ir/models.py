@@ -15,7 +15,7 @@ class IRColumns(Enum):
     ORDER_NOTE = 7
 
 
-@dataclass(frozen=True)
+@dataclass
 class IRTransaction:
     """A dataclass representing the datasets intermediary representation.
 

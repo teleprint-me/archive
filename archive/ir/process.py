@@ -1,11 +1,26 @@
 from pathlib import Path
 from typing import Union
 
+import iso8601
+
 from archive.ir.builder import build_ir_csv
 from archive.ir.config import exchanges
 from archive.ir.models import IRTransaction
 from archive.tools.io import print_csv, write_csv
 from archive.tools.sort import sort_csv
+
+
+def format_transactions(
+    transactions: list[IRTransaction],
+) -> list[IRTransaction]:
+    for transaction in transactions:
+        # Format datetime
+        datetime = iso8601.parse_date(transaction.datetime)
+        transaction.datetime = datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
+        # Format transaction type
+        transaction_type = transaction.transaction_type.capitalize()
+        transaction.transaction_type = transaction_type
+    return transactions
 
 
 def process_ir(
@@ -25,7 +40,9 @@ def process_ir(
     else:
         raise ValueError(f"Invalid exchange {exchange}")
 
-    csv_ir_transactions = build_ir_csv(ir_transactions)
+    formatted_transactions = format_transactions(ir_transactions)
+
+    csv_ir_transactions = build_ir_csv(formatted_transactions)
     csv_sorted = sort_csv(csv_ir_transactions, column=2)
     print_csv(csv_sorted)
 
