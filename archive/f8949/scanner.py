@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Union
 
-from archive.form8949.models import F8949Columns, F8949Transaction
+from archive.f8949.models import F8949Columns, F8949Transaction
 from archive.gl.models import GLTransaction
 from archive.gl.scanner import get_gl_transactions
 from archive.tools.io import read_csv

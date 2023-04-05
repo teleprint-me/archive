@@ -2,7 +2,7 @@ import argparse
 import sys
 from typing import Optional
 
-from archive.form8949.process import process_f8949
+from archive.f8949.process import process_f8949
 from archive.gl.process import process_gl
 from archive.ir.process import process_ir
 

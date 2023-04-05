@@ -2,7 +2,7 @@ from typing import Optional
 
 import iso8601
 
-from archive.form8949.models import F8949Transaction
+from archive.f8949.models import F8949Transaction
 
 
 def filter_transactions_by_date(

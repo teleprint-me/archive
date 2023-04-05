@@ -3,11 +3,8 @@ import sys
 from pathlib import Path
 from typing import Optional, Union
 
-from archive.form8949.parser import filter_transactions_by_date, parse_f8949
-from archive.form8949.scanner import (
-    get_f8949_csv_table,
-    scan_f8949_transactions,
-)
+from archive.f8949.parser import filter_transactions_by_date, parse_f8949
+from archive.f8949.scanner import get_f8949_csv_table, scan_f8949_transactions
 from archive.tools.io import print_csv, write_csv
 
 
