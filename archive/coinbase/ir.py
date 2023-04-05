@@ -28,6 +28,9 @@ def build_coinbase_ir(
 ) -> list[IRTransaction]:
     ir_transactions = []
 
+    if excluded_types is None:
+        excluded_types = ["Send", "Receive"]
+
     if excluded_types and "Convert" in excluded_types:
         parsed_transactions = parse_coinbase(
             transactions,

@@ -50,10 +50,6 @@ class CoinbaseProTransaction:
             "USD",
             "GBP",
             "EUR",
-            # "USDC",  # stable coins are considered crypto
-            # "USDT",
-            # "UST",
-            # "DAI",
         ]
 
     def should_keep(self, included_assets: list[str]) -> bool:

@@ -20,7 +20,7 @@ exchanges = {
     "kraken": {
         "scan": scan_kraken,
         "build_ir": build_kraken_ir,
-        # Add any additional output functions specific to Coinbase Pro
+        # Add any additional output functions specific to Kraken
     },
     # Add other exchanges with their respective functions
 }

@@ -1,20 +1,10 @@
 import argparse
 import sys
-from pathlib import Path
 from typing import Optional
 
-from archive.form8949.parser import filter_transactions_by_date, parse_f8949
-from archive.form8949.scanner import (
-    get_f8949_csv_table,
-    scan_f8949_transactions,
-)
-from archive.gl.parser import parse_gl
-from archive.gl.scanner import get_gl_csv_table, scan_gl_transactions
-from archive.ir.scanner import scan_ir_transactions
-from archive.tools.io import print_csv, write_csv
-
-# TODO: Update the script to expect a single asset symbol instead of a list of included products
-# and get rid of the excluded types. Use default values for now.
+from archive.form8949.process import process_f8949
+from archive.gl.process import process_gl
+from archive.ir.process import process_ir
 
 
 def main(
@@ -24,31 +14,15 @@ def main(
     start_date: Optional[str] = "",
     end_date: Optional[str] = "",
 ):
-    ir_transactions_all = []
-
     # Step 1: Process exchange CSV files for each exchange
     for exchange, file_path in exchange_file_list:
-        ir_transactions = process_exchange_csv(
-            exchange, file_path, asset, label
-        )
-        ir_transactions_all.extend(ir_transactions)
-
-        ir_output_file_path = Path(f"data/ir/ir-{exchange}-{label}.csv")
-        write_csv(ir_output_file_path, ir_transactions)
-
-    # Combine IR transactions from all exchanges into a single CSV file
-    ir_all_output_file_path = Path(f"data/ir/ir-all-{label}.csv")
-    write_csv(ir_all_output_file_path, ir_transactions_all)
+        process_ir(asset, label, exchange, file_path)
 
     # Step 2: Process IR transactions and generate GL transactions
-    gl_transactions = process_ir_transactions(asset, label)
-    gl_output_file_path = Path(f"data/gl/gains-and-losses-{label}.csv")
-    write_csv(gl_output_file_path, gl_transactions)
+    gl_file_path = process_gl(asset, label, "data/ir/")
 
     # Step 3: Process GL transactions and generate Form 8949 CSV
-    f8949_transactions = process_gl_transactions(label, start_date, end_date)
-    f8949_output_file_path = Path(f"data/out/form-8949-{label}.csv")
-    write_csv(f8949_output_file_path, f8949_transactions)
+    process_f8949(gl_file_path, label, start_date, end_date)
 
 
 if __name__ == "__main__":
