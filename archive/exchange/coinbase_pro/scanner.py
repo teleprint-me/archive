@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from archive.coinbase_pro.models import (
+from archive.exchange.coinbase_pro.models import (
     CoinbaseProColumns,
     CoinbaseProTransaction,
 )

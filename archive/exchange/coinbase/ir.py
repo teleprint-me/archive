@@ -1,8 +1,8 @@
 from typing import Optional
 
-from archive.coinbase.models import CoinbaseTransaction
-from archive.coinbase.parser import parse_coinbase
-from archive.coinbase.scanner import get_coinbase_note_as_string
+from archive.exchange.coinbase.models import CoinbaseTransaction
+from archive.exchange.coinbase.parser import parse_coinbase
+from archive.exchange.coinbase.scanner import get_coinbase_note_as_string
 from archive.ir.models import IRTransaction
 
 
@@ -13,7 +13,7 @@ def get_coinbase_ir_row(
         exchange="coinbase",
         product=transaction.currency_pair,
         datetime=transaction.timestamp,
-        transaction_type=transaction.transaction_type.capitalize(),
+        transaction_type=transaction.transaction_type,
         order_size=float(transaction.quantity),
         market_price=float(transaction.spot_price),
         order_fee=float(transaction.fees),

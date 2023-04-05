@@ -1,7 +1,7 @@
 from typing import Optional
 
-from archive.coinbase_pro.models import CoinbaseProTransaction
-from archive.coinbase_pro.parser import parse_coinbase_pro
+from archive.exchange.coinbase_pro.models import CoinbaseProTransaction
+from archive.exchange.coinbase_pro.parser import parse_coinbase_pro
 from archive.ir.models import IRTransaction
 
 

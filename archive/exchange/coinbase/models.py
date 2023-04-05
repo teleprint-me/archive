@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from archive.coinbase.note import CoinbaseNote
+from archive.exchange.coinbase.note import CoinbaseNote
 
 
 class CoinbaseColumns(Enum):

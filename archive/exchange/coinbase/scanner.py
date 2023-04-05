@@ -1,7 +1,10 @@
 from pathlib import Path
 
-from archive.coinbase.models import CoinbaseColumns, CoinbaseTransaction
-from archive.coinbase.note import CoinbaseNote, CoinbaseNoteColumns
+from archive.exchange.coinbase.models import (
+    CoinbaseColumns,
+    CoinbaseTransaction,
+)
+from archive.exchange.coinbase.note import CoinbaseNote, CoinbaseNoteColumns
 from archive.tools.io import read_csv
 
 
