@@ -13,16 +13,20 @@ def format_transactions(
     transactions: list[GLTransaction],
 ) -> list[GLTransaction]:
     for transaction in transactions:
-        # Format datetime
-        date_acquired = iso8601.parse_date(transaction.date_acquired)
-        date_sold = iso8601.parse_date(transaction.date_sold)
-        transaction.date_acquired = date_acquired.strftime(
-            "%Y-%m-%d %H:%M:%S.%f"
-        )
-        transaction.date_sold = date_sold.strftime("%Y-%m-%d %H:%M:%S.%f")
-        # Format transaction type
-        transaction_type = transaction.transaction_type.capitalize()
-        transaction.transaction_type = transaction_type
+        if bool(transaction.date_acquired):
+            date_acquired = iso8601.parse_date(transaction.date_acquired)
+            transaction.date_acquired = date_acquired.strftime(
+                "%Y-%m-%d %H:%M:%S.%f"
+            )
+
+        if bool(transaction.date_sold):
+            date_sold = iso8601.parse_date(transaction.date_sold)
+            transaction.date_sold = date_sold.strftime("%Y-%m-%d %H:%M:%S.%f")
+
+        if bool(transaction.transaction_type):
+            transaction_type = transaction.transaction_type.capitalize()
+            transaction.transaction_type = transaction_type
+
     return transactions
 
 
