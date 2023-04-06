@@ -31,10 +31,10 @@ def get_f8949_csv_table(
             "Description of property",
             "Date Acquired",
             "Date Sold or Disposed of",
-            "Proceeds",
+            "Sales Proceeds",
             "Cost or Other Basis",
-            "Order Size",
-            "Adjustments to Gain or Loss",
+            "Codes",
+            "Adjustments to Gain or (Loss)",
             "Gain or (Loss)",
         ]
     ]
