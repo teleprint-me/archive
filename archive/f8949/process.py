@@ -1,7 +1,9 @@
+from datetime import datetime
 from pathlib import Path
 from typing import Optional, Union
 
 import iso8601
+from iso8601.iso8601 import ParseError
 
 from archive.f8949.models import F8949Transaction
 from archive.f8949.parser import parse_f8949
@@ -25,7 +27,11 @@ def filter_transactions_by_date(
     filtered_transactions = []
 
     for transaction in transactions:
-        date_sold = iso8601.parse_date(transaction.date_sold)
+        try:
+            date_sold = iso8601.parse_date(transaction.date_sold)
+        except (ParseError,):
+            dt = datetime.strptime(transaction.date_sold, "%m/%d/%y")
+            date_sold = dt.strftime("%Y-%m-%d")
 
         if has_start and has_end:
             if start_date <= date_sold <= end_date:
@@ -43,13 +49,27 @@ def format_datetime(
     transactions: list[F8949Transaction],
 ) -> list[F8949Transaction]:
     for transaction in transactions:
-        # Format datetime
-        date_acquired = iso8601.parse_date(transaction.date_acquired)
-        date_sold = iso8601.parse_date(transaction.date_sold)
+        try:
+            date_acquired = iso8601.parse_date(transaction.date_acquired)
+        except (ParseError,):
+            dt = datetime.strptime(transaction.date_acquired, "%m/%d/%y")
+            date_acquired_str = dt.strftime("%Y-%m-%d")
+            date_acquired = iso8601.parse_date(date_acquired_str)
+            transaction.date_acquired = date_acquired_str
+
+        try:
+            date_sold = iso8601.parse_date(transaction.date_sold)
+        except (ParseError,):
+            dt = datetime.strptime(transaction.date_sold, "%m/%d/%y")
+            date_sold_str = dt.strftime("%Y-%m-%d")
+            date_sold = iso8601.parse_date(date_sold_str)
+            transaction.date_sold = date_sold_str
+
+        transaction.date_sold = date_sold.strftime("%Y-%m-%d %H:%M:%S.%f")
         transaction.date_acquired = date_acquired.strftime(
             "%Y-%m-%d %H:%M:%S.%f"
         )
-        transaction.date_sold = date_sold.strftime("%Y-%m-%d %H:%M:%S.%f")
+
     return transactions
 
 
@@ -69,5 +89,5 @@ def process_f8949(
     csv_f8949_transactions = get_f8949_csv_table(formatted_transactions)
     print_csv(csv_f8949_transactions)
 
-    output_file_path = Path(f"data/out/f8949-{label}.csv")
+    output_file_path = Path(f"data/f8949/f8949-{label}.csv")
     write_csv(output_file_path, csv_f8949_transactions)
