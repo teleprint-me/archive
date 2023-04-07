@@ -1,3 +1,6 @@
+from pathlib import Path
+from typing import Union
+
 from archive.f1099.parser import (
     convert_robinhood_to_f8949_transactions,
     merge_f8949_transactions,
@@ -10,7 +13,7 @@ from archive.tools.sort import sort_csv
 
 
 def process_f1099(
-    form8949_filepath: str,
+    form8949_filepath: Union[str, Path],
     robinhood1099_filepath: str,
     asset: str,
     label: str,

@@ -78,7 +78,7 @@ def process_f8949(
     label: str,
     start_date: Optional[str] = "",
     end_date: Optional[str] = "",
-) -> None:
+) -> Union[str, Path]:
     scanned_transactions = scan_f8949_transactions(file_path)
     filtered_transactions = filter_transactions_by_date(
         scanned_transactions, start_date, end_date
@@ -91,3 +91,5 @@ def process_f8949(
 
     output_file_path = Path(f"data/f8949/f8949-{label}.csv")
     write_csv(output_file_path, csv_f8949_transactions)
+
+    return output_file_path
