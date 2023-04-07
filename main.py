@@ -1,6 +1,7 @@
 import sys
 from argparse import ArgumentParser, Namespace
 
+from archive.f1099.process import process_f1099
 from archive.f8949.process import process_f8949
 from archive.gl.process import process_gl
 from archive.ir.process import process_ir
@@ -17,6 +18,12 @@ def get_arguments() -> Namespace:
         nargs=2,
         metavar=("EXCHANGE", "FILE_PATH"),
         help="Name of the exchange and path to the input CSV file. Repeat this argument for multiple exchanges.",
+    )
+
+    parser.add_argument(
+        "--robinhood1099",
+        type=str,
+        help="The filepath to the Robinhood 1099 CSV file.",
     )
 
     parser.add_argument(
@@ -59,7 +66,20 @@ def main() -> None:
     gl_file_path = process_gl(args.asset, args.label, "data/ir/")
 
     # Step 3: Process GL transactions and generate Form 8949 CSV
-    process_f8949(gl_file_path, args.label, args.start_date, args.end_date)
+    f8949_file_path = process_f8949(
+        gl_file_path, args.label, args.start_date, args.end_date
+    )
+
+    # Step 4: Process F1099 Transactions and generate Form 8949 CSV
+    if args.robinhood1099:
+        process_f1099(
+            f8949_file_path,
+            args.robinhood1099,
+            args.asset,
+            args.label,
+            args.start_date,
+            args.end_date,
+        )
 
 
 if __name__ == "__main__":
