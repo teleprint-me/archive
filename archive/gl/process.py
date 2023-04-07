@@ -31,7 +31,9 @@ def format_transactions(
 
 
 def process_gl(
-    asset: str, label: str, directory: Union[str, Path]
+    asset: str,
+    label: str,
+    directory: Union[str, Path],
 ) -> Union[str, Path]:
     gl_transactions = scan_gl_transactions(asset, directory)
     gl_transactions = parse_gl(gl_transactions)
@@ -39,7 +41,7 @@ def process_gl(
     formatted_transactions = format_transactions(gl_transactions)
 
     csv_gl_transactions = get_gl_csv_table(formatted_transactions)
-    print_csv(csv_gl_transactions)
+    print_csv(csv_gl_transactions, width=320)
 
     output_file_path = Path(f"data/gl/gl-{label}.csv")
     write_csv(output_file_path, csv_gl_transactions)

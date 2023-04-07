@@ -134,10 +134,37 @@ def build_gl_transactions(
     return transactions
 
 
+def remove_duplicate_transactions(
+    transactions: list[IRTransaction],
+) -> list[IRTransaction]:
+    seen = set()
+    filtered_transactions = []
+
+    for transaction in transactions:
+        transaction_hash = hash(
+            (
+                transaction.datetime,
+                transaction.transaction_type,
+                transaction.product,
+                transaction.order_size,
+                transaction.market_price,
+                transaction.order_fee,
+                transaction.exchange,
+            )
+        )
+
+        if transaction_hash not in seen:
+            seen.add(transaction_hash)
+            filtered_transactions.append(transaction)
+
+    return filtered_transactions
+
+
 def scan_gl_transactions(
     asset: str, directory: Union[str, Path]
 ) -> list[GLTransaction]:
     csv_table = read_ir_transactions(directory)
     transactions = build_ir_transactions(csv_table)
+    transactions = remove_duplicate_transactions(transactions)
     filtered_transactions = filter_transactions(asset, transactions)
     return build_gl_transactions(filtered_transactions)
