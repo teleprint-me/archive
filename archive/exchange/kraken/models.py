@@ -74,7 +74,7 @@ class KrakenTransaction:
             return products[self.pair]
         except KeyError:
             raise KeyError(
-                f"Unknown Kraken product: '{self.pair}'. Please add it to the 'products' dictionary in 'kraken/transaction.py'."
+                f"Unknown Kraken product: '{self.pair}'. Please add it to the 'products' dictionary in 'archive/exchange/kraken/models.py'."
             )
 
     @property
@@ -87,7 +87,7 @@ class KrakenTransaction:
             return self.product.split("-")[0]
         except IndexError:
             raise KeyError(
-                f"Unexpected Kraken product format: '{self.product}'. Please check the 'products' dictionary in 'kraken/transaction.py'."
+                f"Unexpected Kraken product format: '{self.product}'. Please check the 'products' dictionary in 'archive/exchange/kraken/models.py'."
             )
 
     @property
@@ -100,15 +100,15 @@ class KrakenTransaction:
             return self.product.split("-")[1]
         except IndexError:
             raise KeyError(
-                f"Unexpected Kraken product format: '{self.product}'. Please check the 'products' dictionary in 'kraken/transaction.py'."
+                f"Unexpected Kraken product format: '{self.product}'. Please check the 'products' dictionary in 'archive/exchange/kraken/models.py'."
             )
 
     @property
-    def is_fiat(self) -> bool:
+    def fiat(self) -> list[str]:
         """
-        Returns True if the quote asset of the transaction's product is a fiat currency.
+        Returns a list of fiat currencies.
         """
-        return self.quote in [
+        return [
             "USD",
             "GBP",
             "EUR",
@@ -118,6 +118,35 @@ class KrakenTransaction:
             "AUD",
             "NZD",
         ]
+
+    @property
+    def stablecoins(self) -> list[str]:
+        """
+        Returns a list of stablecoins.
+        """
+        return [
+            "USDT",
+            "USDC",
+            "DAI",
+            "PAX",
+            "BUSD",
+            "HUSD",
+            "TUSD",
+        ]
+
+    @property
+    def is_fiat(self) -> bool:
+        """
+        Returns True if the quote asset of the transaction's product is a fiat currency.
+        """
+        return self.quote in self.fiat
+
+    @property
+    def is_stablecoin(self) -> bool:
+        """
+        Returns True if the quote asset of the transaction's product is a stablecoin.
+        """
+        return self.quote in self.stablecoins
 
     def should_keep(self, included_assets: list[str]) -> bool:
         """

@@ -26,16 +26,16 @@ def filter_transactions(
     return filtered_transactions
 
 
-def get_missing_transaction(
+def get_missing_crypto_to_crypto(
     transaction: KrakenTransaction,
-) -> tuple[KrakenTransaction, KrakenTransaction]:
+) -> list[KrakenTransaction]:
     """Get missing transaction data for the given crypto-to-crypto transaction.
 
     Args:
         transaction: A KrakenTransaction instance.
 
     Returns:
-        A 2-tuple containing missing KrakenTransaction's.
+        A list containing missing KrakenTransaction's.
     """
 
     # 1. Determine the Product, Base Product, and Quote Product
@@ -148,7 +148,90 @@ def get_missing_transaction(
     else:
         raise ValueError(f"Invalid transaction type {transaction.type}")
 
-    return missing_sell, missing_buy
+    return [missing_sell, missing_buy]
+
+
+def get_missing_crypto_to_stablecoin(
+    transaction: KrakenTransaction,
+) -> list[KrakenTransaction]:
+    """Get missing transaction for a crypto-to-stablecoin transaction in Kraken.
+
+    Args:
+        transaction: A KrakenTransaction.
+
+    Returns:
+        A list of KrakenTransaction's derived from the transaction.
+    """
+
+    # 1. Determine the Product, Base Product, and Quote Product
+    product_info = get_asset_info(transaction.pair)
+    if len(transaction.pair) == 6 or len(transaction.pair) == 7:
+        base_product = f"{product_info['base']}USD"
+        quote_product = f"{product_info['quote']}USD"
+    else:
+        base_product = f"{product_info['base']}ZUSD"
+        quote_product = f"{product_info['quote']}ZUSD"
+
+    # 2. Determine the Transaction Size for both Base and Quote Products
+    base_size = transaction.vol
+    quote_size = transaction.cost
+
+    # 3. Determine Market Price for the Quote Product
+    quote_response = get_spot_price(quote_product, transaction.time)
+    quote_price = float(quote_response["data"]["amount"])
+
+    # 4. Calculate base transaction variables based on quote_price
+    base_price = transaction.price / quote_price
+    base_fee = transaction.fee / quote_price
+    base_total = quote_size / quote_price
+
+    # 5. Calculate quote_total based on base_total
+    quote_total = base_total
+
+    # Label each product transaction as a BUY or SELL
+    if transaction.type == "buy":
+        base_side = "buy"
+        quote_side = "sell"
+    else:
+        base_side = "sell"
+        quote_side = "buy"
+
+    # Create the missing transactions for base product and quote product
+    base_transaction = KrakenTransaction(
+        txid=transaction.txid,
+        order_txid=transaction.order_txid,
+        pair=base_product,
+        time=transaction.time,
+        type=base_side,
+        order_type=transaction.order_type,
+        price=base_price,
+        cost=base_total,
+        fee=base_fee,
+        vol=base_size,
+        margin=transaction.margin,
+        misc=transaction.misc,
+        ledgers=transaction.ledgers,
+        notes=transaction.notes,
+    )
+
+    quote_transaction = KrakenTransaction(
+        txid=transaction.txid,
+        order_txid=transaction.order_txid,
+        pair=quote_product,
+        time=transaction.time,
+        type=quote_side,
+        order_type=transaction.order_type,
+        price=quote_price,
+        cost=quote_total,
+        fee=0.0,
+        vol=quote_size,
+        margin=transaction.margin,
+        misc=transaction.misc,
+        ledgers=transaction.ledgers,
+        notes=transaction.notes,
+    )
+
+    return [base_transaction, quote_transaction]
 
 
 def get_missing_transactions(
@@ -163,17 +246,26 @@ def get_missing_transactions(
         A list of KrakenTransaction's derived from a KrakenNote's.
     """
 
-    conversions = []
+    crypto_to_crypto = []
+    crypto_to_stablecoin = []
     missing_transactions = []
 
-    # extract converted transactions
+    # classify transactions
     for transaction in transactions:
         if not transaction.is_fiat:
-            conversions.append(transaction)
+            if transaction.is_stablecoin:
+                crypto_to_stablecoin.append(transaction)
+            else:
+                crypto_to_crypto.append(transaction)
 
-    # extract missing transactions
-    for convert in conversions:
-        missing_transaction = get_missing_transaction(convert)
+    # process crypto-to-crypto transactions
+    for convert in crypto_to_crypto:
+        missing_transaction = get_missing_crypto_to_crypto(convert)
+        missing_transactions.extend(missing_transaction)
+
+    # process crypto-to-stablecoin transactions
+    for convert in crypto_to_stablecoin:
+        missing_transaction = get_missing_crypto_to_stablecoin(convert)
         missing_transactions.extend(missing_transaction)
 
     return missing_transactions
