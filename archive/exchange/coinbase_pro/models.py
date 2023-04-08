@@ -45,12 +45,29 @@ class CoinbaseProTransaction:
         return self.total_unit
 
     @property
-    def is_fiat(self) -> bool:
-        return self.quote in [
+    def fiat(self) -> list[str]:
+        return [
             "USD",
             "GBP",
             "EUR",
         ]
+
+    @property
+    def stablecoins(self) -> list[str]:
+        return [
+            "USDC",
+            "USDT",
+            "DAI",
+            "TUSD",
+        ]
+
+    @property
+    def is_fiat(self) -> bool:
+        return self.quote in self.fiat
+
+    @property
+    def is_stablecoin(self) -> bool:
+        return self.quote in self.stablecoins
 
     def should_keep(self, included_assets: list[str]) -> bool:
         return (
