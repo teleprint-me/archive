@@ -4,6 +4,9 @@ from typing import Optional
 import requests
 
 
+# TODO: Update the function to return a string or raise an exception
+# NOTE: Changing this code will ripple throughout the code base as this
+# is a core function and is used in more than one place.
 def get_spot_price(currency_pair: str, datetime: Optional[str] = None) -> dict:
     """Perform a GET request to the coinbase API path for spot prices.
 
