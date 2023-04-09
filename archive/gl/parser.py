@@ -64,7 +64,10 @@ def calculate_total_transaction(
         )
         total.gain_or_loss += sum(tx.gain_or_loss for tx in block)
 
-    total.acb_per_share = total.cost_or_other_basis / total.order_size
+    if total.order_size != 0:
+        total.acb_per_share = total.cost_or_other_basis / total.order_size
+    else:
+        total.acb_per_share = 0
 
     return total
 
