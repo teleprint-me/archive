@@ -1,3 +1,5 @@
+import time
+
 import requests
 from dateutil.parser import parse
 
@@ -28,6 +30,9 @@ def get_spot_price(currency_pair: str, datetime: str) -> dict:
     Returns:
         A dictionary containing the spot price information for the currency pair and datetime.
     """
+    # The rate limit of the API requests, in seconds.
+    # The rate limit is used to block a request for at least 1.00 second.
+    time.sleep(1)
 
     # Calculate the timestamp of the datetime string
     timestamp = int(parse(datetime).timestamp())
