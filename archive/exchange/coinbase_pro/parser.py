@@ -4,29 +4,6 @@ from archive.exchange.coinbase.api import get_spot_price
 from archive.exchange.coinbase_pro.models import CoinbaseProTransaction
 
 
-def filter_transactions(
-    transactions: list[CoinbaseProTransaction],
-    included_assets: list[str],
-) -> list[CoinbaseProTransaction]:
-    """Filter transactions based on product.
-
-    Args:
-        transactions: A list of CoinbaseProTransactions.
-        included_products: A list of strings representing the desired products.
-
-    Returns
-        A list of filtered CoinbaseProTransaction's.
-    """
-
-    filtered_transactions = []
-
-    for transaction in transactions:
-        if transaction.should_keep(included_assets):
-            filtered_transactions.append(transaction)
-
-    return filtered_transactions
-
-
 def get_missing_crypto_to_crypto(
     transaction: CoinbaseProTransaction,
 ) -> list[CoinbaseProTransaction]:
@@ -250,27 +227,6 @@ def get_missing_transactions(
     return missing_transactions
 
 
-def exclude_crypto_to_crypto_transactions(
-    transactions: list[CoinbaseProTransaction],
-) -> list[CoinbaseProTransaction]:
-    """Exclude crypto-to-crypto transactions from the list of transactions.
-
-    Args:
-        transactions: A list of CoinbaseProTransaction's.
-
-    Returns:
-        A list of CoinbaseProTransaction's with crypto-to-crypto transactions excluded.
-    """
-
-    processed_transactions = []
-
-    for transaction in transactions:
-        if transaction.is_fiat:
-            processed_transactions.append(transaction)
-
-    return processed_transactions
-
-
 def parse_coinbase_pro(
     transactions: list[CoinbaseProTransaction],
     included_assets: list[str],
@@ -287,10 +243,17 @@ def parse_coinbase_pro(
         A list of filtered CoinbaseProTransaction's.
     """
 
-    filtered_transactions = filter_transactions(transactions, included_assets)
+    # Include user selected assets
+    included_transactions = [
+        tx for tx in transactions if tx.should_keep(included_assets)
+    ]
 
+    # Construct tx's from extracted data for crypto-to-crypto tx's
     if include_missing:
-        missing_transactions = get_missing_transactions(filtered_transactions)
-        filtered_transactions.extend(missing_transactions)
+        missing_transactions = get_missing_transactions(included_transactions)
+        included_transactions.extend(missing_transactions)
 
-    return exclude_crypto_to_crypto_transactions(filtered_transactions)
+    # Exclude crypto-to-crypto assets
+    processed_transactions = [tx for tx in included_transactions if tx.is_fiat]
+
+    return processed_transactions
