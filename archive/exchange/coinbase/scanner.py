@@ -75,7 +75,7 @@ def csv_row_to_coinbase_note(csv_row: list[str]) -> CoinbaseNote:
     )
 
 
-def scan_coinbase(
+def scan_coinbase_transactions(
     filepath: str | Path,
 ) -> list[CoinbaseTransaction]:
     """Scan the CSV file and extract Coinbase transaction data."""

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 
-# define a mapping between exchange product names and a standard naming convention
+# Define a mapping between exchange product names and a standard naming convention
 products = {
     # Stable Coins
     "USDCUSD": "USDC-USD",
@@ -22,7 +22,7 @@ products = {
     "XETHXXBT": "ETH-BTC",
     "XLTCXXBT": "LTC-BTC",
     "XXMRXXBT": "XMR-BTC",
-    # add more mappings as needed
+    # Add more mappings as needed
 }
 
 

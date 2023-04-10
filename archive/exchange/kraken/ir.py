@@ -5,27 +5,6 @@ from archive.exchange.kraken.parser import parse_kraken
 from archive.ir.models import IRTransaction
 
 
-def get_kraken_ir_row(transaction: KrakenTransaction) -> IRTransaction:
-    """Create an IRTransaction from a KrakenTransaction.
-
-    Args:
-        transaction: A KrakenTransaction.
-
-    Returns:
-        An IRTransaction.
-    """
-    return IRTransaction(
-        exchange="kraken",
-        product=transaction.product,
-        datetime=transaction.time,
-        transaction_type=transaction.type.capitalize(),
-        order_size=transaction.vol,
-        market_price=transaction.price,
-        order_fee=transaction.fee,
-        order_note=transaction.notes,
-    )
-
-
 def build_kraken_ir(
     transactions: list[KrakenTransaction],
     included_assets: list[str],
@@ -48,7 +27,17 @@ def build_kraken_ir(
     )
 
     for transaction in parsed_transactions:
-        ir_transaction = get_kraken_ir_row(transaction)
+        ir_transaction = IRTransaction(
+            exchange="kraken",
+            product=transaction.product,
+            datetime=transaction.time,
+            transaction_type=transaction.type.capitalize(),
+            order_size=transaction.vol,
+            market_price=transaction.price,
+            order_fee=transaction.fee,
+            order_note=transaction.notes,
+        )
+
         ir_transactions.append(ir_transaction)
 
     return ir_transactions
