@@ -2,8 +2,22 @@ from dataclasses import dataclass
 from enum import Enum
 
 
-class CoinbaseProColumns(Enum):
-    """Enumeration representing columns in a Coinbase Pro CSV dataset."""
+class CoinbaseProAccountColumn(Enum):
+    """Enumeration representing columns in a Coinbase Pro Account CSV dataset."""
+
+    PORTFOLIO = 0
+    TYPE = 1
+    TIME = 2
+    AMOUNT = 3
+    BALANCE = 4
+    UNIT = 5  # represents given asset, e.g. BTC
+    TRANSFER_ID = 6
+    TRADE_ID = 7
+    ORDER_ID = 8
+
+
+class CoinbaseProFillColumn(Enum):
+    """Enumeration representing columns in a Coinbase Pro Fills CSV dataset."""
 
     PORTFOLIO = 0
     TRADE_ID = 1
@@ -11,11 +25,11 @@ class CoinbaseProColumns(Enum):
     SIDE = 3
     CREATED_AT = 4
     SIZE = 5
-    SIZE_UNIT = 6  # represents the base product
+    SIZE_UNIT = 6  # represents base product, e.g. BTC
     PRICE = 7
     FEE = 8
     TOTAL = 9
-    TOTAL_UNIT = 10  # represents the quote product
+    TOTAL_UNIT = 10  # represents quote product, e.g. USD
     NOTES = 11
 
 
