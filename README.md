@@ -48,6 +48,9 @@ CSV output. Additionally, it also processes the Robinhood 1099 file if provided.
 ```sh
 $ python main.py --exchange-file exchange_name data/in/exchange_name.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
 ```
+#### Note
+
+Gains and losses are calculated as a [Weighted Average Cost](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
 
 ### build_ir.py
 
@@ -85,6 +88,10 @@ in a unified format.
 ```sh
 $ python build_gl.py data/ir/ --asset BTC
 ```
+
+#### Note
+
+Gains and losses are calculated as a [Weighted Average Cost](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
 
 ### build_f8949.py
 
