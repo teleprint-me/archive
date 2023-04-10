@@ -1,19 +1,45 @@
 # Archive
 
-Convert brokerage CSV transactions to a unified format, Calculate gains and losses, and create Form-8949 for filing taxes.
+Convert brokerage CSV transactions to a unified format, Calculate gains and
+losses, and create Form-8949 for filing taxes.
+
+## License
+
+```plaintext
+Archive - Convert brokerage CSV transactions to a unified format, Calculate gains and losses, and create Form-8949 for filing taxes.
+Copyright (C) 2022  teleprint-me
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see https://www.gnu.org/licenses/.
+```
 
 ## Usage
 
 ### main.py
 
-The `main.py` script processes input CSV files for each exchange, generates intermediate results (IR), processes the IR transactions to generate GL transactions, and then processes the GL transactions to generate the Form 8949 CSV output. Additionally, it also processes the Robinhood 1099 file if provided.
+The `main.py` script processes input CSV files for each exchange, generates
+intermediate results (IR), processes the IR transactions to generate GL
+transactions, and then processes the GL transactions to generate the Form 8949
+CSV output. Additionally, it also processes the Robinhood 1099 file if provided.
 
 #### Arguments
 
--   `--exchange-file`: A list of exchange names and file paths for their respective input CSV files.
+-   `--exchange-file`: A list of exchange names and file paths for their
+    respective input CSV files.
 -   `--robinhood1099`: The file path for the Robinhood 1099 CSV file (optional).
 -   `--asset`: The base asset symbol (default is "BTC").
--   `--label`: A label to be appended to the output file name (default is "bitcoin").
+-   `--label`: A label to be appended to the output file name (default is
+    "bitcoin").
 -   `--start-date`: The start date for transactions to be included (optional).
 -   `--end-date`: The end date for transactions to be included (optional).
 
@@ -25,13 +51,16 @@ $ python main.py --exchange-file exchange_name data/in/exchange_name.csv --robin
 
 ### build_ir.py
 
-The `build_ir.py` script processes exchange CSV files to generate intermediate results (IR) in a unified format.
+The `build_ir.py` script processes exchange CSV files to generate intermediate
+results (IR) in a unified format.
 
 #### Arguments
 
--   `--exchange-file`: A list of exchange names and file paths for their respective input CSV files.
+-   `--exchange-file`: A list of exchange names and file paths for their
+    respective input CSV files.
 -   `--asset`: The base asset symbol (default is "BTC").
--   `--label`: A label to be appended to the output file name (default is "bitcoin").
+-   `--label`: A label to be appended to the output file name (default is
+    "bitcoin").
 
 #### Example
 
@@ -41,13 +70,15 @@ $ python build_ir.py --exchange-file exchange_name data/in/exchange_name.csv --a
 
 ### build_gl.py
 
-The `build_gl.py` script processes IR transactions and generates GL transactions in a unified format.
+The `build_gl.py` script processes IR transactions and generates GL transactions
+in a unified format.
 
 #### Arguments
 
 -   `directory`: The directory containing the IR CSV files.
 -   `--asset`: The base asset symbol (default is "BTC").
--   `--label`: A label to be appended to the output file name (default is "bitcoin").
+-   `--label`: A label to be appended to the output file name (default is
+    "bitcoin").
 
 #### Example
 
@@ -57,14 +88,17 @@ $ python build_gl.py data/ir/ --asset BTC
 
 ### build_f8949.py
 
-The `build_f8949.py` script processes GL transactions and generates a Form 8949 CSV output.
+The `build_f8949.py` script processes GL transactions and generates a Form 8949
+CSV output.
 
 #### Arguments
 
 -   `filepath`: The filepath to the gains and losses CSV file.
 -   `--label`: A label to append to the output file name (default is "bitcoin").
--   `--start_date`: The start date for the range of transactions (YYYY-MM-DD, optional).
--   `--end_date`: The end date for the range of transactions (YYYY-MM-DD, optional).
+-   `--start_date`: The start date for the range of transactions (YYYY-MM-DD,
+    optional).
+-   `--end_date`: The end date for the range of transactions (YYYY-MM-DD,
+    optional).
 
 #### Example
 
@@ -80,10 +114,13 @@ The `build_f1099.py` script merges the Form 8949 and Robinhood 1099 datasets.
 
 -   `--form8949`: The filepath to the existing Form 8949 CSV file.
 -   `--robinhood1099`: The filepath to the Robinhood 1099 CSV file.
--   `--asset`: The base asset symbol to be included (e.g., BTC, ETH; default is "BTC").
+-   `--asset`: The base asset symbol to be included (e.g., BTC, ETH; default is
+    "BTC").
 -   `--label`: A label to append to the output file name (default is "bitcoin").
--   `--start_date`: The start date for the range of transactions (YYYY-MM-DD, optional).
--   `--end_date`: The end date for the range of transactions (YYYY-MM-DD, optional).
+-   `--start_date`: The start date for the range of transactions (YYYY-MM-DD,
+    optional).
+-   `--end_date`: The end date for the range of transactions (YYYY-MM-DD,
+    optional).
 
 #### Example
 
