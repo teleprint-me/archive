@@ -21,12 +21,8 @@ def get_missing_crypto_to_crypto(
     quote_product = f"{transaction.quote}-USD"
 
     # Determine Market Price for both Base and Quote Products
-    base_response = get_spot_price(base_product, transaction.created_at)
-    quote_response = get_spot_price(quote_product, transaction.created_at)
-
-    # Extract the market price from the responses
-    base_price = float(base_response["data"]["amount"])
-    quote_price = float(quote_response["data"]["amount"])
+    base_price = get_spot_price(base_product, transaction.created_at)
+    quote_price = get_spot_price(quote_product, transaction.created_at)
 
     # Determine the Transaction Total for both Base and Quote Products
     base_total = base_price * transaction.size
@@ -138,8 +134,7 @@ def get_missing_crypto_to_stablecoin(
     quote_size = transaction.total
 
     # Calculate quote_price
-    quote_response = get_spot_price(quote_product, transaction.created_at)
-    quote_price = float(quote_response["data"]["amount"])
+    quote_price = get_spot_price(quote_product, transaction.created_at)
 
     # Calculate base transaction variables based on quote_price
     base_price = transaction.price / quote_price

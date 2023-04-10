@@ -2,23 +2,7 @@ from typing import Optional
 
 from archive.exchange.coinbase.models import CoinbaseTransaction
 from archive.exchange.coinbase.parser import parse_coinbase
-from archive.exchange.coinbase.scanner import get_coinbase_note_as_string
 from archive.ir.models import IRTransaction
-
-
-def get_coinbase_ir_row(
-    transaction: CoinbaseTransaction,
-) -> IRTransaction:
-    return IRTransaction(
-        exchange="coinbase",
-        product=transaction.currency_pair,
-        datetime=transaction.timestamp,
-        transaction_type=transaction.transaction_type,
-        order_size=float(transaction.quantity),
-        market_price=float(transaction.spot_price),
-        order_fee=float(transaction.fees),
-        order_note=get_coinbase_note_as_string(transaction.notes),
-    )
 
 
 def build_coinbase_ir(
@@ -44,7 +28,33 @@ def build_coinbase_ir(
         )
 
     for transaction in parsed_transactions:
-        ir_transaction = get_coinbase_ir_row(transaction)
+        # Format CoinbaseNote as a string.
+        # Note Format: 'verb size base preposition determiner quote'
+        note_parts = [
+            transaction.notes.verb,
+            transaction.notes.size,
+            transaction.notes.base,
+            transaction.notes.preposition,
+            transaction.notes.determiner,
+            transaction.notes.quote,
+        ]
+
+        filtered_note_parts = filter(str, note_parts)
+
+        order_note = " ".join(filtered_note_parts)
+
+        # Convert from CoinbaseTransaction to IRTransaction
+        ir_transaction = IRTransaction(
+            exchange="coinbase",
+            product=transaction.currency_pair,
+            datetime=transaction.timestamp,
+            transaction_type=transaction.transaction_type,
+            order_size=float(transaction.quantity),
+            market_price=float(transaction.spot_price),
+            order_fee=float(transaction.fees),
+            order_note=order_note,
+        )
+
         ir_transactions.append(ir_transaction)
 
     return ir_transactions

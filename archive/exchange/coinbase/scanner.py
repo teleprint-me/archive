@@ -1,14 +1,15 @@
 from pathlib import Path
 
 from archive.exchange.coinbase.models import (
-    CoinbaseColumns,
+    CoinbaseColumn,
+    CoinbaseNote,
+    CoinbaseNoteColumn,
     CoinbaseTransaction,
 )
-from archive.exchange.coinbase.note import CoinbaseNote, CoinbaseNoteColumns
 from archive.tools.io import read_csv
 
 
-def get_coinbase_note(csv_row: list[str]) -> CoinbaseNote:
+def csv_row_to_coinbase_note(csv_row: list[str]) -> CoinbaseNote:
     """Create a CoinbaseNote instance from a note string.
 
     Args:
@@ -19,11 +20,12 @@ def get_coinbase_note(csv_row: list[str]) -> CoinbaseNote:
     Returns:
         A CoinbaseNote instance.
     """
+
     # Extract "Notes", "Asset", and "Transaction Type" from the given
     # transaction record.
-    notes = csv_row[CoinbaseColumns.NOTES.value].split(" ")
-    product = csv_row[CoinbaseColumns.ASSET.value]
-    transaction_type = csv_row[CoinbaseColumns.TRANSACTION_TYPE.value]
+    notes = csv_row[CoinbaseColumn.NOTES.value].split(" ")
+    product = csv_row[CoinbaseColumn.ASSET.value]
+    transaction_type = csv_row[CoinbaseColumn.TRANSACTION_TYPE.value]
 
     # Address Grammar
     #   - Description: The `Address Grammar` always consists of a single token.
@@ -31,7 +33,7 @@ def get_coinbase_note(csv_row: list[str]) -> CoinbaseNote:
     #   - Sample: "xxxxxxxxxxxxxxxxxxxx68dd"
     if len(notes) == 1:
         return CoinbaseNote(
-            determiner=notes[CoinbaseNoteColumns.VERB.value],
+            determiner=notes[CoinbaseNoteColumn.VERB.value],
             product=product,
             transaction_type=transaction_type,
         )
@@ -40,18 +42,18 @@ def get_coinbase_note(csv_row: list[str]) -> CoinbaseNote:
     #   - Description: The `Trade Grammar` always consists of 6 tokens.
     #   - Grammar: `VERB SIZE BASE PREPOSITION DETERMINER QUOTE`
     #   - Sample: "Bought 0.00094589 BTC for $10.00 USD"
-    if notes[CoinbaseNoteColumns.VERB.value] in [
+    if notes[CoinbaseNoteColumn.VERB.value] in [
         "Bought",
         "Sold",
         "Converted",
     ]:
         return CoinbaseNote(
-            verb=notes[CoinbaseNoteColumns.VERB.value],
-            size=notes[CoinbaseNoteColumns.SIZE.value],
-            base=notes[CoinbaseNoteColumns.BASE.value],
-            preposition=notes[CoinbaseNoteColumns.PREPOSITION.value],
-            determiner=notes[CoinbaseNoteColumns.DETERMINER.value],
-            quote=notes[CoinbaseNoteColumns.QUOTE.value],
+            verb=notes[CoinbaseNoteColumn.VERB.value],
+            size=notes[CoinbaseNoteColumn.SIZE.value],
+            base=notes[CoinbaseNoteColumn.BASE.value],
+            preposition=notes[CoinbaseNoteColumn.PREPOSITION.value],
+            determiner=notes[CoinbaseNoteColumn.DETERMINER.value],
+            quote=notes[CoinbaseNoteColumn.QUOTE.value],
             product=product,
             transaction_type=transaction_type,
         )
@@ -63,109 +65,38 @@ def get_coinbase_note(csv_row: list[str]) -> CoinbaseNote:
     #   - Grammar: `VERB SIZE BASE PREPOSITION DETERMINER`
     #   - Sample: "Sent 0.00188372 BTC to xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx7Qih"
     return CoinbaseNote(
-        verb=notes[CoinbaseNoteColumns.VERB.value],
-        size=notes[CoinbaseNoteColumns.SIZE.value],
-        base=notes[CoinbaseNoteColumns.BASE.value],
-        preposition=notes[CoinbaseNoteColumns.PREPOSITION.value],
-        determiner=" ".join(notes[CoinbaseNoteColumns.DETERMINER.value :]),
+        verb=notes[CoinbaseNoteColumn.VERB.value],
+        size=notes[CoinbaseNoteColumn.SIZE.value],
+        base=notes[CoinbaseNoteColumn.BASE.value],
+        preposition=notes[CoinbaseNoteColumn.PREPOSITION.value],
+        determiner=" ".join(notes[CoinbaseNoteColumn.DETERMINER.value :]),
         product=product,
         transaction_type=transaction_type,
     )
-
-
-def get_coinbase_note_as_string(coinbase_note: CoinbaseNote) -> str:
-    """Return the note as a string in the format 'verb size base preposition determiner quote'"""
-    note_parts = [
-        coinbase_note.verb,
-        coinbase_note.size,
-        coinbase_note.base,
-        coinbase_note.preposition,
-        coinbase_note.determiner,
-        coinbase_note.quote,
-    ]
-    filtered_note_parts = filter(str, note_parts)
-    return " ".join(filtered_note_parts)
-
-
-def get_coinbase_transaction(csv_row: list[str]) -> CoinbaseTransaction:
-    """Build a CoinbaseTransaction from a CSV row and a notes row.
-
-    Args:
-        csv_row: A list representing a row from a Coinbase CSV file.
-
-    Returns:
-        CoinbaseTransaction: A CoinbaseTransaction object representing the transaction.
-    """
-    return CoinbaseTransaction(
-        timestamp=csv_row[CoinbaseColumns.TIMESTAMP.value],
-        transaction_type=csv_row[CoinbaseColumns.TRANSACTION_TYPE.value],
-        asset=csv_row[CoinbaseColumns.ASSET.value],
-        quantity=csv_row[CoinbaseColumns.QUANTITY.value],
-        currency=csv_row[CoinbaseColumns.CURRENCY.value],
-        spot_price=csv_row[CoinbaseColumns.SPOT_PRICE.value],
-        subtotal=csv_row[CoinbaseColumns.SUBTOTAL.value],
-        total=csv_row[CoinbaseColumns.TOTAL.value],
-        fees=csv_row[CoinbaseColumns.FEES.value],
-        notes=get_coinbase_note(csv_row),
-    )
-
-
-def get_coinbase_csv_row(
-    coinbase_transaction: CoinbaseTransaction,
-) -> list[str]:
-    return [
-        coinbase_transaction.timestamp,
-        coinbase_transaction.transaction_type,
-        coinbase_transaction.asset,
-        f"{float(coinbase_transaction.quantity):.8f}",
-        coinbase_transaction.currency,
-        f"{float(coinbase_transaction.spot_price):.2f}",
-        f"{float(coinbase_transaction.subtotal):.2f}",
-        f"{float(coinbase_transaction.total):.2f}",
-        f"{float(coinbase_transaction.fees):.2f}",
-        get_coinbase_note_as_string(coinbase_transaction.notes),
-    ]
-
-
-def build_coinbase_csv(
-    transactions: list[CoinbaseTransaction],
-) -> list[list[str]]:
-    # include the header in the conversion process
-    csv_header = [
-        [
-            "Timestamp",
-            "Transaction Type",
-            "Asset",
-            "Quantity Transacted",
-            "Spot Price Currency",
-            "Spot Price at Transaction",
-            "Subtotal",
-            "Total (inclusive of fees and/or spread)",
-            "Fees and/or Spread",
-            "Notes",
-        ]
-    ]
-    csv_table = []
-    for row in transactions:
-        transaction = get_coinbase_csv_row(row)
-        csv_table.append(transaction)
-    return csv_header + csv_table
-
-
-def build_coinbase_transactions(
-    csv_table: list[list[str]],
-) -> list[CoinbaseTransaction]:
-    transactions = []
-    # omit the header from the conversion process
-    for csv_row in csv_table[1:]:
-        transaction = get_coinbase_transaction(csv_row)
-        transactions.append(transaction)
-    return transactions
 
 
 def scan_coinbase(
     filepath: str | Path,
 ) -> list[CoinbaseTransaction]:
     """Scan the CSV file and extract Coinbase transaction data."""
+    transactions = []
     csv_table = read_csv(filepath)
-    return build_coinbase_transactions(csv_table)
+
+    # omit the header from the conversion process
+    for csv_row in csv_table[1:]:
+        transaction = CoinbaseTransaction(
+            timestamp=csv_row[CoinbaseColumn.TIMESTAMP.value],
+            transaction_type=csv_row[CoinbaseColumn.TRANSACTION_TYPE.value],
+            asset=csv_row[CoinbaseColumn.ASSET.value],
+            quantity=csv_row[CoinbaseColumn.QUANTITY.value],
+            currency=csv_row[CoinbaseColumn.CURRENCY.value],
+            spot_price=csv_row[CoinbaseColumn.SPOT_PRICE.value],
+            subtotal=csv_row[CoinbaseColumn.SUBTOTAL.value],
+            total=csv_row[CoinbaseColumn.TOTAL.value],
+            fees=csv_row[CoinbaseColumn.FEES.value],
+            notes=csv_row_to_coinbase_note(csv_row),
+        )
+
+        transactions.append(transaction)
+
+    return transactions
