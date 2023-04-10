@@ -3,7 +3,7 @@ from enum import Enum
 
 
 class RobinhoodColumns(Enum):
-    """Enumeration representing columns in a Robinhood CSV dataset."""
+    """Enumeration representing columns in a Robinhood 1099 CSV dataset."""
 
     ASSET_NAME = 0
     RECEIVED_DATE = 1
@@ -14,7 +14,7 @@ class RobinhoodColumns(Enum):
 
 @dataclass
 class RobinhoodTransaction:
-    """A dataclass representing a Robinhood transaction."""
+    """A dataclass representing a Robinhood 1099 transaction."""
 
     asset_name: str
     received_date: str
