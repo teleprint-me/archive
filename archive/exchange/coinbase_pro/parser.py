@@ -16,30 +16,31 @@ def get_missing_crypto_to_crypto(
         A list containing missing CoinbaseProTransaction's.
     """
 
-    # 1. Determine the Product, Base Product, and Quote Product
+    # Determine the Product, Base Product, and Quote Product
     base_product = f"{transaction.base}-USD"
     quote_product = f"{transaction.quote}-USD"
 
-    # 2. Determine Market Price for both Base and Quote Products
+    # Determine Market Price for both Base and Quote Products
     base_response = get_spot_price(base_product, transaction.created_at)
     quote_response = get_spot_price(quote_product, transaction.created_at)
+
     # Extract the market price from the responses
     base_price = float(base_response["data"]["amount"])
     quote_price = float(quote_response["data"]["amount"])
 
-    # 3. Determine the Transaction Total for both Base and Quote Products
+    # Determine the Transaction Total for both Base and Quote Products
     base_total = base_price * transaction.size
     quote_total = quote_price * transaction.total
 
-    # 4. Determine the Transaction Fee for both Base and Quote Products
+    # Determine the Transaction Fee for both Base and Quote Products
     quote_fee = quote_price * transaction.fee
     base_fee = 0.0
 
-    # 5. Get the order size for the Base and Quote Products
+    # Get the order size for the Base and Quote Products
     base_size = transaction.size
     quote_size = transaction.total
 
-    # 6. Create CoinbaseProTransaction for the missing BUY or SELL side
+    # Create CoinbaseProTransaction for the missing BUY or SELL side
     if transaction.side == "BUY":
         missing_buy_notes = (
             f"Bought {base_size:.8f} {transaction.base} "
@@ -206,7 +207,7 @@ def get_missing_transactions(
     crypto_to_stablecoin = []
     missing_transactions = []
 
-    # classify transactions
+    # Classify transactions
     for transaction in transactions:
         if not transaction.is_fiat:
             if transaction.is_stablecoin:
@@ -214,12 +215,12 @@ def get_missing_transactions(
             else:
                 crypto_to_crypto.append(transaction)
 
-    # process crypto-to-crypto transactions
+    # Process crypto-to-crypto transactions
     for convert in crypto_to_crypto:
         missing_transaction = get_missing_crypto_to_crypto(convert)
         missing_transactions.extend(missing_transaction)
 
-    # process crypto-to-stablecoin transactions
+    # Process crypto-to-stablecoin transactions
     for convert in crypto_to_stablecoin:
         missing_transaction = get_missing_crypto_to_stablecoin(convert)
         missing_transactions.extend(missing_transaction)
