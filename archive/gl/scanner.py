@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Union
 
 from archive.gl.models import GLColumns, GLTransaction
-from archive.ir.builder import build_ir_transactions, read_ir_transactions
+from archive.ir.builder import build_ir_transactions, scan_ir_transactions
 from archive.ir.models import IRTransaction
 
 
@@ -163,7 +163,7 @@ def remove_duplicate_transactions(
 def scan_gl_transactions(
     asset: str, directory: Union[str, Path]
 ) -> list[GLTransaction]:
-    csv_table = read_ir_transactions(directory)
+    csv_table = scan_ir_transactions(directory)
     transactions = build_ir_transactions(csv_table)
     transactions = remove_duplicate_transactions(transactions)
     filtered_transactions = filter_transactions(asset, transactions)

@@ -3,16 +3,28 @@ from typing import Union
 
 import iso8601
 
-from archive.ir.builder import build_ir_csv
-from archive.ir.config import exchanges
-from archive.ir.models import IRTransaction
+from archive.ir.builder import build_ir_csv_table
+from archive.ir.factory import parser_factory
 from archive.tools.io import print_csv, write_csv
 from archive.tools.sort import sort_csv
 
 
-def format_transactions(
-    transactions: list[IRTransaction],
-) -> list[IRTransaction]:
+def process_ir(
+    asset: str,
+    label: str,
+    exchange: str,
+    file_path: Union[str, Path],
+) -> None:
+    # Format user input
+    asset = asset.upper()
+    label = label.lower()
+    exchange = exchange.lower()
+
+    # Parse specified exchange transactions
+    parser = parser_factory(exchange)
+    transactions = parser.parse(file_path, asset)
+
+    # Format transactions
     for transaction in transactions:
         # Format datetime
         datetime = iso8601.parse_date(transaction.datetime)
@@ -20,30 +32,9 @@ def format_transactions(
         # Format transaction type
         transaction_type = transaction.transaction_type.capitalize()
         transaction.transaction_type = transaction_type
-    return transactions
 
-
-def process_ir(
-    asset: str, label: str, exchange: str, file_path: Union[str, Path]
-) -> None:
-    asset = asset.upper()
-    label = label.lower()
-    exchange = exchange.lower()
-
-    scan_transactions = exchanges[exchange]["scan"]
-    build_ir = exchanges[exchange]["build_ir"]
-
-    transactions = scan_transactions(file_path)
-
-    if exchange in ["coinbase", "coinbase_pro", "kraken"]:
-        ir_transactions = build_ir(transactions, [asset])
-    else:
-        raise ValueError(f"Invalid exchange {exchange}")
-
-    formatted_transactions = format_transactions(ir_transactions)
-
-    csv_ir_transactions = build_ir_csv(formatted_transactions)
-    csv_sorted = sort_csv(csv_ir_transactions, column=2)
+    csv_transactions = build_ir_csv_table(transactions)
+    csv_sorted = sort_csv(csv_transactions, column=2)
     print_csv(csv_sorted)
 
     output_file_path = Path(f"data/ir/ir-{exchange}-{label}.csv")

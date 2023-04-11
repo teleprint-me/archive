@@ -23,7 +23,7 @@ def get_arguments() -> Namespace:
     parser.add_argument(
         "--robinhood1099",
         type=str,
-        help="The filepath to the Robinhood 1099 CSV file.",
+        help="Path to the input Robinhood 1099 CSV file (optional).",
     )
 
     parser.add_argument(
@@ -56,6 +56,11 @@ def get_arguments() -> Namespace:
 
 
 def main() -> None:
+    # CSV: Comma Separated Values
+    # IR: Intermediate Representation
+    # GL: Gains and Losses
+    # F8949: Form-8949
+    # F1099: Form-1099
     args = get_arguments()
 
     # Step 1: Process exchange CSV files for each exchange
@@ -65,12 +70,12 @@ def main() -> None:
     # Step 2: Process IR transactions and generate GL transactions
     gl_file_path = process_gl(args.asset, args.label, "data/ir/")
 
-    # Step 3: Process GL transactions and generate Form 8949 CSV
+    # Step 3: Process GL transactions and generate Form-8949 CSV
     f8949_file_path = process_f8949(
         gl_file_path, args.label, args.start_date, args.end_date
     )
 
-    # Step 4: Process F1099 Transactions and generate Form 8949 CSV
+    # Step 4: Process Form-1099 Transactions and generate Form-8949 CSV
     if args.robinhood1099:
         process_f1099(
             f8949_file_path,

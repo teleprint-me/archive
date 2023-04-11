@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 
-class IRColumns(Enum):
+class IRColumn(Enum):
     """Enumerated columns for intermediary representation."""
 
     EXCHANGE = 0

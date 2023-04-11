@@ -23,19 +23,54 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/.
 ```
 
+## Supported Exchanges
+
+Archive currently supports the following exchanges:
+
+-   Coinbase (`coinbase`)
+-   Coinbase Pro (`coinbase_pro`)
+-   Kraken (`kraken`)
+-   Robinhood (`robinhood`)
+
+You can implement your own parsers for additional exchanges by following the
+provided examples and updating the `parser_factory` in `archive/ir/factory.py`.
+
+## Gains and Losses Calculations
+
+Gains and losses are calculated as a
+[Weighted Average Cost](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
+
+## Installation and initialization
+
+```shell
+git clone https://github.com/teleprint-me/archive.git
+cd archive
+chmod +x init.sh
+./init.sh
+```
+
 ## Usage
+
+⚠️ **USE AT YOUR OWN RISK!**
+
+🚨 **ALWAYS AUDIT THE OUTPUT!**
 
 ### main.py
 
 The `main.py` script processes input CSV files for each exchange, generates
-intermediate results (IR), processes the IR transactions to generate GL
-transactions, and then processes the GL transactions to generate the Form 8949
-CSV output. Additionally, it also processes the Robinhood 1099 file if provided.
+intermediate results (IR), processes the IR transactions to generate gains and
+losses (GL) transactions, and then processes the GL transactions to generate the
+Form-8949 CSV output. Additionally, it also processes the Robinhood Form-1099
+CSV if provided.
 
 #### Arguments
 
 -   `--exchange-file`: A list of exchange names and file paths for their
     respective input CSV files.
+
+    -   Allowed exchanges are: `coinbase_transaction`, `coinbase_pro_fill`,
+        `coinbase_pro_account`, and `kraken_trade`.
+
 -   `--robinhood1099`: The file path for the Robinhood 1099 CSV file (optional).
 -   `--asset`: The base asset symbol (default is "BTC").
 -   `--label`: A label to be appended to the output file name (default is
@@ -46,11 +81,13 @@ CSV output. Additionally, it also processes the Robinhood 1099 file if provided.
 #### Example
 
 ```sh
-$ python main.py --exchange-file exchange_name data/in/exchange_name.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
+$ python main.py --exchange-file coinbase_transaction data/in/coinbase.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
 ```
+
 #### Note
 
-Gains and losses are calculated as a [Weighted Average Cost](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
+Gains and losses are calculated as a
+[Weighted Average Cost](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
 
 ### build_ir.py
 
@@ -91,7 +128,8 @@ $ python build_gl.py data/ir/ --asset BTC
 
 #### Note
 
-Gains and losses are calculated as a [Weighted Average Cost](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
+Gains and losses are calculated as a
+[Weighted Average Cost](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
 
 ### build_f8949.py
 
