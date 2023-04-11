@@ -24,6 +24,10 @@ def process_ir(
     parser = parser_factory(exchange)
     transactions = parser.parse(file_path, asset)
 
+    # Do nothing if data set is empty
+    if not (len(transactions) > 0):
+        return
+
     # Format transactions
     for transaction in transactions:
         # Format datetime
