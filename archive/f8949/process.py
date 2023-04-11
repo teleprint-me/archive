@@ -79,6 +79,9 @@ def process_f8949(
     start_date: Optional[str] = "",
     end_date: Optional[str] = "",
 ) -> Union[str, Path]:
+    # Format user input
+    label = label.lower()
+
     scanned_transactions = scan_f8949_transactions(file_path)
     filtered_transactions = filter_transactions_by_date(
         scanned_transactions, start_date, end_date
