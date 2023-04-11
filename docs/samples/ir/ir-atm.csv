@@ -1,0 +1,6 @@
+Exchange,Product,Datetime,Transaction Type,Order Size,Market Price,Order Fee,Order Note
+atm,BTC-USD,2021-04-22,buy,0.00016000,51556.89,1.75,
+atm,BTC-USD,2021-04-30,buy,0.00015000,56779.55,1.48,
+atm,BTC-USD,2021-05-05,buy,0.00015000,57176.79,1.42,
+atm,ETH-USD,2021-05-10,buy,0.00407000,3946.42,3.94,
+atm,ETH-USD,2021-06-06,buy,0.00592000,2710.99,3.95,
