@@ -16,7 +16,7 @@ def get_spot_price(
         datetime: (optional) For historic spot price, use format YYYY-MM-DD (UTC)
 
     Returns:
-        The response of the GET request as a string representing the spot price
+        The response of the GET request as a float representing the spot price
 
     Raises:
         RequestException: If there's an issue with the response or if the response is missing data
