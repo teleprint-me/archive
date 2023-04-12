@@ -71,7 +71,11 @@ def scan_ir_transactions(directory: str | Path) -> list[list[str]]:
             if not header:
                 header = [csv_table[0]]
 
-            body.extend(csv_table[1:])
+            # NOTE: Trailing spaces and newlines at EOF can cause empty lists
+            # to be added to the body. We check if the list is valid first to
+            # avoid this issue.
+            if csv_table[1:]:
+                body.extend(csv_table[1:])
 
     sorted_table = sorted(body, key=lambda row: row[IRColumn.DATETIME.value])
 
