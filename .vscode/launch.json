@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: archive dai",
+            "name": "Python: main.py",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
@@ -25,10 +25,97 @@
                 "${workspaceFolder}/data/in/kraken-trade.csv",
                 "kraken_ledger",
                 "${workspaceFolder}/data/in/kraken-ledger.csv",
+                "--robinhood1099",
+                "${workspaceFolder}/data/in/robinhood-crypto-1099.csv",
                 "--asset",
-                "dot",
+                "btc",
                 "--label",
-                "polkadot"
+                "bitcoin"
+            ]
+        },
+        {
+            "name": "Python: build_ir.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/build_ir.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--exchange-file",
+                "coinbase_transaction",
+                "${workspaceFolder}/data/in/coinbase-transaction.csv",
+                "--exchange-file",
+                "coinbase_pro_fill",
+                "${workspaceFolder}/data/in/coinbase-pro-fill.csv",
+                "--exchange-file",
+                "coinbase_pro_account",
+                "${workspaceFolder}/data/in/coinbase-pro-account.csv",
+                "--exchange-file",
+                "kraken_trade",
+                "${workspaceFolder}/data/in/kraken-trade.csv",
+                "kraken_ledger",
+                "${workspaceFolder}/data/in/kraken-ledger.csv",
+                "--asset",
+                "btc",
+                "--label",
+                "bitcoin"
+            ]
+        },
+        {
+            "name": "Python: build_gl.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/build_gl.py",
+            "console": "integratedTerminal",
+            "args": [
+                "${workspaceFolder}/data/ir",
+                "--asset",
+                "btc",
+                "--label",
+                "bitcoin"
+            ]
+        },
+        {
+            "name": "Python: build_f8949.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/build_f8949.py",
+            "console": "integratedTerminal",
+            "args": [
+                "${workspaceFolder}/data/gl/gl-bitcoin.csv",
+                "--label",
+                "bitcoin"
+            ]
+        },
+        {
+            "name": "Python: build_f1099.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/build_f1099.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--form8949",
+                "${workspaceFolder}/data/f8949/f8949-bitcoin.csv",
+                "--robinhood1099",
+                "${workspaceFolder}/data/in/robinhood-crypto-1099.csv",
+                "--asset",
+                "btc",
+                "--label",
+                "bitcoin"
+            ]
+        },
+        {
+            "name": "Python: link_f8949.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/link_f8949.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--form8949",
+                "${workspaceFolder}/data/f8949",
+                "--form1099",
+                "${workspaceFolder}/data/f1099",
+                "--label",
+                "bitcoin"
             ]
         }
     ]
