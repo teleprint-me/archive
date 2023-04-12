@@ -67,10 +67,8 @@ CSV if provided.
 
 -   `--exchange-file`: A list of exchange names and file paths for their
     respective input CSV files.
-
     -   Allowed exchanges are: `coinbase_transaction`, `coinbase_pro_fill`,
-        `coinbase_pro_account`, and `kraken_trade`.
-
+        `coinbase_pro_account`, `kraken_trade`, and `kraken_ledger`.
 -   `--robinhood1099`: The file path for the Robinhood 1099 CSV file (optional).
 -   `--asset`: The base asset symbol (default is "BTC").
 -   `--label`: A label to be appended to the output file name (default is
@@ -98,6 +96,10 @@ results (IR) in a unified format.
 
 -   `--exchange-file`: A list of exchange names and file paths for their
     respective input CSV files.
+    -   Allowed exchanges are: `coinbase_transaction`, `coinbase_pro_fill`,
+        `coinbase_pro_account`, `kraken_trade`, and `kraken_ledger`.
+        -   `coinbase_pro_account` only handles conversions.
+        -   `kraken_ledger` only handles staking.
 -   `--asset`: The base asset symbol (default is "BTC").
 -   `--label`: A label to be appended to the output file name (default is
     "bitcoin").
