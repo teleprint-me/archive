@@ -50,7 +50,7 @@ def get_spot_price(currency_pair: str, datetime: str) -> float:
     timestamp = int(parse(datetime).timestamp())
 
     # Set the time range for the Trades endpoint query
-    time_range = f"{timestamp-60}:{timestamp+60}"
+    time_range = f"{timestamp-300}:{timestamp+300}"
 
     # Send a GET request to the Trades endpoint with the specified parameters
     url = "https://api.kraken.com/0/public/Trades"
@@ -61,10 +61,8 @@ def get_spot_price(currency_pair: str, datetime: str) -> float:
         # Extract the trades data from the response and find the trade that
         # occurred closest to the specified datetime
         trades = response.json()["result"][currency_pair]
-        closest_trade = min(trades, key=lambda x: abs(int(x[2]) - timestamp))
-
-        # Extract the price information from the closest trade and return it as a float
-        return float(closest_trade[0])
+        avg_price = sum(float(trade[0]) for trade in trades) / len(trades)
+        return avg_price
 
     except KeyError as e:
         raise RequestException(f"Error retrieving spot price: {e}")
