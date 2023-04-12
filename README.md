@@ -174,3 +174,36 @@ The `build_f1099.py` script merges the Form 8949 and Robinhood 1099 datasets.
 ```sh
 $ python build_f1099.py --form8949 data/f8949/f8949-bitcoin.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
 ```
+
+### link_f8949.py
+
+The `link_f8949.py` script joins the Form-8949 and Robinhood-1099 datasets and
+outputs a single unified Form-8949.
+
+#### Arguments
+
+-   `--form8949`: The directory containing the Form-8949 files.
+-   `--form1099`: The directory containing the Form-1099 CSV files.
+-   `--year YEAR`: The year for the range of transactions (YYYY).
+-   `--label`: A label to append to the output file name.
+
+#### Example
+
+```sh
+$ python link_f8949.py --form8949 data/f8949 --form1099 data/f1099 --year 2021
+```
+
+### Google Sheets Scripts
+
+The included `scripts/` directory contains 2 scripts for formatting the contents of the output in Google Sheets.
+
+Each script is labeled as such:
+
+- `format-f8949.js` - Formats the current active sheet containing Form-8949 data. 
+- `format-gl.js` - Formats the current active sheet containing Gains and Losses data.
+
+1. Create a new sheet.
+2. File > Import > Upload > Browse > Open > Import Location: Insert new sheet(s) > Import data
+3. Extensions > Apps Script > Code.gs > Copy and paste the relevant scripts > Save > Run (Follow security prompts)
+
+Note that `format-gl.gs` depends on `format-f8949.gs` as they share some dependent variables for consistency.
