@@ -5,12 +5,31 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: archive kraken",
+            "name": "Python: archive dai",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
-            "args": ["kraken", "data/in/kraken-trades.csv"]
+            "args": [
+                "--exchange-file",
+                "coinbase_transaction",
+                "${workspaceFolder}/data/in/coinbase-transaction.csv",
+                "--exchange-file",
+                "coinbase_pro_fill",
+                "${workspaceFolder}/data/in/coinbase-pro-fill.csv",
+                "--exchange-file",
+                "coinbase_pro_account",
+                "${workspaceFolder}/data/in/coinbase-pro-account.csv",
+                "--exchange-file",
+                "kraken_trade",
+                "${workspaceFolder}/data/in/kraken-trade.csv",
+                "kraken_ledger",
+                "${workspaceFolder}/data/in/kraken-ledger.csv",
+                "--asset",
+                "dot",
+                "--label",
+                "polkadot"
+            ]
         }
     ]
 }
