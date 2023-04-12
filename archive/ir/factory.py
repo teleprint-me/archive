@@ -10,7 +10,10 @@ from archive.exchange.coinbase_pro.scanner import (
     scan_coinbase_pro_fills,
 )
 from archive.exchange.kraken.ir import build_kraken_ir
-from archive.exchange.kraken.scanner import scan_kraken_trades
+from archive.exchange.kraken.scanner import (
+    scan_kraken_ledgers,
+    scan_kraken_trades,
+)
 from archive.ir.models import IRTransaction
 
 
@@ -64,6 +67,16 @@ class KrakenTrade(BaseParser):
         return build_kraken_ir(transactions, [asset])
 
 
+class KrakenLedger(BaseParser):
+    def parse(
+        self,
+        filepath: Union[str, Path],
+        asset: str,
+    ) -> list[IRTransaction]:
+        transactions = scan_kraken_ledgers(filepath)
+        return build_kraken_ir(transactions, [asset])
+
+
 class Robinhood1099(BaseParser):
     def parse(
         self,
@@ -82,6 +95,8 @@ def parser_factory(dataset_type):
         return CoinbaseProAccount()
     elif dataset_type == "kraken_trade":
         return KrakenTrade()
+    elif dataset_type == "kraken_ledger":
+        return KrakenLedger()
     elif dataset_type == "robinhood_1099":
         return Robinhood1099()
     else:

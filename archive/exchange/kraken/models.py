@@ -26,8 +26,23 @@ products = {
 }
 
 
-class KrakenColumns(Enum):
-    """Enumeration representing columns in a Kraken CSV dataset."""
+class KrakenLedgerColumn(Enum):
+    """Enumeration representing columns in a Kraken Ledger CSV dataset."""
+
+    TXID = 0
+    REFID = 1
+    TIME = 2
+    TYPE = 3
+    SUBTYPE = 4
+    ACLASS = 5
+    ASSET = 6
+    AMOUNT = 7
+    FEE = 8
+    BALANCE = 9
+
+
+class KrakenTradeColumn(Enum):
+    """Enumeration representing columns in a Kraken Trade CSV dataset."""
 
     TXID = 0
     ORDER_TXID = 1
@@ -74,7 +89,7 @@ class KrakenTransaction:
             return products[self.pair]
         except KeyError:
             raise KeyError(
-                f"Unknown Kraken product: '{self.pair}'. Please add it to the 'products' dictionary in 'archive/exchange/kraken/models.py'."
+                f"Kraken: '{self.pair}' is an unknown product. Please add it to the 'products' dictionary in 'archive/exchange/kraken/models.py'."
             )
 
     @property
@@ -87,7 +102,7 @@ class KrakenTransaction:
             return self.product.split("-")[0]
         except IndexError:
             raise KeyError(
-                f"Unexpected Kraken product format: '{self.product}'. Please check the 'products' dictionary in 'archive/exchange/kraken/models.py'."
+                f"Kraken: '{self.product}' is an invalid format. Please check the 'products' dictionary in 'archive/exchange/kraken/models.py'."
             )
 
     @property
@@ -100,7 +115,7 @@ class KrakenTransaction:
             return self.product.split("-")[1]
         except IndexError:
             raise KeyError(
-                f"Unexpected Kraken product format: '{self.product}'. Please check the 'products' dictionary in 'archive/exchange/kraken/models.py'."
+                f"Kraken: '{self.product}' is an invalid format. Please check the 'products' dictionary in 'archive/exchange/kraken/models.py'."
             )
 
     @property
