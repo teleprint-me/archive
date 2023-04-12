@@ -6,31 +6,13 @@ from archive.ir.builder import build_ir_transactions, scan_ir_transactions
 from archive.ir.models import IRTransaction
 
 
-def get_gl_csv_row(
-    transaction: GLTransaction,
-) -> list[str]:
-    return [
-        transaction.additional_description,
-        transaction.description,
-        transaction.date_acquired,
-        transaction.transaction_type,
-        f"{transaction.order_size:.8f}",
-        f"{transaction.market_price:.2f}",
-        f"{transaction.exchange_fee:.2f}",
-        f"{transaction.cost_or_other_basis:.2f}",
-        f"{transaction.acb_per_share:.2f}",
-        transaction.date_sold,
-        f"{transaction.sales_proceeds:.2f}",
-        f"{transaction.gain_or_loss:.2f}",
-        transaction.order_note,
-    ]
-
-
 def get_gl_csv_table(
     transactions: list[GLTransaction],
 ) -> list[list[str]]:
+    body = []
+
     # include the header in the conversion process
-    csv_header = [
+    header = [
         [
             "Additional Description",
             "Description",
@@ -47,52 +29,59 @@ def get_gl_csv_table(
             "Order Note",
         ]
     ]
-    csv_table = []
+
     for row in transactions:
-        transaction = get_gl_csv_row(row)
-        csv_table.append(transaction)
-    return csv_header + csv_table
+        transaction = [
+            row.additional_description,
+            row.description,
+            row.date_acquired,
+            row.transaction_type,
+            f"{row.order_size:.8f}",
+            f"{row.market_price:.2f}",
+            f"{row.exchange_fee:.2f}",
+            f"{row.cost_or_other_basis:.2f}",
+            f"{row.acb_per_share:.2f}",
+            row.date_sold,
+            f"{row.sales_proceeds:.2f}",
+            f"{row.gain_or_loss:.2f}",
+            row.order_note,
+        ]
 
+        body.append(transaction)
 
-def get_gl_transaction(csv_row: list[str]) -> GLTransaction:
-    return GLTransaction(
-        additional_description=csv_row[GLColumns.ADDITIONAL_DESCRIPTION.value],
-        description=csv_row[GLColumns.DESCRIPTION.value],
-        date_acquired=csv_row[GLColumns.DATE_ACQUIRED.value],
-        transaction_type=csv_row[GLColumns.TRANSACTION_TYPE.value],
-        order_size=float(csv_row[GLColumns.ORDER_SIZE.value]),
-        market_price=float(csv_row[GLColumns.MARKET_PRICE.value]),
-        exchange_fee=float(csv_row[GLColumns.EXCHANGE_FEE.value]),
-        cost_or_other_basis=float(
-            csv_row[GLColumns.COST_OR_OTHER_BASIS.value]
-        ),
-        acb_per_share=float(csv_row[GLColumns.ACB_PER_SHARE.value]),
-        date_sold=csv_row[GLColumns.DATE_SOLD.value],
-        sales_proceeds=float(csv_row[GLColumns.SALES_PROCEEDS.value]),
-        gain_or_loss=float(csv_row[GLColumns.GAIN_OR_LOSS.value]),
-        order_note=csv_row[GLColumns.ORDER_NOTE.value],
-    )
+    return header + body
 
 
 def get_gl_transactions(
     csv_table: list[list[str]],
 ) -> list[GLTransaction]:
     transactions = []
+
     # omit the header from the conversion process
     for csv_row in csv_table[1:]:
-        transaction = get_gl_transaction(csv_row)
+        transaction = GLTransaction(
+            additional_description=csv_row[
+                GLColumns.ADDITIONAL_DESCRIPTION.value
+            ],
+            description=csv_row[GLColumns.DESCRIPTION.value],
+            date_acquired=csv_row[GLColumns.DATE_ACQUIRED.value],
+            transaction_type=csv_row[GLColumns.TRANSACTION_TYPE.value],
+            order_size=float(csv_row[GLColumns.ORDER_SIZE.value]),
+            market_price=float(csv_row[GLColumns.MARKET_PRICE.value]),
+            exchange_fee=float(csv_row[GLColumns.EXCHANGE_FEE.value]),
+            cost_or_other_basis=float(
+                csv_row[GLColumns.COST_OR_OTHER_BASIS.value]
+            ),
+            acb_per_share=float(csv_row[GLColumns.ACB_PER_SHARE.value]),
+            date_sold=csv_row[GLColumns.DATE_SOLD.value],
+            sales_proceeds=float(csv_row[GLColumns.SALES_PROCEEDS.value]),
+            gain_or_loss=float(csv_row[GLColumns.GAIN_OR_LOSS.value]),
+            order_note=csv_row[GLColumns.ORDER_NOTE.value],
+        )
+
         transactions.append(transaction)
+
     return transactions
-
-
-def filter_transactions(
-    asset: str, transactions: list[IRTransaction]
-) -> list[IRTransaction]:
-    filtered_transactions = []
-    for transaction in transactions:
-        if transaction.product.startswith(asset):
-            filtered_transactions.append(transaction)
-    return filtered_transactions
 
 
 def build_gl_transactions(
@@ -166,5 +155,7 @@ def scan_gl_transactions(
     csv_table = scan_ir_transactions(directory)
     transactions = build_ir_transactions(csv_table)
     transactions = remove_duplicate_transactions(transactions)
-    filtered_transactions = filter_transactions(asset, transactions)
+    filtered_transactions = [
+        tx for tx in transactions if tx.product.startswith(asset)
+    ]
     return build_gl_transactions(filtered_transactions)
