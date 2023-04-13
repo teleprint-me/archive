@@ -135,11 +135,15 @@ archive<wbr>.ir<wbr>.builder    </h1>
 </span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">header</span><span class="p">:</span>
 </span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>                <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="n">csv_table</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 </span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>            <span class="n">body</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">csv_table</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>
-</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>    <span class="n">sorted_table</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="n">IRColumn</span><span class="o">.</span><span class="n">DATETIME</span><span class="o">.</span><span class="n">value</span><span class="p">])</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>
-</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>    <span class="k">return</span> <span class="n">header</span> <span class="o">+</span> <span class="n">sorted_table</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>            <span class="c1"># NOTE: Trailing spaces and newlines at EOF can cause empty lists</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>            <span class="c1"># to be added to the body. We check if the list is valid first to</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>            <span class="c1"># avoid this issue.</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>            <span class="k">if</span> <span class="n">csv_table</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>                <span class="n">body</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">csv_table</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>
+</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>    <span class="n">sorted_table</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="n">IRColumn</span><span class="o">.</span><span class="n">DATETIME</span><span class="o">.</span><span class="n">value</span><span class="p">])</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a>
+</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>    <span class="k">return</span> <span class="n">header</span> <span class="o">+</span> <span class="n">sorted_table</span>
 </span></pre></div>
 
 
@@ -251,11 +255,15 @@ archive<wbr>.ir<wbr>.builder    </h1>
 </span><span id="scan_ir_transactions-72"><a href="#scan_ir_transactions-72"><span class="linenos">72</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">header</span><span class="p">:</span>
 </span><span id="scan_ir_transactions-73"><a href="#scan_ir_transactions-73"><span class="linenos">73</span></a>                <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="n">csv_table</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 </span><span id="scan_ir_transactions-74"><a href="#scan_ir_transactions-74"><span class="linenos">74</span></a>
-</span><span id="scan_ir_transactions-75"><a href="#scan_ir_transactions-75"><span class="linenos">75</span></a>            <span class="n">body</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">csv_table</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-</span><span id="scan_ir_transactions-76"><a href="#scan_ir_transactions-76"><span class="linenos">76</span></a>
-</span><span id="scan_ir_transactions-77"><a href="#scan_ir_transactions-77"><span class="linenos">77</span></a>    <span class="n">sorted_table</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="n">IRColumn</span><span class="o">.</span><span class="n">DATETIME</span><span class="o">.</span><span class="n">value</span><span class="p">])</span>
-</span><span id="scan_ir_transactions-78"><a href="#scan_ir_transactions-78"><span class="linenos">78</span></a>
-</span><span id="scan_ir_transactions-79"><a href="#scan_ir_transactions-79"><span class="linenos">79</span></a>    <span class="k">return</span> <span class="n">header</span> <span class="o">+</span> <span class="n">sorted_table</span>
+</span><span id="scan_ir_transactions-75"><a href="#scan_ir_transactions-75"><span class="linenos">75</span></a>            <span class="c1"># NOTE: Trailing spaces and newlines at EOF can cause empty lists</span>
+</span><span id="scan_ir_transactions-76"><a href="#scan_ir_transactions-76"><span class="linenos">76</span></a>            <span class="c1"># to be added to the body. We check if the list is valid first to</span>
+</span><span id="scan_ir_transactions-77"><a href="#scan_ir_transactions-77"><span class="linenos">77</span></a>            <span class="c1"># avoid this issue.</span>
+</span><span id="scan_ir_transactions-78"><a href="#scan_ir_transactions-78"><span class="linenos">78</span></a>            <span class="k">if</span> <span class="n">csv_table</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+</span><span id="scan_ir_transactions-79"><a href="#scan_ir_transactions-79"><span class="linenos">79</span></a>                <span class="n">body</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">csv_table</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span><span id="scan_ir_transactions-80"><a href="#scan_ir_transactions-80"><span class="linenos">80</span></a>
+</span><span id="scan_ir_transactions-81"><a href="#scan_ir_transactions-81"><span class="linenos">81</span></a>    <span class="n">sorted_table</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="n">IRColumn</span><span class="o">.</span><span class="n">DATETIME</span><span class="o">.</span><span class="n">value</span><span class="p">])</span>
+</span><span id="scan_ir_transactions-82"><a href="#scan_ir_transactions-82"><span class="linenos">82</span></a>
+</span><span id="scan_ir_transactions-83"><a href="#scan_ir_transactions-83"><span class="linenos">83</span></a>    <span class="k">return</span> <span class="n">header</span> <span class="o">+</span> <span class="n">sorted_table</span>
 </span></pre></div>
 
 
