@@ -1,4 +1,7 @@
 from archive.gl.models import GLTotalTransaction, GLTransaction
+from archive.tools.logger import setup_logger
+
+logger = setup_logger("parser_logger", "data/gl_parse.log")
 
 
 def calculate_buy_cost_basis(transaction: GLTransaction) -> GLTransaction:
@@ -115,6 +118,8 @@ def parse_gl(transactions: list[GLTransaction]) -> list[GLTransaction]:
     total = GLTotalTransaction()
     blocks = build_transaction_blocks(transactions)
 
+    logger.debug(f"Transaction Blocks: {blocks}")
+
     for block in blocks:
         processed_transactions = []
 
@@ -122,7 +127,6 @@ def parse_gl(transactions: list[GLTransaction]) -> list[GLTransaction]:
             if transaction.is_buy:
                 transaction = calculate_buy_cost_basis(transaction)
                 transaction = calculate_adjusted_cost_basis(transaction)
-
             else:
                 transaction.acb_per_share = total.acb_per_share
                 transaction = calculate_sell_cost_basis(transaction)
@@ -131,10 +135,14 @@ def parse_gl(transactions: list[GLTransaction]) -> list[GLTransaction]:
 
             processed_transactions.append(transaction)
 
+        logger.debug(f"Processed Transactions: {processed_transactions}")
+
         total = calculate_total_transaction(total, block)
         total_transaction = build_total_transaction(total)
 
         gl_transactions.extend(processed_transactions)
         gl_transactions.append(total_transaction)
+
+    logger.debug(f"Final GL Transactions: {gl_transactions}")
 
     return gl_transactions

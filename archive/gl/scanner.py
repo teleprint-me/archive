@@ -4,6 +4,9 @@ from typing import Union
 from archive.gl.models import GLColumns, GLTransaction
 from archive.ir.builder import build_ir_transactions, scan_ir_transactions
 from archive.ir.models import IRTransaction
+from archive.tools.logger import setup_logger
+
+logger = setup_logger("scanner_logger", "data/gl_scan.log")
 
 
 def get_gl_csv_table(
@@ -152,10 +155,20 @@ def remove_duplicate_transactions(
 def scan_gl_transactions(
     asset: str, directory: Union[str, Path]
 ) -> list[GLTransaction]:
+    logger.debug(f"Asset: {asset}")
+    logger.debug(f"Directory: {directory}")
     csv_table = scan_ir_transactions(directory)
+    logger.debug(f"CSV Table: {csv_table}")
+
     transactions = build_ir_transactions(csv_table)
+    logger.debug(f"IR Transactions: {transactions}")
+
     transactions = remove_duplicate_transactions(transactions)
+    logger.debug(f"Unique Transactions: {transactions}")
+
     filtered_transactions = [
         tx for tx in transactions if tx.product.startswith(asset)
     ]
+    logger.debug(f"Filtered Transactions: {filtered_transactions}")
+
     return build_gl_transactions(filtered_transactions)
