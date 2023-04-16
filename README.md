@@ -1,7 +1,6 @@
 # Archive
 
-Convert brokerage CSV transactions to a unified format, Calculate gains and
-losses, and create Form-8949 for filing taxes.
+Command-line tools for managing cryptocurrency investments.
 
 ## License
 
@@ -22,6 +21,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/.
 ```
+
+## Features
+
+- [x] Generate Intermediary Representations (IR) from CSV transaction data.
+- [x] Generate Gains and Losses (GL) from IR data.
+- [x] Generate Form-8949 from GL data.
+- [x] Generate Form-8949 from Form-1099.
+- [ ] Generate Dollar Cost Average transactions.
+- [ ] Generate Dollar Value Average transactions.
 
 ## Supported Exchanges
 
