@@ -23,10 +23,10 @@ def process_form_link(
         current_year = datetime.now().year
         year = str(current_year - 1)
 
-    if not label:
-        label = year
-
-    filepath = f"data/form-8949-{year}-{label}.csv"
+    if label:
+        filepath = f"data/form-8949-{year}-{label}.csv"
+    else:
+        filepath = f"data/form-8949-{year}.csv"
 
     # Step 1: Read all Form-8949 and Form-1099 CSV files and combine their data
     f8949_transactions = link_f8949_transactions(f8949_directory)

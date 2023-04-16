@@ -1,7 +1,7 @@
 from archive.gl.models import GLTotalTransaction, GLTransaction
 from archive.tools.logger import setup_logger
 
-logger = setup_logger("parser_logger", "data/gl_parse.log")
+logger = setup_logger("parser_logger", "data/log/parse_gl.log")
 
 
 def calculate_buy_cost_basis(transaction: GLTransaction) -> GLTransaction:
@@ -97,18 +97,31 @@ def build_transaction_blocks(
 ) -> list[list[GLTransaction]]:
     transaction_blocks = []
     current_block = []
+
+    logger.debug(f"Transactions: {transactions}")
+
     current_transaction_type = transactions[0].is_buy
+
+    logger.debug(f"Initial transaction type: {current_transaction_type}")
 
     for transaction in transactions:
         if transaction.is_buy != current_transaction_type:
             transaction_blocks.append(current_block)
+            logger.debug(f"New transaction block added: {current_block}")
             current_block = []
             current_transaction_type = transaction.is_buy
+            logger.debug(
+                f"Transaction type switched to: {current_transaction_type}"
+            )
 
         current_block.append(transaction)
+        logger.debug(f"Transaction added to current block: {transaction}")
 
     if current_block:
         transaction_blocks.append(current_block)
+        logger.debug(f"Final transaction block added: {current_block}")
+
+    logger.debug(f"Built transaction blocks: {transaction_blocks}")
 
     return transaction_blocks
 

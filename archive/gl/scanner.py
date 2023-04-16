@@ -6,7 +6,7 @@ from archive.ir.builder import build_ir_transactions, scan_ir_transactions
 from archive.ir.models import IRTransaction
 from archive.tools.logger import setup_logger
 
-logger = setup_logger("scanner_logger", "data/gl_scan.log")
+logger = setup_logger("scanner_logger", "data/log/scan_gl.log")
 
 
 def get_gl_csv_table(

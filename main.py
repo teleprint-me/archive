@@ -70,6 +70,9 @@ def main() -> None:
     # Step 2: Process IR transactions and generate GL transactions
     gl_file_path = process_gl(args.asset, args.label, "data/ir/")
 
+    if not gl_file_path:
+        return None
+
     # Step 3: Process GL transactions and generate Form-8949 CSV
     f8949_file_path = process_f8949(
         gl_file_path, args.label, args.start_date, args.end_date

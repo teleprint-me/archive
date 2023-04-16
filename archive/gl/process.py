@@ -7,6 +7,9 @@ from archive.gl.models import GLTransaction
 from archive.gl.parser import parse_gl
 from archive.gl.scanner import get_gl_csv_table, scan_gl_transactions
 from archive.tools.io import print_csv, write_csv
+from archive.tools.logger import setup_logger
+
+logger = setup_logger("parser_logger", "data/log/process_gl.log")
 
 
 def format_transactions(
@@ -40,6 +43,13 @@ def process_gl(
     label = label.lower()
 
     gl_transactions = scan_gl_transactions(asset, directory)
+
+    if not gl_transactions:
+        logger.debug(
+            f"GLTransaction Error: Failed to process {asset} for {label} using {directory}"
+        )
+        return ""
+
     gl_transactions = format_transactions(gl_transactions)
     gl_transactions = parse_gl(gl_transactions)
 
