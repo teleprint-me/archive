@@ -53,8 +53,8 @@ class Auth(AuthBase):
             api: Instance of the API class, if not provided, a default instance is created.
         """
 
-        self.key: Optional[str] = getenv("API_KEY")
-        self.secret: Optional[str] = getenv("API_SECRET")
+        self.key: Optional[str] = getenv("API_KEY") or ""
+        self.secret: Optional[str] = getenv("API_SECRET") or ""
 
     def __call__(self, request: PreparedRequest) -> PreparedRequest:
         """Return the prepared request with updated headers.
@@ -127,7 +127,7 @@ def get(url: str, data: Optional[dict] = None) -> dict[str, Any]:
             return response
 
     except RequestException as error:
-        raise RequestException(f"Error retrieving request: {error}")
+        raise RequestException(f"Error retrieving GET request: {error}")
 
 
 def post(url: str, data: Optional[dict] = None) -> dict[str, Any]:
@@ -160,7 +160,7 @@ def post(url: str, data: Optional[dict] = None) -> dict[str, Any]:
             return response
 
     except RequestException as error:
-        raise RequestException(f"Error retrieving request: {error}")
+        raise RequestException(f"Error retrieving POST request: {error}")
 
 
 def get_spot_price(
