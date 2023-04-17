@@ -217,3 +217,22 @@ Each script is labeled as such:
 3. Extensions > Apps Script > Code.gs > Copy and paste the relevant scripts > Save > Run (Follow security prompts)
 
 Note that `format-gl.gs` depends on `format-f8949.gs` as they share some dependent variables for consistency.
+
+## Bots
+
+### env_manager.py
+
+```shell
+python env_manager.py set EXCHANGE coinbase
+python env_manager.py set PRODUCT_ID BTC-USD
+python env_manager.py set ORDER_SIZE 10.00
+python env_manager.py set INTERVAL weekly
+python env_manager.py set API_KEY <your-api-key>
+python env_manager.py set API_SECRET <your-api-secret>
+
+python env_manager.py unset EXCHANGE
+```
+
+### Cost Average Bot
+
+TODO
