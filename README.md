@@ -205,18 +205,22 @@ The `env_manager.py` script manages environment variables.
 #### Arguments
 
 - `set`: Set a key-value pair.
-- `unset`: Unset a key.
-- `--env-file`: Path the environment file (default: `.env`)
 
 ```shell
 python env_manager.py set EXCHANGE coinbase
-python env_manager.py set PRODUCT_ID BTC-USD
-python env_manager.py set PRINCIPAL_AMOUNT 10.00
-python env_manager.py set INTERVAL weekly
-python env_manager.py set API_KEY <your-api-key>
-python env_manager.py set API_SECRET <your-api-secret>
+```
 
+- `unset`: Unset a key.
+
+```shell
 python env_manager.py unset EXCHANGE
+```
+
+- `--env-file`: Path the environment file (default: `.env`)
+
+```shell
+mkdir -pv ~/.config/archive
+python env_manager.py -f ~/.config/archive/.env set EXCHANGE coinbase
 ```
 
 ## Bots
