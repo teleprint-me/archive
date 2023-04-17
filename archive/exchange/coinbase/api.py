@@ -1,8 +1,12 @@
 import hashlib
 import hmac
 import time
+from datetime import datetime
 from os import getenv
 from typing import Any, Optional
+
+# NOTE: Always generate uuid4 for privacy!
+from uuid import uuid4
 
 import requests
 from dotenv import load_dotenv
@@ -193,5 +197,60 @@ def get_spot_price(
         else:
             raise RequestException("Invalid response from the API")
 
-    except RequestException as e:
-        raise RequestException(f"Error retrieving spot price: {e}")
+    except RequestException as error:
+        raise RequestException(f"Error retrieving spot price: {error}")
+
+
+def post_market_order(
+    quote_size: float,
+    product_id: str,
+    side: str = "BUY",
+) -> dict[str, Any]:
+    """
+    Post a market order to the Coinbase Advanced Trade API.
+
+    Args:
+        quote_size: The amount of quote currency to spend on the order (required for BUY orders).
+        product_id: The product this order was created for, e.g., 'BTC-USD'.
+        side: The side of the order, either 'BUY' or 'SELL'. Defaults to 'BUY'.
+
+    Returns:
+        A dictionary containing details of the created order, including order_id, product_id, side, base_size, and quote_size.
+
+    Raises:
+        RequestException: If there's an issue with the response or if the response contains an error message.
+    """
+
+    try:
+        market_order = {
+            "client_order_id": str(uuid4()),
+            "product_id": product_id,
+            "side": side,
+            "order_configuration": {
+                "market_market_ioc": {"quote_size": str(quote_size)}
+            },
+        }
+
+        response = post("/orders", data=market_order)
+
+        if "success" in response and response["success"]:
+            success_response = response["success_response"]
+            market_response = response["order_configuration"][
+                "market_market_ioc"
+            ]
+
+            return {
+                "exchange": "coinbase",
+                "datetime": datetime.now().isoformat(),
+                "order_id": response["order_id"],
+                "product_id": success_response["product_id"],
+                "side": success_response["side"],
+                "base_size": market_response["base_size"],
+                "quote_size": market_response["quote_size"],
+            }
+
+        else:
+            raise RequestException(response["error_response"]["message"])
+
+    except RequestException as error:
+        raise RequestException(f"Error posting market order: {error}")
