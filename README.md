@@ -93,8 +93,8 @@ CSV if provided.
 
 #### Example
 
-```sh
-$ python main.py --exchange-file coinbase_transaction data/in/coinbase.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
+```shell
+python main.py --exchange-file coinbase_transaction data/in/coinbase.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
 ```
 
 ### build_ir.py
@@ -116,8 +116,8 @@ results (IR) in a unified format.
 
 #### Example
 
-```sh
-$ python build_ir.py --exchange-file exchange_name data/in/exchange_name.csv --asset BTC
+```shell
+python build_ir.py --exchange-file exchange_name data/in/exchange_name.csv --asset BTC
 ```
 
 ### build_gl.py
@@ -134,8 +134,8 @@ in a unified format.
 
 #### Example
 
-```sh
-$ python build_gl.py data/ir/ --asset BTC
+```shell
+python build_gl.py data/ir/ --asset BTC
 ```
 
 ### build_f8949.py
@@ -154,8 +154,8 @@ CSV output.
 
 #### Example
 
-```sh
-$ python build_f8949.py data/gl/gl-bitcoin.csv --start_date 2021-01-01 --end_date 2021-12-31
+```shell
+python build_f8949.py data/gl/gl-bitcoin.csv --start_date 2021-01-01 --end_date 2021-12-31
 ```
 
 ### build_f1099.py
@@ -176,8 +176,8 @@ The `build_f1099.py` script merges the Form 8949 and Robinhood 1099 datasets.
 
 #### Example
 
-```sh
-$ python build_f1099.py --form8949 data/f8949/f8949-bitcoin.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
+```shell
+python build_f1099.py --form8949 data/f8949/f8949-bitcoin.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
 ```
 
 ### link_f8949.py
@@ -194,8 +194,8 @@ outputs a single unified Form-8949.
 
 #### Example
 
-```sh
-$ python link_f8949.py --form8949 data/f8949 --form1099 data/f1099 --year 2021
+```shell
+python link_f8949.py --form8949 data/f8949 --form1099 data/f1099 --year 2021
 ```
 
 ### env_manager.py
