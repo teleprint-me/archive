@@ -1,3 +1,11 @@
+**Disclaimer:**
+
+_**I am a programmer and I am NOT an accredited financial expert. You should seek out an accredited financial expert for making serious investment decisions. Do NOT take investment advice from random internet strangers and always do your own research**._
+
+⚠️ **USE THIS SOFTWARE AT YOUR OWN RISK!**
+
+🚨 **ALWAYS AUDIT THE OUTPUT!**
+
 # Archive
 
 Command-line tools for managing cryptocurrency investments.
@@ -24,12 +32,12 @@ along with this program.  If not, see https://www.gnu.org/licenses/.
 
 ## Features
 
-- [x] Generate Intermediary Representations (IR) from CSV transaction data.
-- [x] Generate Gains and Losses (GL) from IR data.
-- [x] Generate Form-8949 from GL data.
-- [x] Generate Form-8949 from Form-1099.
-- [ ] Generate Dollar Cost Average transactions.
-- [ ] Generate Dollar Value Average transactions.
+-   [x] Generate Intermediary Representations (IR) from CSV transaction data.
+-   [x] Generate Gains and Losses (GL) from IR data.
+-   [x] Generate Form-8949 from GL data.
+-   [x] Generate Form-8949 from Form-1099.
+-   [ ] Generate Dollar Cost Average transactions.
+-   [ ] Generate Dollar Value Average transactions.
 
 ## Supported Exchanges
 
@@ -45,10 +53,11 @@ provided examples and updating the `parser_factory` in `archive/ir/factory.py`.
 
 ## Calculations
 
-- Gains and losses are calculated by a
-[Weighted Average](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
-- Cost Averaging is determined by the principal amount.
-- Value Averaging is determined by the principal amount, interest rate, and interval.
+-   Gains and losses are calculated by a
+    [Weighted Average](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
+-   Cost Averaging is determined by the principal amount.
+-   Value Averaging is determined by the principal amount, interest rate, and
+    interval.
 
 ## Installation and initialization
 
@@ -60,10 +69,6 @@ chmod +x init.sh
 ```
 
 ## Usage
-
-⚠️ **USE AT YOUR OWN RISK!**
-
-🚨 **ALWAYS AUDIT THE OUTPUT!**
 
 ### main.py
 
@@ -91,11 +96,6 @@ CSV if provided.
 ```sh
 $ python main.py --exchange-file coinbase_transaction data/in/coinbase.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
 ```
-
-#### Note
-
-Gains and losses are calculated as a
-[Weighted Average Cost](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
 
 ### build_ir.py
 
@@ -137,11 +137,6 @@ in a unified format.
 ```sh
 $ python build_gl.py data/ir/ --asset BTC
 ```
-
-#### Note
-
-Gains and losses are calculated as a
-[Weighted Average Cost](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
 
 ### build_f8949.py
 
@@ -203,29 +198,20 @@ outputs a single unified Form-8949.
 $ python link_f8949.py --form8949 data/f8949 --form1099 data/f1099 --year 2021
 ```
 
-### Google Sheets Scripts
-
-The included `scripts/` directory contains 2 scripts for formatting the contents of the output in Google Sheets.
-
-Each script is labeled as such:
-
-- `format-f8949.js` - Formats the current active sheet containing Form-8949 data. 
-- `format-gl.js` - Formats the current active sheet containing Gains and Losses data.
-
-1. Create a new sheet.
-2. File > Import > Upload > Browse > Open > Import Location: Insert new sheet(s) > Import data
-3. Extensions > Apps Script > Code.gs > Copy and paste the relevant scripts > Save > Run (Follow security prompts)
-
-Note that `format-gl.gs` depends on `format-f8949.gs` as they share some dependent variables for consistency.
-
-## Bots
-
 ### env_manager.py
+
+The `env_manager.py` script manages environment variables.
+
+#### Arguments
+
+- `set`: Set a key-value pair.
+- `unset`: Unset a key.
+- `--env-file`: Path the environment file (default: `.env`)
 
 ```shell
 python env_manager.py set EXCHANGE coinbase
 python env_manager.py set PRODUCT_ID BTC-USD
-python env_manager.py set ORDER_SIZE 10.00
+python env_manager.py set PRINCIPAL_AMOUNT 10.00
 python env_manager.py set INTERVAL weekly
 python env_manager.py set API_KEY <your-api-key>
 python env_manager.py set API_SECRET <your-api-secret>
@@ -233,6 +219,37 @@ python env_manager.py set API_SECRET <your-api-secret>
 python env_manager.py unset EXCHANGE
 ```
 
+## Bots
+
 ### Cost Average Bot
 
-TODO
+    TODO
+
+### Dynamic Cost Average Bot
+
+    TODO
+
+### Value Average Bot
+
+    TODO
+
+## Google Sheets Scripts
+
+The included `scripts/` directory contains 2 scripts for formatting the contents
+of the output in Google Sheets.
+
+Each script is labeled as such:
+
+-   `format-f8949.js` - Formats the current active sheet containing Form-8949
+    data.
+-   `format-gl.js` - Formats the current active sheet containing Gains and
+    Losses data.
+
+1. Create a new sheet.
+2. File > Import > Upload > Browse > Open > Import Location: Insert new
+   sheet(s) > Import data
+3. Extensions > Apps Script > Code.gs > Copy and paste the relevant scripts >
+   Save > Run (Follow security prompts)
+
+Note that `format-gl.gs` depends on `format-f8949.gs` as they share some
+dependent variables for consistency.
