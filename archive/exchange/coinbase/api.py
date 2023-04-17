@@ -231,7 +231,7 @@ def post_market_order(
             },
         }
 
-        response = post("/orders", data=market_order)
+        response = post(f"{__advanced__}/orders", data=market_order)
 
         if "success" in response and response["success"]:
             success_response = response["success_response"]
