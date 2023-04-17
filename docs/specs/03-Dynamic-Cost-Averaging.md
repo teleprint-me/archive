@@ -7,25 +7,25 @@ always do your own research._
 
 # Dynamic Cost Averaging
 
-Dynamic Cost Averaging is similar to Cost Averaging. We set a Principle Amount
-and then purchase an asset with Principle Amount on a set interval based on Time
+Dynamic Cost Averaging is similar to Cost Averaging. We set a Principal Amount
+and then purchase an asset with Principal Amount on a set interval based on Time
 Period.
 
 We include Target Value that assists in determining the amount to buy or sell
-based on a Purchase Factor of the Principle Amount that falls within Min Factor
+based on a Purchase Factor of the Principal Amount that falls within Min Factor
 and Max Factor range. These expressions and variables are defined by the user.
 
 We need to define our columns: Date, Market Price, Current Target, Current
-Value, Principle Amount, Factor Purchase, Factor Amount, Total Factor Amount,
+Value, Principal Amount, Factor Purchase, Factor Amount, Total Factor Amount,
 Order Size, Total Order Size, and Time Period. This will allow us to keep track
 of the relevant data and show the evaluated expressions as its set of results.
 
 We define the sequence of steps, as well as the expressions used, to evaluate
 each value as the following:
 
-1.  Define Principle Amount
+1.  Define Principal Amount
 
-        Principle Amount = Constant Float Value
+        Principal Amount = Constant Float Value
 
 2.  Define Factor Range
 
@@ -49,7 +49,7 @@ each value as the following:
 
 6.  Get Current Target
 
-        Current Target = Principle Amount * Time Period
+        Current Target = Principal Amount * Time Period
 
 7.  Get Previous Total Order Size
 
@@ -60,7 +60,7 @@ each value as the following:
 
 8.  Get Order Size
 
-        Order Size = Principle Amount / Market Price
+        Order Size = Principal Amount / Market Price
 
 9.  Get Total Order Size
 
@@ -79,7 +79,7 @@ each value as the following:
     Factor Purchase represents a value that is used to determine the size of the
     next trade.
 
-        Factor Purchase = Target Difference / Principle Amount
+        Factor Purchase = Target Difference / Principal Amount
 
     We also need to enforce the Min Factor and Max Factor limits.
 
@@ -97,7 +97,7 @@ each value as the following:
 
 12. Get Factor Amount
 
-        Factor Amount = Purchase Factor * Principle Amount
+        Factor Amount = Purchase Factor * Principal Amount
 
 13. Get Previous Total Factor Amount
 
@@ -143,7 +143,7 @@ I want to paper trade $100 per month on a yearly basis. I will paper trade $100
 per month using the BTC-USD trade pair over a 1 year period. The 1 year period
 will take place in 2020 on the first day of each month.
 
-| Date       | Market Price | Current Target | Current Value | Principle Amount | Factor Purchase | Factor Amount | Total Factor Amount | Order Size | Total Order Size | Time Period |
+| Date       | Market Price | Current Target | Current Value | Principal Amount | Factor Purchase | Factor Amount | Total Factor Amount | Order Size | Total Order Size | Time Period |
 | ---------- | ------------ | -------------- | ------------- | ---------------- | --------------- | ------------- | ------------------- | ---------- | ---------------- | ----------- |
 | 2020-01-01 | 7174.33      | 100.00         | 0.00          | 100.00           | 1.00            | 100.00        | 100.00              | 0.01393858 | 0.01393858       | 1           |
 | 2020-02-01 | 9380.18      | 200.00         | 130.75        |                  |                 |               |                     |            |                  | 2           |
@@ -152,7 +152,7 @@ will take place in 2020 on the first day of each month.
 
 ---
 
-| Date       | Market Price | Current Target | Current Value | Principle Amount | Factor Purchase | Factor Amount | Total Factor Amount | Order Size | Total Order Size | Time Period |
+| Date       | Market Price | Current Target | Current Value | Principal Amount | Factor Purchase | Factor Amount | Total Factor Amount | Order Size | Total Order Size | Time Period |
 | ---------- | ------------ | -------------- | ------------- | ---------------- | --------------- | ------------- | ------------------- | ---------- | ---------------- | ----------- |
 | 2020-01-01 | 7174.33      | 100.00         | 0.00          | 100.00           | 1.00            | 100.00        | 100.00              | 0.01393858 | 0.01393858       | 1           |
 | 2020-02-01 | 9380.18      | 200.00         | 130.75        | 100.00           | 1.00            | 100.00        | 200.00              | 0.01066078 | 0.02459936       | 2           |

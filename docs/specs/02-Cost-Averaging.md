@@ -4,7 +4,7 @@ _I am a **programmer** and I am **NOT** an accredited financial expert. You shou
 
 # Cost Averaging
 
-_Cost Averaging_ is just setting a _Principle Amount_ and then purchasing an asset with that _Fixed Amount_ on a _Set Interval_ based on a _Time Period_ that is defined by the investor.
+_Cost Averaging_ is just setting a _Principal Amount_ and then purchasing an asset with that _Fixed Amount_ on a _Set Interval_ based on a _Time Period_ that is defined by the investor.
 
 I want to _Paper Trade_ $100 per month on a yearly basis. I will paper trade $100 per month using the BTC-USD trade pair over a 1 year period. The 1 year period will take place in 2020.
 
@@ -16,8 +16,8 @@ We also need to define how each record is calculated by filling out each cell wi
 
 -   If there is no previous **Period**, then set **Period** to **0** where
 -   -   **Period** = 1 + Period
--   **Target** = Principle Amount \* Period
--   **Size** = Principle Amount / Price
+-   **Target** = Principal Amount \* Period
+-   **Size** = Principal Amount / Price
 -   If there is no **Previous Total Size**, then set **Pervious Total Size** to
     **0** where
 -   -   **Previous Total Size** = **0** or the _Total Sum_ (Σ) of the **Size**

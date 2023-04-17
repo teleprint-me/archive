@@ -5,8 +5,8 @@ Command-line tools for managing cryptocurrency investments.
 ## License
 
 ```plaintext
-Archive - Convert brokerage CSV transactions to a unified format, Calculate gains and losses, and create Form-8949 for filing taxes.
-Copyright (C) 2022  teleprint-me
+Archive - Command-line tools for managing cryptocurrency investments.
+Copyright (C) 2023  teleprint-me
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -43,10 +43,12 @@ Archive currently supports the following exchanges:
 You can implement your own parsers for additional exchanges by following the
 provided examples and updating the `parser_factory` in `archive/ir/factory.py`.
 
-## Gains and Losses Calculations
+## Calculations
 
-Gains and losses are calculated as a
-[Weighted Average Cost](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
+- Gains and losses are calculated by a
+[Weighted Average](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
+- Cost Averaging is determined by the principal amount.
+- Value Averaging is determined by the principal amount, interest rate, and interval.
 
 ## Installation and initialization
 

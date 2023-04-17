@@ -53,12 +53,12 @@ Here, we use a smaller data set to keep things simple for now. We will use the M
 
 ---
 
-Our columns will be the following: Date, Market Price, Principle Amount, Target Value, Current Value, Order Size, Total Order Size, and Time Period.
+Our columns will be the following: Date, Market Price, Principal Amount, Target Value, Current Value, Order Size, Total Order Size, and Time Period.
 
 -   **Date** will represent the date for the current record (row).
 -   **Market Price** will represent the current price at which each unit of
     Bitcoin was bought or sold.
--   **Principle Amount** will represent the amount of money that was put into
+-   **Principal Amount** will represent the amount of money that was put into
     the investment.
 -   **Target Value** will represent our desired projected value for our current
     overall investment.
@@ -68,21 +68,21 @@ Our columns will be the following: Date, Market Price, Principle Amount, Target 
 -   **Total Order Size** will represent the total amount that we purchased.
 -   **Time Period** will represent the total number of times we've invested.
 
-_Principle Amount_ will be the only _constant value_. A **constant value** is a
+_Principal Amount_ will be the only _constant value_. A **constant value** is a
 _fixed value_. A fixed value is a value that does not change. The rest will be
 _variable_. A variable represents an unknown, or yet to be calculated, value.
 The variables will be calculated based on whether certain _conditions_ are met.
 
 I like using small numbers and using multiples of 10 tends to keep things very
 simple. This allows us to catch errors when we make mistakes. The mistake will
-be more apparent and easy to backtrack as a result. Our _Principle Amount_ will
+be more apparent and easy to backtrack as a result. Our _Principal Amount_ will
 be $10 as a result of this reasoning.
 
 The _Market Price_ for the _Date_ Jan 01, 2020 was $9334.98.
 
 The following will be the outline for our first record entry:
 
-| Date     | Market Price | Current Target | Current Value | Principle Amount | Order Size | Total Order Size | Time Period |
+| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Time Period |
 | -------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     |                |               | $10              |            |                  |             |
 
@@ -91,8 +91,8 @@ This allows us to set up our first record.
 We also need to define how we will calculate the rest of the columns.
 
 -   **Time Period** = 1 + Time Period
--   **Current Target** = Principle Amount \* Time Period
--   **Order Size** = Principle Amount / Market Price
+-   **Current Target** = Principal Amount \* Time Period
+-   **Order Size** = Principal Amount / Market Price
 -   **Total Order Size** = Order Size + Previous Total Order Size
 -   **Current Value** = Market Price \* Previous Total Order Size
 
@@ -116,7 +116,7 @@ _Time Period_.
 
 The following would be the result for our first record entry:
 
-| Date     | Market Price | Current Target | Current Value | Principle Amount | Order Size | Total Order Size | Time Period |
+| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Time Period |
 | -------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     | $10            | 0             | $10              | 0.00107124 | 0.00107124       | 1           |
 
@@ -128,7 +128,7 @@ _solvent_.
 Let's create the second record to see how each cell is evaluated and then
 recorded.
 
-| Date     | Market Price | Current Target | Current Value | Principle Amount | Order Size | Total Order Size | Time Period |
+| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Time Period |
 | -------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     | $10            | 0             | $10              | 0.00107124 | 0.00107124       | 1           |
 | 02/01/20 | $8505.07     |                |               | $10              |            |                  |             |
@@ -142,7 +142,7 @@ variable using the given information.
 -   **Total Order Size** = 0.00117577 + 0.00107124 ≈ 0.00224701
 -   **Current Value** = 8505.07 \* 0.00107124 = 9.11
 
-| Date     | Market Price | Current Target | Current Value | Principle Amount | Order Size | Total Order Size | Time Period |
+| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Time Period |
 | -------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     | $10            | 0             | $10              | 0.00107124 | 0.00107124       | 1           |
 | 02/01/20 | $8505.07     | $20            | $9.11         | $10              | 0.00117577 | 0.00224701       | 2           |
@@ -152,7 +152,7 @@ deviate from the investment plan.
 
 This table isn't displaying our gain or loss. Let's define a new expression to
 evaluate our gain or loss in a new column. We can place it in between our
-**Current Value** and **Principle Amount** columns.
+**Current Value** and **Principal Amount** columns.
 
 -   **Gain/Loss** = Current Value - Previous Current Target
 
@@ -166,7 +166,7 @@ evaluate our gain or loss in a new column. We can place it in between our
 -   First Row: **Gain/Loss** = 0 - 0 = 0
 -   Second Row: **Gain/Loss** = 9.11 - 10 ≈ -0.89
 
-| Date     | Market Price | Current Target | Current Value | Gain/Loss | Principle Amount | Order Size | Total Order Size | Time Period |
+| Date     | Market Price | Current Target | Current Value | Gain/Loss | Principal Amount | Order Size | Total Order Size | Time Period |
 | -------- | ------------ | -------------- | ------------- | --------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     | $10            | 0             | 0         | $10              | 0.00107124 | 0.00107124       | 1           |
 | 02/01/20 | $8505.07     | $20            | $9.11         | -$0.89    | $10              | 0.00117577 | 0.00224701       | 2           |

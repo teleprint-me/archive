@@ -7,8 +7,8 @@ always do your own research._
 
 # Value Averaging
 
-Value Averaging is similar to Cost Averaging. We set a Principle Amount and then
-purchase an asset with the Principle Amount on a set interval based on Time
+Value Averaging is similar to Cost Averaging. We set a Principal Amount and then
+purchase an asset with the Principal Amount on a set interval based on Time
 Period and Growth Rate.
 
 We need to define our columns: Date, Market Price, Current Target, Current
@@ -21,9 +21,9 @@ evaluated expressions as its set of results.
 We define the sequence of steps, as well as the expressions used, to evaluate
 each value as the following:
 
-1.  Define Principle Amount
+1.  Define Principal Amount
 
-        Principle Amount = Constant Float Value
+        Principal Amount = Constant Float Value
 
 2.  Define Interest Rate
 
@@ -47,9 +47,9 @@ each value as the following:
 6.  Get Current Target
 
         IF NOT Previous Current Target
-            THEN Current Target = Principle Amount
+            THEN Current Target = Principal Amount
         IF Previous Current Target
-            THEN Current Target = Principle Amount * Time Period * pow(Interest Rate, Time Period)
+            THEN Current Target = Principal Amount * Time Period * pow(Interest Rate, Time Period)
 
 7.  Get Previous Total Order Size
 
@@ -122,9 +122,9 @@ Initialize the table and calculate the first record:
         Previous Total Order Size = 0
         Previous Total Trade Amount = 0
 
-2.  Set Principle Amount
+2.  Set Principal Amount
 
-        Principle Amount = 100.00
+        Principal Amount = 100.00
 
 3.  Set the Interest Rate. We set the Interest Rate to 10% and add 1 to it to
     enforce the identity property of multiplication. This ensures that the
@@ -145,10 +145,10 @@ Initialize the table and calculate the first record:
         Time Period = 1 + 0 = 1
 
 7.  Get Current Target. The Current Target for the first record is always the
-    Principle Amount. The rationale is to exclude the interest rate from the
+    Principal Amount. The rationale is to exclude the interest rate from the
     initial amount because there are no previous investments. The rest of the
     records evaluate the expression
-    `Principle Amount * Time Period * POW(Interest Rate, Time Period)` to
+    `Principal Amount * Time Period * POW(Interest Rate, Time Period)` to
     calculate the Current Target in order to include the interest rate from the
     2nd record forward on.
 
@@ -238,7 +238,7 @@ amongst brokerages and is outside of the scope of this strategy.
 
 11. Repeat steps 1 through 10 until each record has been evaluated
 
-| Date       | Market Price | Current Target | Current Value | Principle Amount | Factor Purchase | Factor Amount | Total Factor Amount | Order Size | Total Order Size | Time Period |
+| Date       | Market Price | Current Target | Current Value | Principal Amount | Factor Purchase | Factor Amount | Total Factor Amount | Order Size | Total Order Size | Time Period |
 | ---------- | ------------ | -------------- | ------------- | ---------------- | --------------- | ------------- | ------------------- | ---------- | ---------------- | ----------- |
 | 2020-01-01 | 7174.33      | 100.00         | 0.00          | 100.00           | 1.00            | 100.00        | 100.00              | 0.01393858 | 0.01393858       | 1           |
 | 2020-02-01 | 9380.18      | 200.00         | 130.75        | 100.00           | 1.00            | 100.00        | 200.00              | 0.01066078 | 0.02459936       | 2           |
