@@ -1,10 +1,15 @@
 import csv
 from pathlib import Path
+from typing import Union
 
 import texttable
 
+from archive.tools.logger import setup_logger
 
-def read_csv(filepath: str | Path) -> list[list[str]]:
+logger = setup_logger("io_logger", "data/log/io.log")
+
+
+def read_csv(filepath: Union[str, Path]) -> list[list[str]]:
     """Read data from a CSV file using the given filepath.
 
     Args:
@@ -14,13 +19,21 @@ def read_csv(filepath: str | Path) -> list[list[str]]:
         A list of CSV rows, where each row is a list of column values.
     """
     csv_table = []
+
     with open(filepath, mode="r") as file:
         for csv_row in csv.reader(file, delimiter=","):
             csv_table.append(csv_row)
-        return csv_table
+
+    logger.debug(f"CSV_READ: {filepath}")
+    logger.debug(f"CSV_READ_TABLE: {csv_table}")
+
+    return csv_table
 
 
-def write_csv(filepath: str | Path, csv_table: list[list[str]]):
+def write_csv(
+    filepath: Union[str, Path],
+    csv_table: list[list[str]],
+) -> None:
     """Write data to a CSV file.
 
     Args:
@@ -34,8 +47,24 @@ def write_csv(filepath: str | Path, csv_table: list[list[str]]):
         writer = csv.writer(file, delimiter=",")
         writer.writerows(csv_table)
 
+    logger.debug(f"CSV_WRITE: {filepath}")
+    logger.debug(f"CSV_WRITE_TABLE: {csv_table}")
 
-def print_csv(csv_table: list[list[str]], width: int = 240):
+
+def read_write_csv(
+    filepath: Union[str, Path],
+    csv_table: list[list[str]],
+) -> list[list[str]]:
+    try:
+        return read_csv(filepath)
+    except (FileNotFoundError,) as error:
+        logger.debug(f"CSV_READ_WRITE: {error}")
+
+        write_csv(filepath, csv_table)
+        return read_csv(filepath)
+
+
+def print_csv(csv_table: list[list[str]], width: int = 240) -> None:
     """Prints a formatted table of the CSV contents to the console.
 
     Args:
