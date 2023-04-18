@@ -1,100 +1,287 @@
 **Disclaimer:**
 
-_I am a **programmer** and I am **NOT** an accredited financial expert. You should seek out an accredited financial expert for making serious investment decisions. Do NOT take investment advice from random internet strangers and always do your own research._
+_**I am a programmer and I am NOT an accredited financial expert. You should
+seek out an accredited financial expert for making serious investment decisions.
+Do NOT take investment advice from random internet strangers and always do your
+own research**._
 
 # Cost Averaging
 
-_Cost Averaging_ is just setting a _Principal Amount_ and then purchasing an asset with that _Fixed Amount_ on a _Set Interval_ based on a _Time Period_ that is defined by the investor.
+## Understanding Cost Averaging Variables
 
-I want to _Paper Trade_ $100 per month on a yearly basis. I will paper trade $100 per month using the BTC-USD trade pair over a 1 year period. The 1 year period will take place in 2020.
+_Cost Averaging_ is an investment strategy that involves setting a fixed
+_Principal Amount_ and periodically purchasing an asset at that amount based on
+a predetermined _Frequency_. This approach aims to spread investment over time,
+reducing the impact of market fluctuations.
 
-We define our columns as: Date, Price, Target, Value, Size, Total Size, and Period.
+-   `principal_amount: float = 10.00`
+-   `interval: int = 0`
+-   `frequency: dict[str, int] = {"daily": 365, "weekly": 52, "monthly": 12}`
+    -   `daily: int = 365`
+    -   `weekly: int = 52`
+    -   `monthly: int = 12`
 
-This keeps the tabulation of our data simple and compact.
+Each variable represents the following:
 
-We also need to define how each record is calculated by filling out each cell with the appropriate data.
+-   `principal_amount`: The fixed amount of money invested at each interval. In
+    this example, the principal amount is set to $10.00.
+-   `interval`: The number of time units that have passed since the start of the
+    investment strategy. The interval is a variable that changes over time.
+-   `frequency`: The frequency at which the asset is purchased. It can be set to
+    "daily", "weekly", or "monthly". In this example, the frequency is set to
+    "monthly".
+    -   `daily`: Indicates an investment made every day, resulting in 365
+        investments per year.
+    -   `weekly`: Indicates an investment made once a week, resulting in 52
+        investments per year.
+    -   `monthly`: Indicates an investment made once a month, resulting in 12
+        investments per year.
 
--   If there is no previous **Period**, then set **Period** to **0** where
--   -   **Period** = 1 + Period
--   **Target** = Principal Amount \* Period
--   **Size** = Principal Amount / Price
--   If there is no **Previous Total Size**, then set **Pervious Total Size** to
-    **0** where
--   -   **Previous Total Size** = **0** or the _Total Sum_ (Σ) of the **Size**
-        column excluding the _Current Record_
--   **Total Size** = Size + Previous Total Size
--   **Value** = Price \* Previous Total Size
+These variables help to define and execute a cost averaging investment strategy
+tailored to the investor's preferences and risk tolerance.
 
-Let's start by setting both _Previous Total Size_ and _Period_ to 0.
+### Defining Paper Trading Parameters
 
--   **Previous Total Size** = 0
--   **Period** = 1 + 0 = 1
+In this example, we will _Paper Trade_ $10 per month on a yearly basis using the
+BTC-USD trade pair over a 1-year period in 2020. The columns for our data table
+are: Date, Market Price, Current Target, Current Value, Order Size, Total Order
+Size, and Interval. This structure keeps the tabulation of our data simple and
+compact.
 
-Now we can tabulate our _Target_, _Value_, _Size_, _Total Size_, and _Period_. This allows us to track the progress of our investment and gives us a "_birds eye_" view of its performance over time.
+### Calculating Record Entries
 
-It's important to keep in mind that the current _Value_ excludes the current records _Total Size_.
+We need to define how each record is calculated by filling out each cell with
+the appropriate data.
 
--   If **Value** as (Price \* Current Total Size) **includes** current record,
-    then **Value** = Price \* Current Total Size
--   Else **Value** = Price \* Previous Total Size **excludes** current record
+-   If there is no previous `interval`, then set `interval` to `0`
+    -   Increment `interval` for each inserted record:
+        `interval: int = interval + 1`
+-   `current_target: float = principal_amount * interval`
+-   `order_size: float = principal_amount / market_price`
+-   If there is no `previous_total_order_size`, then set
+    `previous_total_order_size` to `0`.
+    -   `previous_total_order_size: float = 0`
+    -   `previous_total_order_size` represents the sum (Σ) of the _Order Size_
+        column excluding the _Current Record_.
+        -   `previous_total_order_size: float = sum(order_size_column[:-1])`
+-   `total_order_size: float = order_size + previous_total_order_size`
+-   `current_value: float = market_price * previous_total_order_size`
 
-| Date     | Price     | Target | Value   | Size       | Total Size | Period |
-| -------- | --------- | ------ | ------- | ---------- | ---------- | ------ |
-| 01/01/20 | $9334.98  | $100   | 0       | 0.01071240 | 0.01071240 | 01     |
-| 02/01/20 | $8505.07  | $200   | $91.11  | 0.01175769 | 0.02247009 | 02     |
-| 03/01/20 | $6424.35  | $300   | $144.36 | 0.01556578 | 0.03803587 | 03     |
-| 04/01/20 | $8624.28  | $400   | $328.03 | 0.01159517 | 0.04963104 | 04     |
-| 05/01/20 | $9446.57  | $500   | $468.84 | 0.01058585 | 0.06021689 | 05     |
-| 06/01/20 | $9136.20  | $600   | $550.15 | 0.01094547 | 0.07116236 | 06     |
-| 07/01/20 | $11351.62 | $700   | $807.81 |            |            | 07     |
-| 08/01/20 | $11655.00 | $800   |         |            |            | 08     |
-| 09/01/20 | $10779.63 | $900   |         |            |            | 09     |
-| 10/01/20 | $13804.81 | $1000  |         |            |            | 10     |
-| 11/01/20 | $19713.94 | $1100  |         |            |            | 11     |
-| 12/01/20 | $28990.08 | $1200  |         |            |            | 12     |
+Each variable represents the following:
 
-See if you can finish the table as an exercise. It's already more than halfway there for you.
+-   `interval`: The number of time units that have passed since the start of the
+    investment strategy. The interval is incremented for each record entry.
+-   `current_target`: The target investment amount at the current interval,
+    calculated as the principal amount multiplied by the interval.
+-   `order_size`: The amount of the asset to be purchased at the current market
+    price, calculated as the principal amount divided by the price.
+-   `previous_total_order_size`: The sum of the _Order Size_ column excluding
+    the current record. If no previous total order size exists, set it to `0`.
+-   `total_order_size`: The sum of the current order size and the previous total
+    order size.
+-   `current_value`: The value of the investment at the current market price,
+    calculated as the market price multiplied by the previous total order size.
 
-We opted for _excluding_ the current _Value_ and you can see that we remained in an _unrealized loss_ up until the 4th record entry.
+This method of calculation helps track the progress of the paper trading
+investment strategy and provides insights into its performance over time.
 
--   **Gain/Loss** = Value - Previous Target
--   **Gain/Loss** = 328.03 - 300 ≈ 28.03
+### Initializing Variables and Tabulating Data
 
-We can also see that we made an _unrealized gain_ of $28.03 by the 4th record entry. Our investment is only _realized_ once we sell.
+Let's start by initializing both `previous_total_order_size` and `interval`:
 
-We can define*Gain/Loss* as:
+-   `previous_total_order_size: float = 0`
+-   `interval: int = 1`
 
--   **Gain/Loss** = Value - Previous Target
+Now we can tabulate our _Current Target_, _Current Value_, _Order Size_, _Total
+Order Size_, and _Interval_. This allows us to track the progress of our
+investment and gives us a bird's-eye view of its performance over time.
 
--   If there is no **Value**, then set **Value** to **0**.
--   If there is no **Previous Target**, then set **Previous Target** to **0**.
+### Handling the Current Value Calculation
 
--   A **Gain** is represented as a _positive value_ (+) while a **Loss** is
-    represented as a _negative value_ (-).
+It's important to note that the _Current Value_ calculation depends on whether
+or not it includes the current record's _Total Order Size_:
 
--   First Row: **Gain/Loss** = 0 - 0 = 0
--   Second Row: **Gain/Loss** = 91.11 - 100 ≈ -8.89
--   Third Row: **Gain/Loss** = 144.36 - 200 ≈ -55.64
--   Forth Row: **Gain/Loss** = 328.03 - 300 ≈ 28.03
--   Fifth row: **Gain/Loss** = 468.84 - 400 ≈ 68.84
+-   If the `record` is the _Initial Record_, then the `current_value` is
+    initialized to zero: `current_value: float = 0`, because there is no
+    investment yet.
+-   If there is at least one record, then the `current_value` calculation uses
+    `previous_total_order_size`:
+    `current_value: float = market_price * previous_total_order_size`.
 
-You'll notice that the _Previous Target_ is always the previous **Target** value and **Value** is always represents the current records **Value**.
+| Date     | Market Price | Current Target | Current Value | Order Size | Total Order Size | Interval |
+| -------- | ------------ | -------------- | ------------- | ---------- | ---------------- | -------- |
+| 01/01/20 | 9,334.98     | 10.00          | 0.00          | 0.00107124 | 0.00107124       | 1        |
+| 02/01/20 | 8,505.07     | 20.00          | 9.11          | 0.00117577 | 0.00224701       | 2        |
+| 03/01/20 | 6,424.35     | 30.00          | 14.44         | 0.00155658 | 0.00380359       | 3        |
+| 04/01/20 | 8,624.28     | 40.00          | 32.80         | 0.00115952 | 0.00496310       | 4        |
+| 05/01/20 | 9,446.57     | 50.00          | 46.88         | 0.00105859 | 0.00602169       | 5        |
+| 06/01/20 | 9,136.20     | 60.00          | 55.02         |            |                  | 6        |
+| 07/01/20 | 11,351.62    | 70.00          |               |            |                  | 7        |
+| 08/01/20 | 11,655.00    | 80.00          |               |            |                  | 8        |
+| 09/01/20 | 10,779.63    | 90.00          |               |            |                  | 9        |
+| 10/01/20 | 13,804.81    | 100.00         |               |            |                  | 10       |
+| 11/01/20 | 19,713.94    |                |               |            |                  | 11       |
+| 12/01/20 | 28,990.08    |                |               |            |                  | 12       |
 
-| Date     | Price     | Target | Value   | Gain/Loss | Size       | Total Size | Period |
-| -------- | --------- | ------ | ------- | --------- | ---------- | ---------- | ------ |
-| 01/01/20 | $9334.98  | $100   | 0       | 0         | 0.01071240 | 0.01071240 | 01     |
-| 02/01/20 | $8505.07  | $200   | $91.11  | -$8.89    | 0.01175769 | 0.02247009 | 02     |
-| 03/01/20 | $6424.35  | $300   | $144.36 | -$55.64   | 0.01556578 | 0.03803587 | 03     |
-| 04/01/20 | $8624.28  | $400   | $328.03 | $28.03    | 0.01159517 | 0.04963104 | 04     |
-| 05/01/20 | $9446.57  | $500   | $468.84 | $68.84    | 0.01058585 | 0.06021689 | 05     |
-| 06/01/20 | $9136.20  | $600   | $550.15 | $50.15    | 0.01094547 | 0.07116236 | 06     |
-| 07/01/20 | $11351.62 | $700   | $807.81 | $207.81   | 0.00880932 | 0.07997168 | 07     |
-| 08/01/20 | $11655.00 | $800   |         |           |            |            | 08     |
-| 09/01/20 | $10779.63 | $900   |         |           |            |            | 09     |
-| 10/01/20 | $13804.81 | $1000  |         |           |            |            | 10     |
-| 11/01/20 | $19713.94 | $1100  |         |           |            |            | 11     |
-| 12/01/20 | $28990.08 | $1200  |         |           |            |            | 12     |
+Try completing the table as an exercise. It's already more than halfway there
+for you.
 
-See if you can finish the table as an exercise. Again, it's already more than halfway there for you.
+### Tracking Investment Performance with Gain or Loss
 
-You can also see that **Size** was affected by the **Price**. We bought less when the price was "**high**" and bought more when the price was "**low**". This becomes more apparent as the price increases or decreases.
+In this example, we'll add a Gain or (Loss) column to provide more information
+about our investment performance at a glance.
+
+| Date     | Market Price | Current Target | Current Value | Gain or (Loss) | Order Size | Total Order Size | Interval |
+| -------- | ------------ | -------------- | ------------- | -------------- | ---------- | ---------------- | -------- |
+| 01/01/20 | 9,334.98     | 10.00          | 0.00          | 0.00           | 0.00107124 | 0.00107124       | 1        |
+| 02/01/20 | 8,505.07     | 20.00          | 9.11          | (0.89)         | 0.00117577 | 0.00224701       | 2        |
+| 03/01/20 | 6,424.35     | 30.00          | 14.44         | (5.56)         | 0.00155658 | 0.00380359       | 3        |
+| 04/01/20 | 8,624.28     | 40.00          | 32.80         | 2.80           | 0.00115952 | 0.00496310       | 4        |
+| 05/01/20 | 9,446.57     | 50.00          | 46.88         | 6.88           | 0.00105859 | 0.00602169       | 5        |
+
+The Gain or (Loss) column represents the difference between the `current_value`
+and the `previous_current_target`. It can be calculated using the formula:
+
+-   `gain_or_loss = current_value - previous_current_target`
+
+A positive value represents a gain, while a negative value represents a loss.
+
+The table shows that the investment remains in an unrealized loss until the 4th
+record entry. The investment becomes realized once it is sold.
+
+The table also demonstrates how the `order_size` is affected by the
+`market_price`. We buy less when the price is high and buy more when the price
+is low. This trend becomes more apparent as the price increases or decreases.
+
+As an exercise, try completing the table to further understand the investment
+performance.
+
+## Algorithm Overview and Models
+
+### Models
+
+#### Base Model
+
+```python
+@dataclass
+class AverageRecord:
+    """A dataclass representing a base record for averaging strategies."""
+
+    exchange: str
+    product_id: str
+    datetime: str
+    principal_amount: float
+    market_price: float
+    side: str
+    current_target: float
+    current_value: float
+    order_size: float
+    total_order_size: float
+    interval: int
+
+    @property
+    def base(self) -> str:
+        return self.product_id.split("-")[0]
+
+    @property
+    def quote(self) -> str:
+        return self.product_id.split("-")[1]
+
+    def increment_interval(self) -> int:
+        self.interval += 1
+        return self.interval
+```
+
+The `AverageRecord` dataclass serves as the base model for averaging strategies.
+It contains attributes such as exchange, product_id, datetime, principal_amount,
+market_price, side, current_target, current_value, order_size, total_order_size,
+and interval. The class also includes two properties: `base` and `quote`,
+derived from the product_id, and a method called `increment_interval` to
+increment the interval attribute.
+
+#### Cost Average Model
+
+```python
+@dataclass
+class CostAverageRecord(AverageRecord):
+    gain_loss: Optional[float]
+```
+
+The `CostAverageRecord` dataclass extends the `AverageRecord` and adds an
+optional `gain_loss` attribute, which represents the gain or loss in the
+averaging strategy.
+
+### Pseudocode
+
+#### WIP (Work In Progress)
+
+1. Initialize a list of `CostAverageRecord` objects.
+2. For each record in the input data:
+   a. Extract relevant information such as exchange, product_id, datetime, principal_amount, market_price, and side.
+   b. Calculate the current target, current value, order size, and total order size.
+   c. Calculate gain or loss if applicable.
+   d. Create a `CostAverageRecord` object with the extracted and calculated values.
+   e. Add the `CostAverageRecord` object to the list.
+3. Return the list of `CostAverageRecord` objects.
+
+## Summary
+
+Summary goes here.
+
+## Solution
+
+| Exchange | Principal Amount | Date     | Market Price | Current Target | Current Value | Gain or (Loss) | Order Size | Total Order Size | Interval |
+| -------- | ---------------- | -------- | ------------ | -------------- | ------------- | -------------- | ---------- | ---------------- | -------- |
+| paper    | 10.00            | 01/01/20 | 9,334.98     | 10.00          | 0.00          | 0.00           | 0.00107124 | 0.00107124       | 1        |
+| paper    | 10.00            | 02/01/20 | 8,505.07     | 20.00          | 9.11          | (0.89)         | 0.00117577 | 0.00224701       | 2        |
+| paper    | 10.00            | 03/01/20 | 6,424.35     | 30.00          | 14.44         | (5.56)         | 0.00155658 | 0.00380359       | 3        |
+| paper    | 10.00            | 04/01/20 | 8,624.28     | 40.00          | 32.80         | 2.80           | 0.00115952 | 0.00496310       | 4        |
+| paper    | 10.00            | 05/01/20 | 9,446.57     | 50.00          | 46.88         | 6.88           | 0.00105859 | 0.00602169       | 5        |
+| paper    | 10.00            | 06/01/20 | 9,136.20     | 60.00          | 55.02         | 5.02           | 0.00109455 | 0.00711624       | 6        |
+| paper    | 10.00            | 07/01/20 | 11,351.62    | 70.00          | 80.78         | 20.78          | 0.00088093 | 0.00799717       | 7        |
+| paper    | 10.00            | 08/01/20 | 11,655.00    | 80.00          | 93.21         | 23.21          | 0.00085800 | 0.00885517       | 8        |
+| paper    | 10.00            | 09/01/20 | 10,779.63    | 90.00          | 95.46         | 15.46          | 0.00092768 | 0.00978284       | 9        |
+| paper    | 10.00            | 10/01/20 | 13,804.81    | 100.00         | 135.05        | 45.05          | 0.00072439 | 0.01050723       | 10       |
+| paper    | 10.00            | 11/01/20 | 19,713.94    | 110.00         | 207.14        | 107.14         | 0.00050726 | 0.01101448       | 11       |
+| paper    | 10.00            | 12/01/20 | 28,990.08    | 120.00         | 319.31        | 209.31         | 0.00034495 | 0.01135943       | 12       |
+
+## Complete Data Set
+
+| Exchange | Principal Amount | Date     | Market Price | Current Target | Current Value | Gain or (Loss) | Order Size | Total Order Size | Interval |
+| -------- | ---------------- | -------- | ------------ | -------------- | ------------- | -------------- | ---------- | ---------------- | -------- |
+| paper    | 10.00            | 01/01/20 | 9,334.98     | 10.00          | 0.00          | 0.00           | 0.00107124 | 0.00107124       | 1        |
+| paper    | 10.00            | 02/01/20 | 8,505.07     | 20.00          | 9.11          | (0.89)         | 0.00117577 | 0.00224701       | 2        |
+| paper    | 10.00            | 03/01/20 | 6,424.35     | 30.00          | 14.44         | (5.56)         | 0.00155658 | 0.00380359       | 3        |
+| paper    | 10.00            | 04/01/20 | 8,624.28     | 40.00          | 32.80         | 2.80           | 0.00115952 | 0.00496310       | 4        |
+| paper    | 10.00            | 05/01/20 | 9,446.57     | 50.00          | 46.88         | 6.88           | 0.00105859 | 0.00602169       | 5        |
+| paper    | 10.00            | 06/01/20 | 9,136.20     | 60.00          | 55.02         | 5.02           | 0.00109455 | 0.00711624       | 6        |
+| paper    | 10.00            | 07/01/20 | 11,351.62    | 70.00          | 80.78         | 20.78          | 0.00088093 | 0.00799717       | 7        |
+| paper    | 10.00            | 08/01/20 | 11,655.00    | 80.00          | 93.21         | 23.21          | 0.00085800 | 0.00885517       | 8        |
+| paper    | 10.00            | 09/01/20 | 10,779.63    | 90.00          | 95.46         | 15.46          | 0.00092768 | 0.00978284       | 9        |
+| paper    | 10.00            | 10/01/20 | 13,804.81    | 100.00         | 135.05        | 45.05          | 0.00072439 | 0.01050723       | 10       |
+| paper    | 10.00            | 11/01/20 | 19,713.94    | 110.00         | 207.14        | 107.14         | 0.00050726 | 0.01101448       | 11       |
+| paper    | 10.00            | 12/01/20 | 28,990.08    | 120.00         | 319.31        | 209.31         | 0.00034495 | 0.01135943       | 12       |
+| paper    | 10.00            | 01/01/21 | 33,137.74    | 130.00         | 376.43        | 256.43         | 0.00030177 | 0.01166120       | 13       |
+| paper    | 10.00            | 02/01/21 | 45,231.75    | 140.00         | 527.46        | 397.46         | 0.00022108 | 0.01188228       | 14       |
+| paper    | 10.00            | 03/01/21 | 58,800.00    | 150.00         | 698.68        | 558.68         | 0.00017007 | 0.01205235       | 15       |
+| paper    | 10.00            | 04/01/21 | 57,798.77    | 160.00         | 696.61        | 546.61         | 0.00017301 | 0.01222537       | 16       |
+| paper    | 10.00            | 05/01/21 | 37,279.31    | 170.00         | 455.75        | 295.75         | 0.00026825 | 0.01249361       | 17       |
+| paper    | 10.00            | 06/01/21 | 35,060.00    | 180.00         | 438.03        | 268.03         | 0.00028523 | 0.01277884       | 18       |
+| paper    | 10.00            | 07/01/21 | 41,495.01    | 190.00         | 530.26        | 350.26         | 0.00024099 | 0.01301983       | 19       |
+| paper    | 10.00            | 08/01/21 | 47,112.50    | 200.00         | 613.40        | 423.40         | 0.00021226 | 0.01323209       | 20       |
+| paper    | 10.00            | 09/01/21 | 43,824.43    | 210.00         | 579.89        | 379.89         | 0.00022818 | 0.01346027       | 21       |
+| paper    | 10.00            | 10/01/21 | 61,343.68    | 220.00         | 825.70        | 615.70         | 0.00016302 | 0.01362329       | 22       |
+| paper    | 10.00            | 11/01/21 | 56,987.97    | 230.00         | 776.36        | 556.36         | 0.00017548 | 0.01379876       | 23       |
+| paper    | 10.00            | 12/01/21 | 46,211.24    | 240.00         | 637.66        | 407.66         | 0.00021640 | 0.01401516       | 24       |
+| paper    | 10.00            | 01/01/22 | 38,491.93    | 250.00         | 539.47        | 299.47         | 0.00025979 | 0.01427495       | 25       |
+| paper    | 10.00            | 02/01/22 | 43,192.66    | 260.00         | 616.57        | 366.57         | 0.00023152 | 0.01450648       | 26       |
+| paper    | 10.00            | 03/01/22 | 45,528.45    | 270.00         | 660.46        | 400.46         | 0.00021964 | 0.01472612       | 27       |
+| paper    | 10.00            | 04/01/22 | 37,644.10    | 280.00         | 554.35        | 284.35         | 0.00026565 | 0.01499176       | 28       |
+| paper    | 10.00            | 05/01/22 | 31,784.05    | 290.00         | 476.50        | 196.50         | 0.00031462 | 0.01530639       | 29       |
+| paper    | 10.00            | 06/01/22 | 19,985.62    | 300.00         | 305.91        | 15.91          | 0.00050036 | 0.01580675       | 30       |
+| paper    | 10.00            | 07/01/22 | 23,307.44    | 310.00         | 368.41        | 68.41          | 0.00042905 | 0.01623580       | 31       |
+| paper    | 10.00            | 08/01/22 | 20,048.26    | 320.00         | 325.50        | 15.50          | 0.00049880 | 0.01673459       | 32       |
+| paper    | 10.00            | 09/01/22 | 19,426.11    | 330.00         | 325.09        | 5.09           | 0.00051477 | 0.01724936       | 33       |
+| paper    | 10.00            | 10/01/22 | 20,489.94    | 340.00         | 353.44        | 23.44          | 0.00048804 | 0.01773741       | 34       |
+| paper    | 10.00            | 11/01/22 | 17,167.33    | 350.00         | 304.50        | (35.50)        | 0.00058250 | 0.01831991       | 35       |
+| paper    | 10.00            | 12/01/22 | 16,530.35    | 360.00         | 302.83        | (47.17)        | 0.00060495 | 0.01892486       | 36       |

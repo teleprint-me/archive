@@ -84,7 +84,7 @@ set later on to include 2021 and 2022 monthly market prices as well.
 ### Defining Record Entries
 
 Our columns will be the following: Date, Market Price, Principal Amount, Target
-Value, Current Value, Order Size, Total Order Size, and Time Period.
+Value, Current Value, Order Size, Total Order Size, and Interval.
 
 -   **Date** represents the date for the current record (row).
 -   **Market Price** represents the current price at which each unit of Bitcoin
@@ -96,7 +96,7 @@ Value, Current Value, Order Size, Total Order Size, and Time Period.
 -   **Current Value** represents the most recent total value of our investment.
 -   **Order Size** represents the amount that we purchased.
 -   **Total Order Size** represents the total amount that we purchased.
--   **Time Period** represents the total number of times we've invested.
+-   **Interval** represents the total number of times we've invested.
 
 _Principal Amount_ is the only _constant value_. A **constant value** is a
 _fixed value_, meaning a value that does not change. The rest are _variables_. A
@@ -111,7 +111,7 @@ The _Market Price_ for the _Date_ Jan 01, 2020 was $9334.98.
 
 The following is the outline for our first record entry:
 
-| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Time Period |
+| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Interval |
 | -------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     |                |               | $10              |            |                  |             |
 
@@ -121,25 +121,25 @@ This allows us to set up our first record.
 
 We also need to define how we will calculate the rest of the columns.
 
--   **Time Period** = 1 + Time Period
--   **Current Target** = Principal Amount \* Time Period
+-   **Interval** = 1 + Interval
+-   **Current Target** = Principal Amount \* Interval
 -   **Order Size** = Principal Amount / Market Price
 -   **Total Order Size** = Order Size + Previous Total Order Size
 -   **Current Value** = Market Price \* Previous Total Order Size
 
 -   If there is no **Previous Total Order Size**, then set **Pervious Total
     Order Size** to **0**.
--   If there is no previous **Time Period**, then set **Time Period** to **0**.
+-   If there is no previous **Interval**, then set **Interval** to **0**.
 
-Let's start by setting both _Previous Total Order Size_ and _Time Period_ to 0.
+Let's start by setting both _Previous Total Order Size_ and _Interval_ to 0.
 
 -   **Previous Total Order Size** = 0
--   **Time Period** = 0
+-   **Interval** = 0
 
 Now we can calculate our _Current Target_, _Current Value_, _Order Size_, and
-_Time Period_.
+_Interval_.
 
--   **Time Period** = 1 + 0 = 1
+-   **Interval** = 1 + 0 = 1
 -   **Current Target** = 10 \* 1 = 10
 -   **Order Size** = 10 / 9334.98 ≈ 0.00107124
 -   **Total Order Size** = 0.00107124 + 0 ≈ 0.00107124
@@ -147,7 +147,7 @@ _Time Period_.
 
 The following would be the result for our first record entry:
 
-| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Time Period |
+| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Interval |
 | -------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     | $10            | 0             | $10              | 0.00107124 | 0.00107124       | 1           |
 
@@ -161,7 +161,7 @@ _solvent_.
 Let's create the second record to see how each cell is evaluated and then
 recorded.
 
-| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Time Period |
+| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Interval |
 | -------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     | $10            | 0             | $10              | 0.00107124 | 0.00107124       | 1           |
 | 02/01/20 | $8505.07     |                |               | $10              |            |                  |             |
@@ -169,13 +169,13 @@ recorded.
 All we have to do is follow the same pattern as before while updating each
 variable using the given information.
 
--   **Time Period** = 1 + 1 = 2
+-   **Interval** = 1 + 1 = 2
 -   **Current Target** = 10 \* 2 = 20
 -   **Order Size** = 10 / 8505.07 ≈ 0.00117577
 -   **Total Order Size** = 0.00117577 + 0.00107124 ≈ 0.00224701
 -   **Current Value** = 8505.07 \* 0.00107124 = 9.11
 
-| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Time Period |
+| Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Interval |
 | -------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     | $10            | 0             | $10              | 0.00107124 | 0.00107124       | 1           |
 | 02/01/20 | $8505.07     | $20            | $9.11         | $10              | 0.00117577 | 0.00224701       | 2           |
@@ -189,7 +189,7 @@ This table isn't displaying our gain or loss. Let's define a new expression to
 evaluate our gain or loss in a new column. We can place it in between our
 **Current Value** and **Principal Amount** columns.
 
--   **Gain/Loss** = Current Value - Previous Current Target
+-   **Gain or (Loss)** = Current Value - Previous Current Target
 
 -   If there is no **Current Value**, then set **Current Value** to **0**.
 -   If there is no **Previous Current Target**, then set **Previous Current
@@ -198,10 +198,10 @@ evaluate our gain or loss in a new column. We can place it in between our
 -   A **Gain** is represented as a _positive value_ (+) while a **Loss** is
     represented as a _negative value_ (-).
 
--   First Row: **Gain/Loss** = 0 - 0 = 0
--   Second Row: **Gain/Loss** = 9.11 - 10 ≈ -0.89
+-   First Row: **Gain or (Loss)** = 0 - 0 = 0
+-   Second Row: **Gain or (Loss)** = 9.11 - 10 ≈ -0.89
 
-| Date     | Market Price | Current Target | Current Value | Gain/Loss | Principal Amount | Order Size | Total Order Size | Time Period |
+| Date     | Market Price | Current Target | Current Value | Gain or (Loss) | Principal Amount | Order Size | Total Order Size | Interval |
 | -------- | ------------ | -------------- | ------------- | --------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     | $10            | 0             | 0         | $10              | 0.00107124 | 0.00107124       | 1           |
 | 02/01/20 | $8505.07     | $20            | $9.11         | -$0.89    | $10              | 0.00117577 | 0.00224701       | 2           |
@@ -213,10 +213,10 @@ Averaging for Bitcoin investment. We started by gathering a sample dataset
 containing the closing prices of Bitcoin for the first day of each month
 in 2020. Then, we defined and initialized a table to track our investment
 progress, including columns for Date, Market Price, Principal Amount, Current
-Target, Current Value, Order Size, Total Order Size, and Time Period.
+Target, Current Value, Order Size, Total Order Size, and Interval.
 
 Afterward, we demonstrated how to create new records and calculate the values
-for each column. We also added a Gain/Loss column to display the difference
+for each column. We also added a Gain or (Loss) column to display the difference
 between the current value and the previous target value. This approach allows us
 to track our investment progress and ensure that we follow a consistent
 strategy, such as providing insights into our gains or losses over time. By
