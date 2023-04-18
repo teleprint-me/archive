@@ -9,8 +9,8 @@ load_dotenv()
 
 
 def execute_dca(execute: Optional[bool] = False) -> None:
-    EXCHANGE = getenv("EXCHANGE")
-    PRODUCT_ID = getenv("PRODUCT_ID")
+    EXCHANGE = getenv("EXCHANGE") or ""
+    PRODUCT_ID = getenv("PRODUCT_ID") or ""
     PRINCIPAL_AMOUNT = float(getenv("PRINCIPAL_AMOUNT") or 0)
 
     broker = broker_factory(EXCHANGE)

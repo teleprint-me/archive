@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Optional
 
 
-class BaseColumn(Enum):
+class AveragingColumn(Enum):
     """Enumerated columns for the averaging strategies records."""
 
     EXCHANGE = 0
@@ -19,7 +19,7 @@ class BaseColumn(Enum):
 
 
 @dataclass
-class BaseRecord:
+class AveragingRecord:
     """A dataclass representing a base record for averaging strategies."""
 
     exchange: str
@@ -48,19 +48,19 @@ class BaseRecord:
 
 
 @dataclass
-class CostAveragingRecord(BaseRecord):
+class CostAveragingRecord(AveragingRecord):
     gain_loss: Optional[float]
 
 
 @dataclass
-class DynamicAveragingRecord(BaseRecord):
+class DynamicAveragingRecord(AveragingRecord):
     factor: Optional[float]
     factor_amount: Optional[float]
     total_factor_amount: Optional[float]
 
 
 @dataclass
-class ValueAveragingRecord(BaseRecord):
+class ValueAveragingRecord(AveragingRecord):
     interest_rate: Optional[float]
     trade_amount: Optional[float]
     total_trade_amount: Optional[float]

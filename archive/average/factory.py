@@ -1,24 +1,43 @@
 from abc import ABC, abstractmethod
 
-from archive.average.models import DCARecord
+from archive.average.models import AveragingRecord
 
 
-class BaseParser(ABC):
+class Broker(ABC):
     @abstractmethod
-    def dca_order(
+    def order(
         self,
         quote_size: float,
         product_id: str,
         side: str = "BUY",
-    ) -> DCARecord:
+    ) -> AveragingRecord:
         raise NotImplementedError()
 
 
-class Coinbase(BaseParser):
-    def parse(
+class Coinbase(Broker):
+    def order(
         self,
-        filepath: Union[str, Path],
-        asset: str,
-    ) -> list[IRTransaction]:
-        transactions = scan_coinbase_transactions(filepath)
-        return build_coinbase_ir(transactions, [asset])
+        quote_size: float,
+        product_id: str,
+        side: str = "BUY",
+    ) -> AveragingRecord:
+        raise NotImplementedError()
+
+
+class Kraken(Broker):
+    def order(
+        self,
+        quote_size: float,
+        product_id: str,
+        side: str = "BUY",
+    ) -> AveragingRecord:
+        raise NotImplementedError()
+
+
+def broker_factory(exchange: str) -> Broker:
+    if exchange == "coinbase":
+        return Coinbase()
+    elif exchange == "kraken":
+        return Kraken()
+    else:
+        raise ValueError(f"Invalid exchange type: {exchange}")
