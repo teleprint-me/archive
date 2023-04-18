@@ -1,9 +1,9 @@
 **Disclaimer:**
 
-_I am a **programmer** and I am **NOT** an accredited financial expert. You
-should seek out an accredited financial expert for making serious investment
-decisions. Do NOT take investment advice from random internet strangers and
-always do your own research._
+_**I am a programmer and I am NOT an accredited financial expert. You should
+seek out an accredited financial expert for making serious investment decisions.
+Do NOT take investment advice from random internet strangers and always do your
+own research**._
 
 # Data Management
 
@@ -44,7 +44,7 @@ product create the _trade pair_ "_BTC-USD_".
 
 A **trade pair** refers to the two currencies being traded against each other in
 a currency exchange. In this case, BTC-USD represents a trade in which Bitcoin
-(BTC) is traded for United States dollars (USD).
+(BTC) is traded for United States Dollars (USD).
 
 The **base currency** is the first currency listed in a _currency pair_ and
 represents the currency being bought or sold. In the BTC-USD trade pair, BTC is
@@ -56,8 +56,6 @@ trade pair, USD is the quote currency, and you are buying or selling Bitcoin
 with US dollars.
 
 ## Gathering Data Sets
-
----
 
 The following data set represents the _closing prices_ for Bitcoin on the _first
 day of each month_ in the year 2020.
@@ -220,6 +218,7 @@ Target, Current Value, Order Size, Total Order Size, and Time Period.
 Afterward, we demonstrated how to create new records and calculate the values
 for each column. We also added a Gain/Loss column to display the difference
 between the current value and the previous target value. This approach allows us
-to track our investment progress and ensure that we follow a consistent strategy, such as providing insights into our gains or losses over
-time. By following this data management method, we can make more informed
-decisions and maintain a disciplined investment plan.
+to track our investment progress and ensure that we follow a consistent
+strategy, such as providing insights into our gains or losses over time. By
+following this data management method, we can make more informed decisions and
+maintain a disciplined investment plan.
