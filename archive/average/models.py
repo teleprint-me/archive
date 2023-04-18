@@ -3,23 +3,24 @@ from enum import Enum
 from typing import Optional
 
 
-class AveragingColumn(Enum):
+class AverageColumn(Enum):
     """Enumerated columns for the averaging strategies records."""
 
     EXCHANGE = 0
     PRODUCT_ID = 1
-    SIDE = 2
-    DATETIME = 3
+    DATETIME = 2
+    PRINCIPAL_AMOUNT = 3
     MARKET_PRICE = 4
-    CURRENT_TARGET = 5
-    CURRENT_VALUE = 6
-    ORDER_SIZE = 7
-    TOTAL_ORDER_SIZE = 8
-    INTERVAL = 9
+    SIDE = 5
+    CURRENT_TARGET = 6
+    CURRENT_VALUE = 7
+    ORDER_SIZE = 8
+    TOTAL_ORDER_SIZE = 9
+    INTERVAL = 10
 
 
 @dataclass
-class AveragingRecord:
+class AverageRecord:
     """A dataclass representing a base record for averaging strategies."""
 
     exchange: str
@@ -48,19 +49,19 @@ class AveragingRecord:
 
 
 @dataclass
-class CostAveragingRecord(AveragingRecord):
+class CostAverageRecord(AverageRecord):
     gain_loss: Optional[float]
 
 
 @dataclass
-class DynamicAveragingRecord(AveragingRecord):
+class DynamicAverageRecord(AverageRecord):
     factor: Optional[float]
     factor_amount: Optional[float]
     total_factor_amount: Optional[float]
 
 
 @dataclass
-class ValueAveragingRecord(AveragingRecord):
+class ValueAverageRecord(AverageRecord):
     interest_rate: Optional[float]
     trade_amount: Optional[float]
     total_trade_amount: Optional[float]
