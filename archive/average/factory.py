@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from archive.average.models import AveragingRecord
+from archive.average.models import AverageRecord
 
 
 class Broker(ABC):
@@ -10,7 +10,7 @@ class Broker(ABC):
         quote_size: float,
         product_id: str,
         side: str = "BUY",
-    ) -> AveragingRecord:
+    ) -> AverageRecord:
         raise NotImplementedError()
 
 
@@ -20,7 +20,7 @@ class Coinbase(Broker):
         quote_size: float,
         product_id: str,
         side: str = "BUY",
-    ) -> AveragingRecord:
+    ) -> AverageRecord:
         raise NotImplementedError()
 
 
@@ -30,7 +30,7 @@ class Kraken(Broker):
         quote_size: float,
         product_id: str,
         side: str = "BUY",
-    ) -> AveragingRecord:
+    ) -> AverageRecord:
         raise NotImplementedError()
 
 
