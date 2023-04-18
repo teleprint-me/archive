@@ -1,36 +1,66 @@
 **Disclaimer:**
 
-_I am a **programmer** and I am **NOT** an accredited financial expert. You should seek out an accredited financial expert for making serious investment decisions. Do NOT take investment advice from random internet strangers and always do your own research._
+_I am a **programmer** and I am **NOT** an accredited financial expert. You
+should seek out an accredited financial expert for making serious investment
+decisions. Do NOT take investment advice from random internet strangers and
+always do your own research._
 
-# Data Tracking
+# Data Management
 
-Data is usually tracked as it's created alongside the execution of these strategies. The tracked data creates a data set. A **data set** is a collection of data. [[3]](https://en.wikipedia.org/wiki/Data_set) This data is then [tabulated](https://www.merriam-webster.com/dictionary/tabulate). The tabulated data consists of columns where every column of a table represents a variable. Each row corresponds to a given record of the data set. This becomes a data table. [[4]](https://en.wikipedia.org/wiki/Table_(database))
+Data is typically tracked alongside the execution of investment strategies. The
+tracked data creates a data set, which is a collection of data.
+[[3]](https://en.wikipedia.org/wiki/Data_set) This data is then
+[tabulated](https://www.merriam-webster.com/dictionary/tabulate), resulting in a
+data table. [[4]](https://en.wikipedia.org/wiki/Table_(database)) The tabulated
+data consists of columns where every column of a table represents a variable,
+and each row corresponds to a given record of the data set.
 
-A table cell is one grouping within a table used for storing information or data. Cells are grouped horizontally (rows of cells) and vertically (columns of cells). Each cell contains information relating to the combination of the row and column headings it is [collinear](https://www.merriam-webster.com/dictionary/collinear) with. [[5]](https://en.wikipedia.org/wiki/Table_cell) You use a series of simple mathematical formulas to determine the value that resides within each cell. Each cell may be the result of a constant or variable.
+A table cell is one grouping within a table used for storing information or
+data. Cells are grouped horizontally (rows of cells) and vertically (columns of
+cells). Each cell contains information relating to the combination of the row
+and column headings it is
+[collinear](https://www.merriam-webster.com/dictionary/collinear) with.
+[[5]](https://en.wikipedia.org/wiki/Table_cell) A series of simple mathematical
+formulas can determine the value that resides within each cell. Each cell may be
+the result of a constant or variable.
 
 ## Tabulating data sets
 
+A table may contain any set of columns relevant to the data set, causing each
+table to vary in its utilization by different investors. The table columns are
+typically chosen to reflect the information the investor is interested in.
+
+We will set up our own custom table and build upon it, starting with Cost
+Averaging, then moving onto Dynamic Cost Averaging, and finally Value Averaging.
+
+Our initial table will be kept as simple as possible, and we will add to it once
+we've completed covering [First Principles](https://fs.blog/first-principles/).
+
+We'll use Bitcoin's 2020 _closing prices_ as our sample data set. This will
+allow us to _paper trade_ with the data set provided from 2020. The volatility
+in Bitcoin will help showcase how each strategy performs. Bitcoin will be our
+_base currency_, and the Dollar will be our _quote currency_. The base and quote
+product create the _trade pair_ "_BTC-USD_".
+
+A **trade pair** refers to the two currencies being traded against each other in
+a currency exchange. In this case, BTC-USD represents a trade in which Bitcoin
+(BTC) is traded for United States dollars (USD).
+
+The **base currency** is the first currency listed in a _currency pair_ and
+represents the currency being bought or sold. In the BTC-USD trade pair, BTC is
+the base currency, and you are either buying or selling Bitcoin.
+
+The **quote currency** is the second currency listed in a _currency pair_ and
+represents the currency used to buy or sell the base currency. In the BTC-USD
+trade pair, USD is the quote currency, and you are buying or selling Bitcoin
+with US dollars.
+
+## Gathering Data Sets
+
 ---
 
-A table may contain any set of columns that is relevant to the data set. This causes every table to vary from the way it may be utilized by another investor. The table columns will typically be chosen to reflect the information the investor is interested in.
-
-We will set up our own custom table and then build off of it starting with Cost Averaging, then moving onto Dynamic Cost Averaging, and then finish off with Value Averaging.
-
-Our initial table will be kept as simple as possible and then we'll add to it once we've completed covering [First Principles](https://fs.blog/first-principles/).
-
-We'll use Bitcoin's 2020 _closing prices_ as our sample data set. This will allow us to _paper trade_ with the data set provided from 2020. The volatility in Bitcoin will help showcase how each strategy performs. Bitcoin will be our _base currency_ and the Dollar will be our _quote currency_. The base and quote product create the _trade pair_ "_BTC-USD_".
-
-A **trade pair** refers to the two currencies that are being traded against each other in a currency exchange. In this case, BTC-USD represents a trade in which Bitcoin (BTC) is being traded for United States dollars (USD).
-
-The **base currency** is the first currency listed in a _currency pair_ and it is the currency that you are buying or selling. In the BTC-USD trade pair, BTC is the base currency and you are either buying or selling Bitcoin.
-
-The **quote currency** is the second currency listed in a _currency pair_, and it is the currency that you are using to buy or sell the base currency. In the BTC-USD trade pair, USD is the quote currency and you are buying or selling Bitcoin with US dollars.
-
-## Gathering data sets
-
----
-
-The following data set represents the _closing prices_ for Bitcoin for the _first day of each month_ in the year 2020.
+The following data set represents the _closing prices_ for Bitcoin on the _first
+day of each month_ in the year 2020.
 
 | Month | Day | Year | Closing Price |
 | ----- | --- | ---- | ------------- |
@@ -47,46 +77,49 @@ The following data set represents the _closing prices_ for Bitcoin for the _firs
 | Nov   | 01  | 2020 | $19713.94     |
 | Dec   | 01  | 2020 | $28990.08     |
 
-Here, we use a smaller data set to keep things simple for now. We will use the MM/DD/YY format in the proceeding examples as well as expand on this data set later on to include 2021 and 2022 monthly market prices as well.
+In this section, we use a smaller data set to keep things simple for now. We
+will use the MM/DD/YY format in the subsequent examples and expand on this data
+set later on to include 2021 and 2022 monthly market prices as well.
 
-## Defining data sets
+## Defining Data Sets
 
----
+### Defining Record Entries
 
-Our columns will be the following: Date, Market Price, Principal Amount, Target Value, Current Value, Order Size, Total Order Size, and Time Period.
+Our columns will be the following: Date, Market Price, Principal Amount, Target
+Value, Current Value, Order Size, Total Order Size, and Time Period.
 
--   **Date** will represent the date for the current record (row).
--   **Market Price** will represent the current price at which each unit of
-    Bitcoin was bought or sold.
--   **Principal Amount** will represent the amount of money that was put into
-    the investment.
--   **Target Value** will represent our desired projected value for our current
-    overall investment.
--   **Current Value** will represent the most recent total value of our
+-   **Date** represents the date for the current record (row).
+-   **Market Price** represents the current price at which each unit of Bitcoin
+    was bought or sold.
+-   **Principal Amount** represents the amount of money that was put into the
     investment.
--   **Order Size** will represent the amount that we purchased.
--   **Total Order Size** will represent the total amount that we purchased.
--   **Time Period** will represent the total number of times we've invested.
+-   **Target Value** represents our desired projected value for our current
+    overall investment.
+-   **Current Value** represents the most recent total value of our investment.
+-   **Order Size** represents the amount that we purchased.
+-   **Total Order Size** represents the total amount that we purchased.
+-   **Time Period** represents the total number of times we've invested.
 
-_Principal Amount_ will be the only _constant value_. A **constant value** is a
-_fixed value_. A fixed value is a value that does not change. The rest will be
-_variable_. A variable represents an unknown, or yet to be calculated, value.
-The variables will be calculated based on whether certain _conditions_ are met.
+_Principal Amount_ is the only _constant value_. A **constant value** is a
+_fixed value_, meaning a value that does not change. The rest are _variables_. A
+variable represents an unknown or yet to be calculated value. The variables will
+be calculated based on whether certain _conditions_ are met.
 
-I like using small numbers and using multiples of 10 tends to keep things very
-simple. This allows us to catch errors when we make mistakes. The mistake will
-be more apparent and easy to backtrack as a result. Our _Principal Amount_ will
-be $10 as a result of this reasoning.
+Using small numbers and multiples of 10 tends to keep things simple. This allows
+us to catch errors when we make mistakes, making them more apparent and easy to
+backtrack. As a result, our _Principal Amount_ will be $10.
 
 The _Market Price_ for the _Date_ Jan 01, 2020 was $9334.98.
 
-The following will be the outline for our first record entry:
+The following is the outline for our first record entry:
 
 | Date     | Market Price | Current Target | Current Value | Principal Amount | Order Size | Total Order Size | Time Period |
 | -------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     |                |               | $10              |            |                  |             |
 
 This allows us to set up our first record.
+
+### Setting Up the Initial Record Entry
 
 We also need to define how we will calculate the rest of the columns.
 
@@ -125,6 +158,8 @@ _we had no previous investment_. This will only ever be true for the first
 record entry while operating under the assumption that the investment remains
 _solvent_.
 
+### Calculating and Recording the Second Record Entry
+
 Let's create the second record to see how each cell is evaluated and then
 recorded.
 
@@ -150,6 +185,8 @@ variable using the given information.
 We follow these steps every time we invest from this point forward and never
 deviate from the investment plan.
 
+### Adding Columns to a Table
+
 This table isn't displaying our gain or loss. Let's define a new expression to
 evaluate our gain or loss in a new column. We can place it in between our
 **Current Value** and **Principal Amount** columns.
@@ -160,8 +197,8 @@ evaluate our gain or loss in a new column. We can place it in between our
 -   If there is no **Previous Current Target**, then set **Previous Current
     Target** to **0**.
 
--   A **Gain** is represented as a _positive value_ (\+) while a **Loss** is
-    represented as a _negative value_ (\-).
+-   A **Gain** is represented as a _positive value_ (+) while a **Loss** is
+    represented as a _negative value_ (-).
 
 -   First Row: **Gain/Loss** = 0 - 0 = 0
 -   Second Row: **Gain/Loss** = 9.11 - 10 ≈ -0.89
@@ -170,3 +207,19 @@ evaluate our gain or loss in a new column. We can place it in between our
 | -------- | ------------ | -------------- | ------------- | --------- | ---------------- | ---------- | ---------------- | ----------- |
 | 01/01/20 | $9334.98     | $10            | 0             | 0         | $10              | 0.00107124 | 0.00107124       | 1           |
 | 02/01/20 | $8505.07     | $20            | $9.11         | -$0.89    | $10              | 0.00117577 | 0.00224701       | 2           |
+
+## Summary
+
+In this specification, we focused on managing data related to Dollar-Cost
+Averaging for Bitcoin investment. We started by gathering a sample dataset
+containing the closing prices of Bitcoin for the first day of each month
+in 2020. Then, we defined and initialized a table to track our investment
+progress, including columns for Date, Market Price, Principal Amount, Current
+Target, Current Value, Order Size, Total Order Size, and Time Period.
+
+Afterward, we demonstrated how to create new records and calculate the values
+for each column. We also added a Gain/Loss column to display the difference
+between the current value and the previous target value. This approach allows us
+to track our investment progress and ensure that we follow a consistent strategy, such as providing insights into our gains or losses over
+time. By following this data management method, we can make more informed
+decisions and maintain a disciplined investment plan.
