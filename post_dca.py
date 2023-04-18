@@ -8,6 +8,14 @@ def get_arguments() -> Namespace:
     parser = ArgumentParser(description="Post DCA orders.")
 
     parser.add_argument(
+        "-f",
+        "--file",
+        type=str,
+        default="data/average/dca_records.csv",
+        help="File to read from and write to (default: dca_records.csv)",
+    )
+
+    parser.add_argument(
         "-x",
         "--execute",
         action="store_false",
@@ -20,7 +28,7 @@ def get_arguments() -> Namespace:
 def main():
     args = get_arguments()
 
-    execute_dca(args.execute)
+    execute_dca(args.file, args.execute)
 
 
 if __name__ == "__main__":
