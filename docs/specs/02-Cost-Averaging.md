@@ -169,15 +169,15 @@ class AverageRecord:
 
     exchange: str
     product_id: str
-    datetime: str
     principal_amount: float
-    market_price: float
     side: str
+    datetime: str
+    market_price: float
     current_target: float
     current_value: float
     order_size: float
     total_order_size: float
-    interval: int
+    interval: int = 0
 
     @property
     def base(self) -> str:
@@ -204,7 +204,7 @@ increment the interval attribute.
 ```python
 @dataclass
 class CostAverageRecord(AverageRecord):
-    gain_loss: Optional[float]
+    gain_loss: float = 0
 ```
 
 The `CostAverageRecord` dataclass extends the `AverageRecord` and adds an

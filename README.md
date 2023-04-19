@@ -2,6 +2,8 @@
 
 _**I am a programmer and I am NOT an accredited financial expert. You should seek out an accredited financial expert for making serious investment decisions. Do NOT take investment advice from random internet strangers and always do your own research**._
 
+📝 **THIS SOFTWARE IS UNDER ACTIVE DEVELOPMENT AND IS SUBJECT TO CHANGE**
+
 ⚠️ **USE THIS SOFTWARE AT YOUR OWN RISK!**
 
 🚨 **ALWAYS AUDIT THE OUTPUT!**
