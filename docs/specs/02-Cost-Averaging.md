@@ -215,46 +215,51 @@ averaging strategy.
 
 #### WIP (Work In Progress)
 
-1.  Read environment variables
+1. Read environment variables
 
     a. Get the EXCHANGE, PRODUCT_ID, PRINCIPAL_AMOUNT, and INTERVAL.
 
-2.  Create a broker instance using the `broker_factory` function with the
-    EXCHANGE.
+2. Create a broker instance using the `broker_factory` function with the
+   EXCHANGE.
 
-3.  Read the existing records from the CSV file using `read_csv` from the `io`
+3. Read the existing records from the CSV file or create a new file if it
+   doesn't exist, using `read_write_csv` from the `io` module.
+
+4. If the existing records have at least one data row (excluding the header),
+   convert the CSV dataset from a `list[list[str]]` to a
+   `list[CostAverageRecord]`. Otherwise, initialize an empty list for storing
+   `CostAverageRecord` objects.
+
+5. If the list of records is not empty:
+
+    a. Get the last record from the list and extract any necessary values.
+
+6. Execute or simulate an order using the broker:
+
+    a. If execute flag is True, call the broker's `order` method with the
+    PRINCIPAL_AMOUNT and PRODUCT_ID.
+
+    b. If execute flag is False, simulate the order without actually placing it.
+
+7. Retrieve the order information, including datetime, market_price, side, and
+   quote_size.
+
+8. Calculate the current target, current value, total order size, and gain or
+   loss if applicable.
+
+9. Create a `CostAverageRecord` object with the extracted and calculated values,
+   and the incremented interval.
+
+10. Append the new `CostAverageRecord` object to the list of records.
+
+11. Convert the list of `CostAverageRecord` objects back to a `list[list[str]]`.
+
+12. Print the updated records using `print_csv` from the `io` module.
+
+13. Write the updated records to the CSV file using `write_csv` from the `io`
     module.
 
-4.  Initialize an empty list for storing `CostAverageRecord` objects.
-
-5.  For each interval in the DCA strategy:
-
-    a. Execute or simulate an order using the broker:
-
-        i. If execute flag is True, call the broker's `order` method with the PRINCIPAL_AMOUNT and PRODUCT_ID.
-
-        ii. If execute flag is False, simulate the order without actually placing it.
-
-    b. Retrieve the order information, including datetime, market_price, side,
-    and quote_size.
-
-    c. Calculate the current target, current value, total order size, and gain
-    or loss if applicable.
-
-    d. Create a `CostAverageRecord` object with the extracted and calculated
-    values, and increment the interval.
-
-    e. Add the `CostAverageRecord` object to the list.
-
-6.  If executing orders:
-
-    a. Append the new `CostAverageRecord` objects to the existing records.
-
-    b. Write the updated records to the CSV file using `write_csv` from the `io`
-    module.
-
-7.  If simulating, print the list of `CostAverageRecord` objects for review
-    using `print_csv` from the `io` module.
+14. Exit the program.
 
 ## Summary
 
