@@ -5,7 +5,7 @@ set -e
 SERVICE_NAME="dca"
 SYSTEMD_PATH="/etc/systemd/system"
 SERVICE_FILE="${SYSTEMD_PATH}/${SERVICE_NAME}.service"
-POST_DCA_PATH="/path/to/post_dca.py"
+POST_AVERAGING_PATH="/path/to/post_cost_average.py"
 VENV_PATH="/path/to/your/venv"
 ENV_FILE="/path/to/your/env/file"
 USERNAME=$(whoami)
@@ -14,11 +14,11 @@ echo "Creating systemd service configuration..."
 
 sudo bash -c "cat > ${SERVICE_FILE}" << EOL
 [Unit]
-Description=Automated Dollar Cost Averaging Service
+Description=Automated Averaging Service
 
 [Service]
 Type=simple
-ExecStart=${VENV_PATH}/bin/python ${POST_DCA_PATH}
+ExecStart=${VENV_PATH}/bin/python ${POST_AVERAGING_PATH}
 Restart=on-failure
 User=${USERNAME}
 EnvironmentFile=${ENV_FILE}

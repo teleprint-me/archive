@@ -1,0 +1,10 @@
+[Unit]
+Description=Automated Averaging Timer
+
+[Timer]
+OnCalendar=${FREQUENCY}
+Persistent=true
+Unit=archive_average.service
+
+[Install]
+WantedBy=timers.target

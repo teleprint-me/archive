@@ -1,0 +1,12 @@
+[Unit]
+Description=Automated Averaging Service
+
+[Service]
+Type=simple
+ExecStart=/path/to/your/venv/bin/python /path/to/post_average.py
+Restart=on-failure
+User=your_username
+EnvironmentFile=/path/to/your/env/file
+
+[Install]
+WantedBy=multi-user.target
