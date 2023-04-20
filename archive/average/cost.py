@@ -13,6 +13,16 @@ load_dotenv()
 def convert_csv_to_records(
     records: list[list[str]],
 ) -> list[CostAverageRecord]:
+    """Convert a list of lists representing CSV records into a list of
+    CostAverageRecord objects.
+
+    Args:
+        records (list[list[str]]): A list of lists representing CSV records.
+
+    Returns:
+        list[CostAverageRecord]: A list of CostAverageRecord objects.
+    """
+
     entries = []
 
     for record in records[1:]:
@@ -45,6 +55,16 @@ def convert_csv_to_records(
 def convert_records_to_csv(
     records: list[CostAverageRecord],
 ) -> list[list[str]]:
+    """Convert a list of CostAverageRecord objects into a list of lists
+    representing CSV records.
+
+    Args:
+        records (list[CostAverageRecord]): A list of CostAverageRecord objects.
+
+    Returns:
+        list[list[str]]: A list of lists representing CSV records.
+    """
+
     entries: list[list[str]] = [
         [
             "Exchange",
@@ -87,6 +107,16 @@ def create_cost_average_record(
     order: dict[str, Union[str, float]],
     last_record: Optional[CostAverageRecord] = None,
 ) -> CostAverageRecord:
+    """Create a new CostAverageRecord using the provided order and the last record.
+
+    Args:
+        order: A dictionary containing the order details, including exchange, product_id, principal_amount, side, datetime, market_price, and order_size.
+        last_record: The last CostAverageRecord in the series, or None if there's no previous record.
+
+    Returns:
+        A new CostAverageRecord instance with the calculated fields based on the provided order and last record.
+    """
+
     principal_amount = float(order["principal_amount"])
     market_price = float(order["market_price"])
     order_size = float(order["order_size"])
@@ -128,6 +158,13 @@ def create_cost_average_record(
 
 
 def execute_cost_average(file: str, execute: bool = False) -> None:
+    """Execute a cost averaging order, update the records, and write the results to a CSV file.
+
+    Args:
+        file: The path to the CSV file to read and update with the new CostAverageRecord.
+        execute: A boolean flag indicating whether to execute a real order (True) or simulate one (False).
+    """
+
     exchange = getenv("EXCHANGE") or ""
     product_id = getenv("PRODUCT_ID") or ""
     principal_amount = float(getenv("PRINCIPAL_AMOUNT") or 0)
