@@ -13,15 +13,6 @@ from archive.exchange.kraken.api import get_spot_price as kraken_spot_price
 
 class Broker(ABC):
     @abstractmethod
-    def post_order(
-        self,
-        quote_size: float,
-        product_id: str,
-        side: str = "BUY",
-    ) -> dict[str, Union[str, float]]:
-        raise NotImplementedError()
-
-    @abstractmethod
     def get_price(self, product_id: str) -> float:
         raise NotImplementedError()
 
@@ -34,16 +25,17 @@ class Broker(ABC):
     ) -> dict[str, Union[str, float]]:
         raise NotImplementedError()
 
-
-class Coinbase(Broker):
+    @abstractmethod
     def post_order(
         self,
         quote_size: float,
         product_id: str,
         side: str = "BUY",
-    ) -> dict[str, Any]:
-        return coinbase_market_order(quote_size, product_id, side)
+    ) -> dict[str, Union[str, float]]:
+        raise NotImplementedError()
 
+
+class Coinbase(Broker):
     def get_price(self, product_id: str) -> float:
         return coinbase_spot_price(product_id)
 
@@ -55,9 +47,20 @@ class Coinbase(Broker):
     ) -> dict[str, Union[str, float]]:
         return coinbase_simulated_market_order(quote_size, product_id, side)
 
+    def post_order(
+        self,
+        quote_size: float,
+        product_id: str,
+        side: str = "BUY",
+    ) -> dict[str, Any]:
+        return coinbase_market_order(quote_size, product_id, side)
+
 
 class Kraken(Broker):
-    def post_order(
+    def get_price(self, product_id: str) -> float:
+        return kraken_spot_price(product_id)
+
+    def get_simulated_order(
         self,
         quote_size: float,
         product_id: str,
@@ -65,11 +68,11 @@ class Kraken(Broker):
     ) -> dict[str, Union[str, float]]:
         raise NotImplementedError()
 
-    def get_price(self, product_id: str) -> float:
-        return kraken_spot_price(product_id)
-
-    def get_simulated_order(
-        self, market_price: float
+    def post_order(
+        self,
+        quote_size: float,
+        product_id: str,
+        side: str = "BUY",
     ) -> dict[str, Union[str, float]]:
         raise NotImplementedError()
 

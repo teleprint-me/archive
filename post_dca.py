@@ -1,7 +1,7 @@
 import sys
 from argparse import ArgumentParser, Namespace
 
-from archive.average.cost import execute_dca
+from archive.average.cost import execute_cost_average
 
 
 def get_arguments() -> Namespace:
@@ -11,14 +11,14 @@ def get_arguments() -> Namespace:
         "-f",
         "--file",
         type=str,
-        default="data/average/dca_records.csv",
+        default="data/average/cost_average_records.csv",
         help="File to read from and write to (default: dca_records.csv)",
     )
 
     parser.add_argument(
         "-x",
         "--execute",
-        action="store_false",
+        action="store_true",  # NOTE: Ensure this is store_true!
         help="The key of the environment variable to set",
     )
 
@@ -28,7 +28,7 @@ def get_arguments() -> Namespace:
 def main():
     args = get_arguments()
 
-    execute_dca(args.file, args.execute)
+    execute_cost_average(args.file, args.execute)
 
 
 if __name__ == "__main__":

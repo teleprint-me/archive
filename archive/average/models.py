@@ -62,7 +62,7 @@ class AverageRecord:
 
 @dataclass
 class CostAverageRecord(AverageRecord):
-    gain_loss: float = 0
+    gain_or_loss: float = 0
 
 
 @dataclass

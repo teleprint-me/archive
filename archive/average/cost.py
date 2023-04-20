@@ -1,7 +1,5 @@
-from datetime import datetime
 from os import getenv
 from typing import Optional, Union
-from uuid import uuid4
 
 from dotenv import load_dotenv
 
@@ -36,7 +34,7 @@ def convert_csv_to_records(
                 record[CostAverageColumn.TOTAL_ORDER_SIZE.value]
             ),
             interval=int(record[CostAverageColumn.INTERVAL.value]),
-            gain_loss=float(record[CostAverageColumn.GAIN_OR_LOSS.value]),
+            gain_or_loss=float(record[CostAverageColumn.GAIN_OR_LOSS.value]),
         )
 
         entries.append(entry)
@@ -60,6 +58,7 @@ def convert_records_to_csv(
             "Order Size",
             "Total Order Size",
             "Interval",
+            "Gain or (Loss)",
         ]
     ]
 
@@ -76,7 +75,7 @@ def convert_records_to_csv(
             str(record.order_size),
             str(record.total_order_size),
             str(record.interval),
-            str(record.gain_loss),
+            str(record.gain_or_loss),
         ]
 
         entries.append(entry)
@@ -92,9 +91,13 @@ def create_cost_average_record(
     market_price = float(order["market_price"])
     order_size = float(order["order_size"])
 
+    last_total_order_size = last_record.total_order_size if last_record else 0
+    last_current_target = last_record.current_target if last_record else 0
     interval = last_record.interval + 1 if last_record else 1
 
-    current_value = market_price * order_size
+    current_value = market_price * last_total_order_size
+
+    gain_loss = current_value - last_current_target
 
     current_target = (
         last_record.current_target + principal_amount
@@ -108,21 +111,19 @@ def create_cost_average_record(
         else order_size
     )
 
-    gain_loss = current_value - current_target
-
     return CostAverageRecord(
-        str(order["exchange"]),
-        str(order["product_id"]),
-        principal_amount,
-        str(order["side"]),
-        str(order["datetime"]),
-        float(order["market_price"]),
-        current_target,
-        current_value,
-        float(order["order_size"]),
-        total_order_size,
-        interval,
-        gain_loss,
+        exchange=str(order["exchange"]),
+        product_id=str(order["product_id"]),
+        principal_amount=principal_amount,
+        side=str(order["side"]),
+        datetime=str(order["datetime"]),
+        market_price=float(order["market_price"]),
+        current_target=current_target,
+        current_value=current_value,
+        order_size=float(order["order_size"]),
+        total_order_size=total_order_size,
+        interval=interval,
+        gain_or_loss=gain_loss,
     )
 
 
@@ -139,11 +140,9 @@ def execute_cost_average(file: str, execute: bool = False) -> None:
     last_record = records[-1] if records else None
 
     if execute:
-        order = broker.post_order(principal_amount, product_id, side="BUY")
+        order = broker.post_order(principal_amount, product_id)
     else:
-        order = broker.get_simulated_order(
-            principal_amount, product_id, side="BUY"
-        )
+        order = broker.get_simulated_order(principal_amount, product_id)
 
     new_record = create_cost_average_record(order, last_record)
 
