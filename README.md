@@ -1,6 +1,9 @@
 **Disclaimer:**
 
-_**I am a programmer and I am NOT an accredited financial expert. You should seek out an accredited financial expert for making serious investment decisions. Do NOT take investment advice from random internet strangers and always do your own research**._
+_**I am a programmer and I am NOT an accredited financial expert. You should
+seek out an accredited financial expert for making serious investment decisions.
+Do NOT take investment advice from random internet strangers and always do your
+own research**._
 
 📝 **THIS SOFTWARE IS UNDER ACTIVE DEVELOPMENT AND IS SUBJECT TO CHANGE**
 
@@ -206,24 +209,46 @@ The `env_manager.py` script manages environment variables.
 
 #### Arguments
 
-- `set`: Set a key-value pair.
+-   `set`: Set a key-value pair.
 
 ```shell
 python env_manager.py set EXCHANGE coinbase
 ```
 
-- `unset`: Unset a key.
+-   `unset`: Unset a key.
 
 ```shell
 python env_manager.py unset EXCHANGE
 ```
 
-- `--env-file`: Path the environment file (default: `.env`)
+-   `--env-file`: Path the environment file (default: `.env`)
 
 ```shell
 mkdir -pv ~/.config/archive
 python env_manager.py -f ~/.config/archive/.env set EXCHANGE coinbase
 ```
+
+### Environment Variables
+
+Here is a list of environment variables that can be set using the
+`env_manager.py` script:
+
+-   `EXCHANGE`: The name of the exchange (e.g. 'coinbase', 'kraken', etc.).
+-   `API_KEY`: The API key for the exchange (if applicable).
+-   `API_SECRET`: The API secret for the exchange (if applicable).
+-   `PASSPHRASE`: The passphrase for the exchange (if applicable).
+-   `PRODUCT_ID`: The product ID of the cryptocurrency pair (e.g. 'BTC-USD',
+    'ETH-USD', etc.).
+-   `PRINCIPAL_AMOUNT`: The amount of money to invest in each purchase.
+-   `FREQUENCY`: The frequency of the averaging strategy (e.g. 'daily',
+    'weekly', 'monthly').
+-   `INTEREST_RATE`: The interest rate for calculating the growth rate in the
+    value averaging strategy.
+-   `MAX_FACTOR`: The maximum factor for dynamic averaging (default is 5).
+
+You can set or unset these variables using the `env_manager.py` script as shown
+in the previous section. Make sure to store the variables in a secure location,
+as they may contain sensitive information like API keys and secrets.
 
 ## Bots
 
