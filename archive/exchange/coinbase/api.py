@@ -1,9 +1,9 @@
 import hashlib
 import hmac
 import time
-from datetime import datetime
+from datetime import datetime as dt
 from os import getenv
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 # NOTE: Always generate uuid4 for privacy!
 from uuid import uuid4
@@ -26,9 +26,9 @@ __source__: str = f"https://github.com/{__agent__}"
 __version__: str = "0.1.7"
 
 # Rate limit of API requests in seconds.
-# Calculated as 1 / (10000 requests per hour / 3600 seconds per hour)
-# Rate limit used to block request for at least 0.36 seconds.
-__limit__: float = 1 / (10000 / 3600)
+# Calculated as 1 / (n requests_per_hour / m seconds_per_hour)
+# Rate limit used to block request for at least 0.1 seconds.
+__limit__: float = 1 / (36000 / 3600)
 
 # Timeout value for HTTP requests.
 __timeout__: int = 30
@@ -184,9 +184,9 @@ def get_spot_price(
         RequestException: If there's an issue with the response or if the response is missing data
     """
 
-    url = f"{__coinbase__}/prices/{currency_pair}/spot"
-
     try:
+        url = f"{__coinbase__}/prices/{currency_pair}/spot"
+
         if datetime:
             response = get(url, data={"date": datetime})
         else:
@@ -201,13 +201,52 @@ def get_spot_price(
         raise RequestException(f"Error retrieving spot price: {error}")
 
 
+def get_simulated_market_order(
+    quote_size: float,
+    product_id: str,
+    side: str = "BUY",
+) -> dict[str, Union[str, float]]:
+    """Simulate a market order based on current spot price and input parameters.
+
+    Args:
+        quote_size: The amount of quote currency to spend on the order (required for BUY orders).
+        product_id: The product this order is created for, e.g., 'BTC-USD'.
+        side: The side of the order, either 'BUY' or 'SELL'. Defaults to 'BUY'.
+
+    Returns:
+        A dictionary containing details of the simulated order, including order_id, product_id, side, principal_amount,
+        datetime, market_price, order_size, and order_fee.
+    """
+
+    exchange = getenv("EXCHANGE") or "coinbase"
+    product_id = getenv("PRODUCT_ID") or product_id
+    principal_amount = float(getenv("PRINCIPAL_AMOUNT") or quote_size)
+
+    market_price = get_spot_price(product_id)
+
+    taker_fee = 0.006
+    order_fee = principal_amount * taker_fee
+    order_size = (principal_amount - order_fee) / market_price
+
+    return {
+        "order_id": str(uuid4()),
+        "exchange": exchange,
+        "product_id": product_id,
+        "principal_amount": principal_amount,
+        "side": side,
+        "datetime": dt.now().isoformat(),
+        "market_price": market_price,
+        "order_size": order_size,
+        "order_fee": order_fee,
+    }
+
+
 def post_market_order(
     quote_size: float,
     product_id: str,
     side: str = "BUY",
-) -> dict[str, Any]:
-    """
-    Post a market order to the Coinbase Advanced Trade API.
+) -> dict[str, Union[str, float]]:
+    """Post a market order to the Coinbase Advanced Trade API.
 
     Args:
         quote_size: The amount of quote currency to spend on the order (required for BUY orders).
@@ -234,19 +273,20 @@ def post_market_order(
         response = post(f"{__advanced__}/orders", data=market_order)
 
         if "success" in response and response["success"]:
-            success_response = response["success_response"]
-            market_response = response["order_configuration"][
-                "market_market_ioc"
-            ]
+            url = f"{__advanced__}/orders/historical/{response['order_id']}"
+            order_response = get(url)
+            order = order_response["order"]
 
             return {
+                "order_id": order["order_id"],
                 "exchange": "coinbase",
-                "datetime": datetime.now().isoformat(),
-                "order_id": response["order_id"],
-                "product_id": success_response["product_id"],
-                "side": success_response["side"],
-                "base_size": market_response["base_size"],
-                "quote_size": market_response["quote_size"],
+                "product_id": order["product_id"],
+                "principal_amount": float(quote_size),
+                "side": order["side"],
+                "datetime": order["created_time"],
+                "market_price": float(order["average_filled_price"]),
+                "order_size": float(order["filled_size"]),
+                "order_fee": float(order["total_fees"]),
             }
 
         else:
