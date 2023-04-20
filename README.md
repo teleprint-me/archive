@@ -252,6 +252,34 @@ as they may contain sensitive information like API keys and secrets.
 
 ## Bots
 
+### Setup
+
+To set up the automated averaging service and timer, follow these steps:
+
+1. Update the paths in `scripts/shell/setup_averaging_service.sh` and `scripts/shell/setup_averaging_timer.sh` to match your system's configuration:
+
+- `POST_AVERAGING_PATH`: Path to the `post_average.py` script.
+- `VENV_PATH`: Path to your virtual environment directory.
+- `ENV_FILE`: Path to your environment variables file (e.g., `.env`).
+
+2. Run the `setup_averaging_service.sh` script to create and start the averaging service:
+
+```sh
+bash scripts/shell/setup_averaging_service.sh
+```
+
+This will create a systemd service that runs the `post_average.py` script. It will also start the service and print its status.
+
+3. Run the `setup_averaging_timer.sh` script to create and start the averaging timer:
+
+```sh
+bash scripts/shell/setup_averaging_timer.sh
+```
+
+This will create a systemd timer that triggers the averaging service at the frequency specified in your environment variables (e.g., `FREQUENCY=weekly`). It will also start the timer and print its status.
+
+With these steps completed, your Averaging Bot will run automatically at the specified frequency, executing orders based on your environment variables.
+
 ### Cost Average Bot
 
 The Cost Average Bot helps you automate your dollar-cost averaging strategy by
