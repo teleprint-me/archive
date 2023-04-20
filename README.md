@@ -254,7 +254,34 @@ as they may contain sensitive information like API keys and secrets.
 
 ### Cost Average Bot
 
-    TODO
+The Cost Average Bot helps you automate your dollar-cost averaging strategy by
+placing orders at a specified frequency.
+
+To set up the Cost Average Bot, you need to have the environment variables
+configured (as described in the Environment Variables section). Ensure you have
+the `EXCHANGE`, `PRODUCT_ID`, and `PRINCIPAL_AMOUNT` variables set.
+
+To execute the bot manually, run the following command:
+
+```sh
+python post_cost_average.py
+```
+
+This will simulate an order based on your configured environment variables and
+update the records file without actually placing the order. By default, the
+records file is `data/average/cost_average_records.csv`. You can change the file
+path by passing the `-f` or `--file` option followed by the desired file path.
+
+To actually place the order using the configured exchange API, use the `-x` or
+`--execute` flag:
+
+```sh
+python post_cost_average.py -x
+```
+
+Please note that executing the script with the `-x` flag will place a real order
+and update the records file accordingly. Use this option with caution and ensure
+your environment variables are configured correctly.
 
 ### Dynamic Cost Average Bot
 
