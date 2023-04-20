@@ -23,7 +23,7 @@ __agent__: str = "teleprint-me/archive"
 __source__: str = f"https://github.com/{__agent__}"
 
 # Source version.
-__version__: str = "0.1.7"
+__version__: str = "0.1.8"
 
 # Rate limit of API requests in seconds.
 # Calculated as 1 / (n requests_per_hour / m seconds_per_hour)
