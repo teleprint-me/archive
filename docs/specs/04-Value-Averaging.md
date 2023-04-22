@@ -244,8 +244,8 @@ based on the exchange's rules and restrictions.
 
 10. Update Previous Total Order Size and Previous Total Trade Amount
 
-        Previous Total Order Size = 0.02579869
-        Previous Total Trade Amount = 211.25
+        Previous Total Order Size = 0.00239089
+        Previous Total Trade Amount = 21.22
 
 11. Repeat steps 1 through 10 until each record has been evaluated
 
