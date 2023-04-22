@@ -96,7 +96,8 @@ each value as the following:
         IF Trade Amount < 0
             THEN sell Trade Amount
 
-NOTE: Buying and Selling should be determined by a `MIN_TRADE_AMOUNT` to avoid erroneous record entries.
+NOTE: Buying and Selling should be determined by a `MIN_TRADE_AMOUNT` to avoid
+erroneous record entries.
 
 15. Get Total Trade Amount
 
@@ -193,6 +194,13 @@ buy, sell, or hold.
 Holding is usually enforced via a minimum or maximum trade amount and varies
 amongst brokerages and is outside of the scope of this strategy.
 
+**Note:** When implementing this strategy, be aware of the specific minimum and
+maximum trade amounts enforced by the exchange you are using. These limits can
+affect the execution of trades and should be taken into account when developing
+your trading bot. Consider adding an environment variable or configuration
+setting to handle these requirements, allowing you to easily adjust the values
+based on the exchange's rules and restrictions.
+
 | Exchange | Date     | Market Price | Current Target | Current Value | Trade Amount | Total Trade Amount | Order Size | Total Order Size | Interval |
 | -------- | -------- | ------------ | -------------- | ------------- | ------------ | ------------------ | ---------- | ---------------- | -------- |
 | paper    | 01/01/20 | 9,334.98     | 10.00          | 0.00          | 10.00        | 10.00              | 0.00107124 | 0.00107124       | 1        |
@@ -241,17 +249,48 @@ amongst brokerages and is outside of the scope of this strategy.
 
 11. Repeat steps 1 through 10 until each record has been evaluated
 
+The records will be created and updated sequentially as the bot executes each
+order, following the steps outlined here.
+
 | Exchange | Date     | Market Price | Current Target | Current Value | Trade Amount | Total Trade Amount | Order Size | Total Order Size | Interval |
 | -------- | -------- | ------------ | -------------- | ------------- | ------------ | ------------------ | ---------- | ---------------- | -------- |
 | paper    | 01/01/20 | 9,334.98     | 10.00          | 0.00          | 10.00        | 10.00              | 0.00107124 | 0.00107124       | 1        |
 | paper    | 02/01/20 | 8,505.07     | 20.33          | 9.11          | 11.22        | 21.22              | 0.00131965 | 0.00239089       | 2        |
 | paper    | 03/01/20 | 6,424.35     | 30.76          |               |              |                    |            |                  | 3        |
+| paper    | 04/01/20 | 8,624.28     |                |               |              |                    |            |                  | 4        |
+| paper    | 05/01/20 | 9,446.57     |                |               |              |                    |            |                  | 5        |
 
 Try completing the table as an exercise.
 
 ## Summary
 
-Summary goes here.
+Value Averaging is an investment strategy that aims to maintain a consistent
+growth rate for an investment over time. It takes into account the principal
+amount, growth rate, and interval, adjusting trades accordingly to achieve the
+desired value at each interval. By buying more when the market price is lower
+and selling when the market price is higher, it seeks to maintain a consistent
+growth trajectory.
+
+The steps to implement the Value Averaging strategy are:
+
+1. Define initial parameters (Principal Amount, Growth Rate, and Interval).
+2. Calculate the Current Target using the formula
+   `Principal Amount * Interval * pow(Growth Rate, Interval)`.
+3. Evaluate the Current Value of the investment.
+4. Determine the Trade Amount by finding the difference between the Current
+   Target and the Current Value.
+5. Calculate the Order Size by dividing the Trade Amount by the Market Price.
+6. Update the Total Order Size and Total Trade Amount based on the calculated
+   Order Size and Trade Amount.
+7. Keep track of the Current Target, Current Value, Trade Amount, Total Trade
+   Amount, Order Size, and Total Order Size for each interval.
+8. Be aware of the specific minimum and maximum trade amounts enforced by the
+   exchange you are using, and consider adding an environment variable or
+   configuration setting to handle these requirements.
+
+By following these steps and adjusting trades based on market fluctuations, the
+Value Averaging strategy aims to achieve consistent growth and reduce the impact
+of market volatility on an investment portfolio.
 
 ## Solution
 
