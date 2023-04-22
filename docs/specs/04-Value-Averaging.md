@@ -96,6 +96,8 @@ each value as the following:
         IF Trade Amount < 0
             THEN sell Trade Amount
 
+NOTE: Buying and Selling should be determined by a `MIN_TRADE_AMOUNT` to avoid erroneous record entries.
+
 15. Get Total Trade Amount
 
         Total Trade Amount = Trade Amount + Previous Total Trade Amount
@@ -179,6 +181,8 @@ and calculate the first record:
 
         Previous Total Order Size = 0.00107132
         Previous Total Trade Amount = 10.00
+
+### Calculating Record Entries
 
 Now we can tabulate our Current Target, Current Value, Trade Amount, Total Trade
 Amount, Order Size, and Total Order Size.
