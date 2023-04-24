@@ -244,9 +244,10 @@ Here is a list of environment variables that can be set using the
 -   `PRINCIPAL_AMOUNT`: The amount of money to invest in each purchase.
 -   `FREQUENCY`: The frequency of the averaging strategy (e.g. 'daily',
     'weekly', 'monthly').
+-   `MIN_TRADE_AMOUNT`: The minimum amount to trade (default is 5).
+-   `MAX_FACTOR`: The maximum factor for dynamic averaging (default is 5).
 -   `INTEREST_RATE`: The interest rate for calculating the growth rate in the
     value averaging strategy.
--   `MAX_FACTOR`: The maximum factor for dynamic averaging (default is 5).
 
 You can set or unset these variables using the `env_manager.py` script as shown
 in the previous section. Make sure to store the variables in a secure location,

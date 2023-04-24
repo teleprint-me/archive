@@ -270,9 +270,7 @@ The `CostAverageRecord` dataclass extends the `AverageRecord` and adds an
 optional `gain_loss` attribute, which represents the gain or loss in the
 averaging strategy.
 
-### Pseudocode
-
-#### WIP (Work In Progress)
+## Pseudocode
 
 1. Read environment variables
 
