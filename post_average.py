@@ -13,7 +13,7 @@ def get_arguments() -> Namespace:
         "-f",
         "--file",
         type=str,
-        default="data/average/value_average_records.csv",
+        default="data/average/average_records.csv",
         help="File to read from and write to (default: average_records.csv)",
     )
 

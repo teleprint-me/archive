@@ -1,7 +1,7 @@
 import sys
 from argparse import ArgumentParser, Namespace
 
-from archive.average.cost import execute_cost_average
+from archive.average.value import execute_value_average
 
 
 def get_arguments() -> Namespace:
@@ -28,7 +28,7 @@ def get_arguments() -> Namespace:
 def main():
     args = get_arguments()
 
-    execute_cost_average(args.file, args.execute)
+    execute_value_average(args.file, args.execute)
 
 
 if __name__ == "__main__":
