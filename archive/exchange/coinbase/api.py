@@ -14,16 +14,9 @@ from requests import RequestException
 from requests.auth import AuthBase
 from requests.models import PreparedRequest
 
+from archive.exchange import __agent__, __source__, __version__
+
 load_dotenv()
-
-# Name of agent making requests.
-__agent__: str = "teleprint-me/archive"
-
-# Source code: Link to GitHub repository.
-__source__: str = f"https://github.com/{__agent__}"
-
-# Source version.
-__version__: str = "0.1.8"
 
 # Rate limit of API requests in seconds.
 # Calculated as 1 / (n requests_per_hour / m seconds_per_hour)
