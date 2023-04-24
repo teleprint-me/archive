@@ -68,7 +68,7 @@ provided examples and updating the `parser_factory` in `archive/ir/factory.py`.
 
 ## Installation and initialization
 
-```shell
+```sh
 git clone https://github.com/teleprint-me/archive.git
 cd archive
 chmod +x init.sh
@@ -100,7 +100,7 @@ CSV if provided.
 
 #### Example
 
-```shell
+```sh
 python main.py --exchange-file coinbase_transaction data/in/coinbase.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
 ```
 
@@ -123,7 +123,7 @@ results (IR) in a unified format.
 
 #### Example
 
-```shell
+```sh
 python build_ir.py --exchange-file exchange_name data/in/exchange_name.csv --asset BTC
 ```
 
@@ -141,7 +141,7 @@ in a unified format.
 
 #### Example
 
-```shell
+```sh
 python build_gl.py data/ir/ --asset BTC
 ```
 
@@ -161,7 +161,7 @@ CSV output.
 
 #### Example
 
-```shell
+```sh
 python build_f8949.py data/gl/gl-bitcoin.csv --start_date 2021-01-01 --end_date 2021-12-31
 ```
 
@@ -183,7 +183,7 @@ The `build_f1099.py` script merges the Form 8949 and Robinhood 1099 datasets.
 
 #### Example
 
-```shell
+```sh
 python build_f1099.py --form8949 data/f8949/f8949-bitcoin.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
 ```
 
@@ -201,7 +201,7 @@ outputs a single unified Form-8949.
 
 #### Example
 
-```shell
+```sh
 python link_f8949.py --form8949 data/f8949 --form1099 data/f1099 --year 2021
 ```
 
@@ -213,19 +213,19 @@ The `env_manager.py` script manages environment variables.
 
 -   `set`: Set a key-value pair.
 
-```shell
+```sh
 python env_manager.py set EXCHANGE coinbase
 ```
 
 -   `unset`: Unset a key.
 
-```shell
+```sh
 python env_manager.py unset EXCHANGE
 ```
 
 -   `--env-file`: Path the environment file (default: `.env`)
 
-```shell
+```sh
 mkdir -pv ~/.config/archive
 python env_manager.py -f ~/.config/archive/.env set EXCHANGE coinbase
 ```
@@ -265,7 +265,7 @@ the `EXCHANGE`, `PRODUCT_ID`, and `PRINCIPAL_AMOUNT` variables set.
 
 To execute the bot manually, run the following command:
 
-```python
+```sh
 python post_cost_average.py
 ```
 
@@ -277,7 +277,7 @@ path by passing the `-f` or `--file` option followed by the desired file path.
 To actually place the order using the configured exchange API, use the `-x` or
 `--execute` flag:
 
-```python
+```sh
 python post_cost_average.py -x
 ```
 
