@@ -7,34 +7,84 @@ own research**._
 
 # Cost Averaging
 
-## Understanding Cost Averaging Variables
-
-_Cost Averaging_ is an investment strategy that involves setting a fixed
-_Principal Amount_ and periodically purchasing an asset at that amount based on
-a predetermined _Frequency_. This approach aims to spread investment over time,
+Cost Averaging is an investment strategy that involves setting a fixed Principal
+Amount and periodically purchasing an asset at that amount based on a
+predetermined Frequency. This approach aims to spread investment over time,
 reducing the impact of market fluctuations.
 
--   `principal_amount: float = 10.00`
--   `interval: int = 0`
--   `frequency: dict[str, int] = {"daily": 365, "weekly": 52, "monthly": 12}`
-    -   `daily: int = 365`
-    -   `weekly: int = 52`
-    -   `monthly: int = 12`
+The columns for our data table are: Datetime, Market Price, Current Target,
+Current Value, Order Size, Total Order Size, and Interval. This structure keeps
+the tabulation of our data simple and compact.
+
+## Overview
+
+1.  Define Principal Amount
+
+        Principal Amount = Constant Float Value
+
+2.  Define Frequency
+
+        Frequency = One of 365 (Daily), 52 (Weekly), 12 (Monthly)
+
+3.  Get Datetime
+
+        Datetime = Current Datetime
+
+4.  Get Market Price
+
+        Market Price = Current Market Price
+
+5.  Get Interval
+
+        IF no previous records
+            THEN Interval = 1
+        Increment Interval with each record insertion
+            Interval = Previous Interval + 1
+
+6.  Get Current Target
+
+        IF no previous records
+            THEN Current Target = Principal Amount
+        IF Previous Current Target
+            THEN Current Target = Principal Amount + Previous Current Target
+
+7.  Get Previous Total Order Size
+
+        IF no previous records
+            THEN set Previous Total Order Size to 0
+        OTHERWISE, set Previous Total Order Size to sum of Order Size column, excluding current record
+            Previous Total Order Size = sum(Order Size) for all previous records
+
+8.  Get Order Size
+
+        Order Size = Trade Amount / Market Price
+
+9.  Get Total Order Size
+
+        Total Order Size = Order Size + Previous Total Order Size
+
+10. Get Current Value
+
+        Current Value = Market Price * Previous Total Order Size
+
+## Understanding Cost Averaging
+
+### Variables
 
 Each variable represents the following:
 
--   `principal_amount`: The fixed amount of money invested at each interval. In
-    this example, the principal amount is set to $10.00.
--   `interval`: The number of time units that have passed since the start of the
-    investment strategy. The interval is a variable that changes over time.
--   `frequency`: The frequency at which the asset is purchased. It can be set to
-    "daily", "weekly", or "monthly". In this example, the frequency is set to
+-   **Interval**: The number of time units that have passed since the start of
+    the investment strategy. The interval is a variable that changes over time.
+-   **Principal Amount**: The fixed amount of money invested at each interval.
+    In this example, the principal amount is set to $10.00.
+-   **Frequency**: The frequency at which the asset is purchased. It can be set
+    to "daily", "weekly", or "monthly". In this example, the frequency is set to
     "monthly".
-    -   `daily`: Indicates an investment made every day, resulting in 365
+    -   **Daily**: Indicates an investment made every day, resulting in 365
         investments per year.
-    -   `weekly`: Indicates an investment made once a week, resulting in 52
+    -   **Weekly**: Indicates an investment made once a week, resulting in 52
         investments per year.
-    -   `monthly`: Indicates an investment made once a month, resulting in 12
+    -   **Monthly**: Indicates an investment made once a month, resulting in 12
         investments per year.
 
 These variables help to define and execute a cost averaging investment strategy
@@ -42,44 +92,58 @@ tailored to the investor's preferences and risk tolerance.
 
 ### Defining Paper Trading Parameters
 
-In this example, we will _Paper Trade_ $10 per month on a yearly basis using the
-BTC-USD trade pair over a 1-year period in 2020. The columns for our data table
-are: Date, Market Price, Current Target, Current Value, Order Size, Total Order
-Size, and Interval. This structure keeps the tabulation of our data simple and
-compact.
+In this example, we will Paper Trade $10 per month on a yearly basis using the
+BTC-USD trade pair over a 1-year period in 2020.
 
 ### Calculating Record Entries
 
 We need to define how each record is calculated by filling out each cell with
 the appropriate data.
 
--   If there is no previous `interval`, then set `interval` to `0`
-    -   Increment `interval` for each inserted record:
-        `interval: int = interval + 1`
--   `current_target: float = principal_amount * interval`
--   `order_size: float = principal_amount / market_price`
--   If there is no `previous_total_order_size`, then set
-    `previous_total_order_size` to `0`.
-    -   `previous_total_order_size: float = 0`
-    -   `previous_total_order_size` represents the sum (Σ) of the _Order Size_
-        column excluding the _Current Record_.
-        -   `previous_total_order_size: float = sum(order_size_column[:-1])`
--   `total_order_size: float = order_size + previous_total_order_size`
--   `current_value: float = market_price * previous_total_order_size`
+1.  Calculate Interval
+
+        If there is no previous Interval, then set Interval to 1
+        Otherwise increment Interval on inserted record
+            Interval = Interval + 1
+
+2.  Calculate Current Target
+
+        current_target = principal_amount * interval
+
+3.  Calculate Order Size
+
+        order_size = principal_amount / market_price
+
+4.  Calculate Previous Total Order Size
+
+        If there is no Previous Total Order Size
+        then set Previous Total Order Size to 0.
+            previous_total_order_size = 0
+        Otherwise Previous Total Order Size represents sum of Order Size
+        column excluding Current Record.
+            previous_total_order_size = sum(order_size_column[:-1])
+
+5.  Calculate Total Order Size
+
+        total_order_size = order_size + previous_total_order_size
+
+6.  Calculate Current Value
+
+        current_value = market_price * previous_total_order_size
 
 Each variable represents the following:
 
--   `interval`: The number of time units that have passed since the start of the
-    investment strategy. The interval is incremented for each record entry.
--   `current_target`: The target investment amount at the current interval,
-    calculated as the principal amount multiplied by the interval.
--   `order_size`: The amount of the asset to be purchased at the current market
-    price, calculated as the principal amount divided by the price.
--   `previous_total_order_size`: The sum of the _Order Size_ column excluding
+-   **interval**: The number of time units that have passed since the start of
+    the investment strategy. The interval is incremented for each record entry.
+-   **current_target**: The target investment amount at the current interval,
+    calculated as the `principal_amount` multiplied by the `interval`.
+-   **order_size**: The amount of the asset to be purchased at the current
+    market price, calculated as the principal amount divided by the price.
+-   **previous_total_order_size**: The sum of the Order Size column excluding
     the current record. If no previous total order size exists, set it to `0`.
--   `total_order_size`: The sum of the current order size and the previous total
-    order size.
--   `current_value`: The value of the investment at the current market price,
+-   **total_order_size**: The sum of the current order size and the previous
+    total order size.
+-   **current_value**: The value of the investment at the current market price,
     calculated as the market price multiplied by the previous total order size.
 
 This method of calculation helps track the progress of the paper trading
@@ -92,21 +156,22 @@ Let's start by initializing both `previous_total_order_size` and `interval`:
 -   `previous_total_order_size: float = 0`
 -   `interval: int = 1`
 
-Now we can tabulate our _Current Target_, _Current Value_, _Order Size_, _Total
-Order Size_, and _Interval_. This allows us to track the progress of our
-investment and gives us a bird's-eye view of its performance over time.
+Now we can tabulate our Current Target, Current Value, Order Size, Total Order
+Size, and Interval. This allows us to track the progress of our investment and
+gives us a bird's-eye view of its performance over time.
 
 ### Handling the Current Value Calculation
 
-It's important to note that the _Current Value_ calculation depends on whether
-or not it includes the current record's _Total Order Size_:
+It's important to note that the Current Value calculation depends on whether or
+not it includes the current record's Total Order Size:
 
--   If the `record` is the _Initial Record_, then the `current_value` is
+    If the record is the Initial Record, then the `current_value` is
     initialized to zero: `current_value: float = 0`, because there is no
     investment yet.
--   If there is at least one record, then the `current_value` calculation uses
+
+    If there is at least one record, then the `current_value` calculation uses
     `previous_total_order_size`:
-    `current_value: float = market_price * previous_total_order_size`.
+        current_value: float = market_price * previous_total_order_size
 
 | Date     | Market Price | Current Target | Current Value | Order Size | Total Order Size | Interval |
 | -------- | ------------ | -------------- | ------------- | ---------- | ---------------- | -------- |
@@ -126,7 +191,7 @@ or not it includes the current record's _Total Order Size_:
 Try completing the table as an exercise. It's already more than halfway there
 for you.
 
-### Tracking Investment Performance with Gain or Loss
+## Tracking Investment Performance with Gain or Loss
 
 In this example, we'll add a Gain or (Loss) column to provide more information
 about our investment performance at a glance.
@@ -142,7 +207,7 @@ about our investment performance at a glance.
 The Gain or (Loss) column represents the difference between the `current_value`
 and the `previous_current_target`. It can be calculated using the formula:
 
--   `gain_or_loss = current_value - previous_current_target`
+    gain_or_loss = current_value - previous_current_target
 
 A positive value represents a gain, while a negative value represents a loss.
 
@@ -156,11 +221,9 @@ is low. This trend becomes more apparent as the price increases or decreases.
 As an exercise, try completing the table to further understand the investment
 performance.
 
-## Algorithm Overview and Models
+## Models
 
-### Models
-
-#### Base Model
+### Base Model
 
 ```python
 @dataclass
@@ -186,10 +249,6 @@ class AverageRecord:
     @property
     def quote(self) -> str:
         return self.product_id.split("-")[1]
-
-    def increment_interval(self) -> int:
-        self.interval += 1
-        return self.interval
 ```
 
 The `AverageRecord` dataclass serves as the base model for averaging strategies.
@@ -199,7 +258,7 @@ and interval. The class also includes two properties: `base` and `quote`,
 derived from the product_id, and a method called `increment_interval` to
 increment the interval attribute.
 
-#### Cost Average Model
+### Cost Average Model
 
 ```python
 @dataclass
@@ -217,7 +276,7 @@ averaging strategy.
 
 1. Read environment variables
 
-    a. Get the EXCHANGE, PRODUCT_ID, PRINCIPAL_AMOUNT, and INTERVAL.
+    a. Get the EXCHANGE, PRODUCT_ID, PRINCIPAL_AMOUNT.
 
 2. Create a broker instance using the `broker_factory` function with the
    EXCHANGE.
