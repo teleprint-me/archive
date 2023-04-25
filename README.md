@@ -292,7 +292,25 @@ your environment variables are configured correctly.
 
 ### Value Average Bot
 
-    TODO
+The Value Average Bot helps you automate your value averaging strategy by placing orders at a specified frequency, taking into account the growth rate based on the provided interest rate and frequency.
+
+To set up the Value Average Bot, you need to have the environment variables configured (as described in the Environment Variables section). Ensure you have the `EXCHANGE`, `PRODUCT_ID`, `PRINCIPAL_AMOUNT`, `INTEREST_RATE`, and `FREQUENCY` variables set.
+
+To execute the bot manually, run the following command:
+
+```sh
+python post_value_average.py
+```
+
+This will simulate an order based on your configured environment variables and update the records file without actually placing the order. By default, the records file is `data/average/value_average_records.csv`. You can change the file path by passing the `-f` or `--file` option followed by the desired file path.
+
+To actually place the order using the configured exchange API, use the `-x` or `--execute` flag:
+
+```sh
+python post_value_average.py -x
+```
+
+Please note that executing the script with the `-x` flag will place a real order and update the records file accordingly. Use this option with caution and ensure your environment variables are configured correctly.
 
 ### Manual Setup
 
