@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 from dotenv import load_dotenv
 
-from archive.average.factory import broker_factory
+from archive.average.factory import Broker, broker_factory
 from archive.average.models import ValueAverageColumn, ValueAverageRecord
 from archive.tools.io import print_csv, read_write_csv, write_csv
 
@@ -113,6 +113,35 @@ def convert_records_to_csv(
     return entries
 
 
+def calculate_trade_amount(
+    broker: Broker,
+    last_record: Optional[ValueAverageRecord],
+    principal_amount: float,
+    product_id: str,
+) -> float:
+    frequency = {"daily": 365, "weekly": 52, "monthly": 12}.get(
+        getenv("FREQUENCY") or "monthly", 12
+    )
+    interest_rate = float(getenv("INTEREST_RATE") or 0.05)  # default is 5%
+    growth_rate = 1 + (interest_rate / frequency)
+
+    # Simulate the order to get the current market price
+    simulated_order = broker.get_simulated_order(principal_amount, product_id)
+    market_price = float(simulated_order["market_price"])
+
+    # Set default values if no previous record exists
+    last_total_order_size = last_record.total_order_size if last_record else 0
+    interval = last_record.interval + 1 if last_record else 1
+
+    current_target = principal_amount * interval * pow(growth_rate, interval)
+
+    current_value = market_price * last_total_order_size
+
+    trade_amount = current_target - current_value
+
+    return trade_amount
+
+
 def create_value_average_record(
     order: dict[str, Union[str, float]],
     last_record: Optional[ValueAverageRecord] = None,
@@ -197,15 +226,35 @@ def execute_value_average(file: str, execute: bool = False) -> None:
 
     broker = broker_factory(exchange)
 
+    min_trade_amount = broker.get_min_order_size(product_id)
+
     csv_table = read_write_csv(file, [])
     records = convert_csv_to_records(csv_table)
 
     last_record = records[-1] if records else None
 
+    # Calculate the trade amount using the helper function
+    trade_amount = calculate_trade_amount(
+        broker, last_record, principal_amount, product_id
+    )
+
+    # Check if the trade amount is below the minimum trade amount
+    if abs(trade_amount) < min_trade_amount:
+        print(
+            f"Skipping the order as the calculated trade amount ({trade_amount}) is below the minimum trade amount ({min_trade_amount})."
+        )
+        return
+
+    # Determine the side based on the trade amount's sign
+    side = "SELL" if trade_amount < 0 else "BUY"
+
+    # Update trade_amount to its absolute value
+    trade_amount = abs(trade_amount)
+
     if execute:
-        order = broker.post_order(principal_amount, product_id)
+        order = broker.post_order(trade_amount, product_id, side)
     else:
-        order = broker.get_simulated_order(principal_amount, product_id)
+        order = broker.get_simulated_order(trade_amount, product_id, side)
 
     new_record = create_value_average_record(order, last_record)
 

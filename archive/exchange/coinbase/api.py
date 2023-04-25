@@ -160,6 +160,28 @@ def post(url: str, data: Optional[dict] = None) -> dict[str, Any]:
         raise RequestException(f"Error retrieving POST request: {error}")
 
 
+def get_min_order_size(product_id: str) -> float:
+    """Get the minimum order size of an asset on Coinbase.
+
+    Args:
+        product_id (str): The identifier for the asset.
+
+    Returns:
+        float: The minimum order size of the asset.
+    """
+
+    url = f"{__advanced__}/products/{product_id}"
+    response = get(url)
+
+    if "quote_min_size" in response:
+        quote_min_size = float(response["quote_min_size"])
+        return quote_min_size
+    else:
+        raise Exception(
+            f"Failed to fetch minimum order size for {product_id}. Response: {response}"
+        )
+
+
 def get_spot_price(
     currency_pair: str,
     datetime: Optional[str] = None,
@@ -226,7 +248,7 @@ def get_simulated_market_order(
         "exchange": exchange,
         "product_id": product_id,
         "principal_amount": principal_amount,
-        "side": side,
+        "side": side.upper(),
         "datetime": dt.now().isoformat(),
         "market_price": market_price,
         "order_size": order_size,
@@ -257,7 +279,7 @@ def post_market_order(
         market_order = {
             "client_order_id": str(uuid4()),
             "product_id": product_id,
-            "side": side,
+            "side": side.upper(),
             "order_configuration": {
                 "market_market_ioc": {"quote_size": str(quote_size)}
             },

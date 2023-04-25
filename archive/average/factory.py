@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 from typing import Any, Union
 
 from archive.exchange.coinbase.api import (
+    get_min_order_size as coinbase_min_order_size,
+)
+from archive.exchange.coinbase.api import (
     get_simulated_market_order as coinbase_simulated_market_order,
 )
 from archive.exchange.coinbase.api import get_spot_price as coinbase_spot_price
@@ -14,8 +17,7 @@ from archive.exchange.kraken.api import get_spot_price as kraken_spot_price
 class Broker(ABC):
     """Abstract base class representing a broker for buying and selling assets.
 
-    Subclasses must implement the `get_price`, `get_simulated_order`, and `post_order`
-    methods.
+    Subclasses must implement the `get_price`, `get_simulated_order`, and `post_order` methods.
     """
 
     @abstractmethod
@@ -27,6 +29,19 @@ class Broker(ABC):
 
         Returns:
             float: The current market price of the asset.
+        """
+
+        raise NotImplementedError()
+
+    @abstractmethod
+    def get_min_order_size(self, product_id: str) -> float:
+        """Get the minimum order size of an asset.
+
+        Args:
+            product_id (str): The identifier for the asset.
+
+        Returns:
+            float: The minimum order size of the asset.
         """
 
         raise NotImplementedError()
@@ -75,8 +90,7 @@ class Broker(ABC):
 class Coinbase(Broker):
     """A class representing the Coinbase exchange.
 
-    Inherits from the `Broker` abstract base class and provides implementations
-    for its methods.
+    Inherits from the `Broker` abstract base class and provides implementations for its methods.
     """
 
     def get_price(self, product_id: str) -> float:
@@ -90,6 +104,18 @@ class Coinbase(Broker):
         """
 
         return coinbase_spot_price(product_id)
+
+    def get_min_order_size(self, product_id: str) -> float:
+        """Get the minimum order size of an asset on Coinbase.
+
+        Args:
+            product_id (str): The identifier for the asset.
+
+        Returns:
+            float: The minimum order size of the asset.
+        """
+
+        return coinbase_min_order_size(product_id)
 
     def get_simulated_order(
         self,
@@ -133,8 +159,7 @@ class Coinbase(Broker):
 class Kraken(Broker):
     """A class representing the Kraken exchange.
 
-    Inherits from the `Broker` abstract base class and provides implementations
-    for the `get_price` method.
+    Inherits from the `Broker` abstract base class and provides implementations for the `get_price` method.
     """
 
     def get_price(self, product_id: str) -> float:
@@ -148,6 +173,18 @@ class Kraken(Broker):
         """
 
         return kraken_spot_price(product_id)
+
+    def get_min_order_size(self, product_id: str) -> float:
+        """Get the minimum order size of an asset.
+
+        Args:
+            product_id (str): The identifier for the asset.
+
+        Returns:
+            float: The minimum order size of the asset.
+        """
+
+        raise NotImplementedError()
 
     def get_simulated_order(
         self,
