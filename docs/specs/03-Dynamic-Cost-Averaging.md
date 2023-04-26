@@ -26,7 +26,7 @@ customized by the user. Let's briefly describe each term:
 -   Min Multiplier and Max Multiplier: The lower and upper bounds of the
     Multiplier range, respectively.
 
-# Algorithm
+## Dynamic Cost Averaging Algorithm
 
 We need to define our columns: Datetime, Market Price, Current Target, Current
 Value, Principal Amount, Multiplier, Trade Amount, Total Trade Amount, Order
@@ -45,77 +45,86 @@ each value as the following:
         Min Multiplier = 1 (sets lower limit)
         Max Multiplier = Constant Integer Value greater than Min Multiplier sets upper limit (default is 5)
 
-3.  Get Datetime
+3.  Get the current Datetime
 
         Datetime = Current Date
 
-4.  Get Market Price
+4.  Get the current Market Price
 
         Market Price = Current Market Price
 
-5.  Get Interval
+5.  Set or calculate the Interval
 
         IF no previous records
             THEN Interval = 1
         ELSE
             Interval = Previous Record Interval + 1
 
-6.  Get Current Target
+6.  Calculate the Current Target
 
         Current Target = Principal Amount * Interval
 
-7.  Get Previous Total Order Size
+7.  Set or calculate the Previous Total Order Size
 
         IF no previous records
             THEN Previous Total Order Size = 0
         ELSE
             Previous Total Order Size = sum of Order Size column for all previous records
 
-8.  Get Order Size
+8.  Get or calculate Order Size
 
         Order Size = Principal Amount / Market Price
 
-9.  Get Total Order Size
+9.  Calculate the Total Order Size
 
         Total Order Size = Order Size + Previous Total Order Size
 
-10. Get Current Value
+10. Get or calculate the Current Value
 
         Current Value = Market Price * Previous Total Order Size
 
-11. Get Multiplier
+11. Calculate the Multiplier
 
-    How much should be bought or sold to get back to the Target Value.
+    Determine how much should be bought or sold to get back to the Target Value.
 
         Target Difference = Current Target - Current Value
+        Target Difference = 10 - 0 = 10
 
     Multiplier represents a value that is used to determine the size of the next
     trade.
 
         Multiplier = Target Difference / Principal Amount
+        Multiplier = 10 / 10 = 1
 
-    We also need to enforce the Min Multiplier and Max Multiplier limits.
+    Enforce the Min Multiplier and Max Multiplier limits.
 
         IF Multiplier = 0
-            THEN RETURN 1
-        IF Multiplier > Max Multiplier
-            THEN RETURN Max Multiplier
-        IF Multiplier < -Max Multiplier
-            THEN RETURN -Max Multiplier
-        RETURN max(Min Multiplier, min(Multiplier, Max Multiplier))
+            THEN Multiplier = 1
+        ELSE IF Multiplier > Max Multiplier
+            THEN Multiplier = Max Multiplier
+        ELSE IF Multiplier < -Max Multiplier
+            THEN Multiplier = -Max Multiplier
+        ELSE IF Multiplier < 0
+            THEN Multiplier = -round(max(Min Multiplier, min(Multiplier, Max Multiplier)))
+        ELSE
+            Multiplier = round(max(Min Multiplier, min(Multiplier, Max Multiplier)))
 
-12. Get Trade Amount
+    In this case, the Multiplier is within the limits:
+
+        Multiplier = 1
+
+12. Calculate the Trade Amount
 
         Trade Amount = Multiplier * Principal Amount
 
-13. Get Previous Total Trade Amount
+13. Get or calculate Previous Total Trade Amount
 
         IF no previous records
             THEN Previous Total Trade Amount = 0
         ELSE
             Previous Total Trade Amount = sum of Trade Amount column for all previous records
 
-14. Get Total Trade Amount
+14. Calculate the Total Trade Amount
 
         Total Trade Amount = Trade Amount + Previous Total Trade Amount
 
@@ -124,19 +133,19 @@ each value as the following:
         Previous Total Trade Amount = Total Trade Amount
         Previous Total Order Size = Total Order Size
 
-## Walkthrough
+## Dynamic Cost Averaging Walk-through
 
 I want to paper trade a Value Averaging strategy, investing $10 per month in the
 BTC-USD trading pair over a 1-year period. I will make the investments on the
 first day of each month in 2020.
 
-The smallest units for US dollars are denominated in "cents" and will use a
-precision of:
+-   The smallest units for US dollars are denominated in "cents" and will use a
+    precision of:
 
         1 * 10 ^ -2 = 0.01
 
-The smallest units for Bitcoin are denominated in "satoshis" and will use a
-precision of:
+-   The smallest units for Bitcoin are denominated in "satoshis" and will use a
+    precision of:
 
         1 * 10 ^ -8 = 0.00000001
 
@@ -182,7 +191,7 @@ Let's initialize the table and calculate the first record:
         Current Target = Principal Amount * Interval
         Current Target = 10 * 1 = 10
 
-7.  Calculate the Order Size
+7.  Calculate or get the Order Size
 
         Order Size = Principal Amount / Market Price
         Order Size = 10 / 9334.98 ≈ 0.0010712395741608446 ≈ 0.00107124
@@ -201,8 +210,8 @@ Let's initialize the table and calculate the first record:
 
     Determine how much should be bought or sold to get back to the Target Value.
 
-    Target Difference = Current Target - Current Value Target Difference = 10 -
-    0 = 10
+        Target Difference = Current Target - Current Value Target Difference
+        Target Difference = 10 - 0 = 10
 
     Multiplier represents a value that is used to determine the size of the next
     trade.
@@ -224,36 +233,31 @@ Let's initialize the table and calculate the first record:
 
         Multiplier = 1
 
-11. Get Trade Amount
+11. Calculate the Trade Amount
 
         Trade Amount = Multiplier * Principal Amount
         Trade Amount = 1 * 10 = 10
 
--   Example of how to calculate Target Difference, Multiplier, and Trade Amount
-    to buy:
+    -   Example of how to calculate Target Difference, Multiplier, and Trade
+        Amount to buy:
 
-        Target Difference = 20 - 9.11 = 10.89 (positive value is a buy signal)
-        Multiplier = 10.89 / 10 ≈ 1.09 ≈ 1 (rounded to the nearest integer)
-        Trade Amount = 1 * 10 = 10 (buy $10 worth)
+            Target Difference = 20 - 9.11 = 10.89 (positive value is a buy signal)
+            Multiplier = 10.89 / 10 ≈ 1.09 ≈ 1 (rounded to the nearest integer)
+            Trade Amount = 1 * 10 = 10 (buy $10 worth)
 
--   Example of how to calculate Target Difference, Multiplier, and Trade Amount
-    to sell:
+    -   Example of how to calculate Target Difference, Multiplier, and Trade
+        Amount to sell:
 
-        Target Difference = 20 - 30.24 = -10.24 (negative value is a sell signal)
-        Multiplier = -10.24 / 10 ≈ -1.024 ≈ -1 (rounded to the nearest integer)
-        Trade Amount = -1 * 10 = -10 (sell $10 worth)
+            Target Difference = 20 - 30.24 = -10.24 (negative value is a sell signal)
+            Multiplier = -10.24 / 10 ≈ -1.024 ≈ -1 (rounded to the nearest integer)
+            Trade Amount = -1 * 10 = -10 (sell $10 worth)
 
-12. Get Previous Total Trade Amount
-
-        Since there are no previous records:
-        Previous Total Trade Amount = 0
-
-13. Get Total Trade Amount
+12. Calculate the Total Trade Amount
 
         Total Trade Amount = Trade Amount + Previous Total Trade Amount
         Total Trade Amount = 10 + 0 = 10
 
-14. Update Previous Total Trade Amount and Previous Total Order Size
+13. Update Previous Total Trade Amount and Previous Total Order Size
 
         Previous Total Trade Amount = Total Trade Amount
         Previous Total Trade Amount = 10
@@ -281,7 +285,165 @@ based on the exchange's rules and restrictions.
 | Datetime   | Market Price | Current Target | Current Value | Principal Amount | Multiplier | Trade Amount | Total Trade Amount | Order Size | Total Order Size | Interval |
 | ---------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ------------ | ------------------ | ---------- | ---------------- | -------- |
 | 2020-01-01 | 9334.98      | 10.00          | 0.00          | 10.00            | 1.00       | 10.00        | 10.00              | 0.00107124 | 0.00107124       | 1        |
-| 2020-02-01 | 9334.98      | 20.00          |               |                  |            |              |                    |            |                  | 2        |
+| 2020-02-01 | 8,505.07     | 20.00          |               |                  |            |              |                    |            |                  | 2        |
+
+We can calculate the second record entry as follows:
+
+1.  Define Principal Amount
+
+        Principal Amount = Constant Float Value
+        Principal Amount = 10.00
+
+2.  Get the current datetime
+
+        Datetime = Current Date
+        Datetime = "2020-02-01"
+
+3.  Get the current market price
+
+        Market Price = Current Market Price
+        Market Price = 8505.07
+
+4.  Calculate the Interval
+
+        Since there is a previous record:
+        Interval = Previous Record Interval + 1
+        Interval = 1 + 1 = 2
+
+5.  Calculate the Current Target
+
+        Current Target = Principal Amount * Interval
+        Current Target = 10 * 2 = 20
+
+6.  Get Previous Total Order Size
+
+        Since there is a previous record:
+        Previous Total Order Size = 0.00107124 (from the previous record)
+
+7.  Calculate or get the Order Size
+
+        Order Size = Principal Amount / Market Price
+        Order Size = 10 / 8505.07 ≈ 0.00117577
+
+8.  Calculate the Total Order Size
+
+        Total Order Size = Order Size + Previous Total Order Size
+        Total Order Size = 0.00117577 + 0.00107124 ≈ 0.00224701
+
+9.  Calculate the Current Value
+
+        Current Value = Market Price * Previous Total Order Size
+        Current Value = 8505.07 * 0.00107124 ≈ 9.11
+
+10. Calculate the Multiplier
+
+    Determine how much should be bought or sold to get back to the Target Value.
+
+        Target Difference = Current Target - Current Value
+        Target Difference = 20 - 9.11 = 10.89
+
+    Multiplier represents a value that is used to determine the size of the next
+    trade.
+
+        Multiplier = Target Difference / Principal Amount
+        Multiplier = 10.89 / 10 = 1.089
+
+    Enforce the Min Multiplier and Max Multiplier limits.
+
+        IF Multiplier = 0
+            THEN Multiplier = 1
+        ELSE IF Multiplier > Max Multiplier
+            THEN Multiplier = Max Multiplier
+        ELSE IF Multiplier < -Max Multiplier
+            THEN Multiplier = -Max Multiplier
+        ELSE IF Multiplier < 0
+            THEN Multiplier = -round(max(Min Multiplier, min(Multiplier, Max Multiplier)))
+        ELSE
+            Multiplier = round(max(Min Multiplier, min(Multiplier, Max Multiplier)))
+
+    In this case, the Multiplier is within the limits:
+
+        Multiplier = 1
+
+11. Calculate the Trade Amount
+
+        Trade Amount = Multiplier * Principal Amount
+        Trade Amount = 1 * 10 = 10
+
+12. Get or calculate Previous Total Trade Amount
+
+        Since there is a previous record:
+        Previous Total Trade Amount = 10 (from the previous record)
+
+13. Calculate the Total Trade Amount
+
+        Total Trade Amount = Trade Amount + Previous Total Trade Amount
+        Total Trade Amount = 10 + 10 = 20
+
+14. Update Previous Total Trade Amount and Previous Total Order Size
+
+        Previous Total Trade Amount = Total Trade Amount
+        Previous Total Trade Amount = 20
+
+        Previous Total Order Size = Total Order Size
+        Previous Total Order Size ≈ 0.00224701
+
+The records will be created and updated sequentially as the bot executes each
+order, following the steps outlined here.
+
+| Datetime   | Market Price | Current Target | Current Value | Principal Amount | Multiplier | Trade Amount | Total Trade Amount | Order Size   | Total Order Size | Interval |
+| ---------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ------------ | ------------------ | ------------ | ---------------- | -------- |
+| 2020-01-01 | 9,334.98     | 10.00          | 0.00          | 10.00            | 1          | 10.00        | 10.00              | 0.00107124   | 0.00107124       | 1        |
+| 2020-02-01 | 8,505.07     | 20.00          | 9.11          | 10.00            | 1          | 10.00        | 20.00              | 0.00117577   | 0.00224701       | 2        |
+| 2020-03-01 | 6,424.35     | 30.00          | 14.43         | 10.00            | 2          | 20.00        | 40.00              | 0.00311315   | 0.00536017       | 3        |
+| 2020-04-01 | 8,624.28     | 40.00          | 46.23         | 10.00            | -1         | (10.00)      | 30.00              | (0.00115952) | 0.00420065       | 4        |
+
+## Summary
+
+Dynamic Cost Averaging (DCA) is an investment strategy that aims to manage the
+impact of market volatility by incrementally adjusting the investment amounts
+based on a predefined set of rules. The strategy uses a constant principal
+amount for each trade and adjusts the trade frequency and size based on market
+conditions, enabling the investor to buy more when prices are low and sell when
+prices are high. This can potentially lead to better long-term returns than
+traditional Cost Averaging (CA).
+
+Key components of the Dynamic Cost Averaging strategy:
+
+1. Principal Amount: The constant amount used for each trade.
+2. Interval: The frequency at which trades are executed (e.g., monthly).
+3. Current Target: The cumulative target amount at the current interval
+   (Principal Amount \* Interval).
+4. Current Value: The total value of the asset based on the current market
+   price.
+5. Multiplier: A value used to determine the size of the next trade, calculated
+   using the difference between the Current Target and Current Value.
+
+The algorithm enforces limits on the minimum and maximum multipliers to prevent
+over- or under-investment. To calculate the multiplier, the algorithm considers
+the target difference, the principal amount, and the multiplier limits.
+
+The main steps in the DCA algorithm are:
+
+1. Define the Principal Amount and Interval.
+2. Get the current Datetime and Market Price.
+3. Calculate the Current Target, Current Value, and Multiplier.
+4. Determine the Trade Amount, Total Trade Amount, Order Size, and Total Order
+   Size.
+5. Update the values and repeat the process for each Interval.
+
+By using Dynamic Cost Averaging, investors can potentially mitigate the risks of
+market fluctuations and achieve more consistent returns over time. The strategy
+is adaptable to different market conditions, making it suitable for various
+investment scenarios.
+
+## Solution
+
+    TODO
+
+## Complete Data Set
+
+    TODO
 
 ---
 
