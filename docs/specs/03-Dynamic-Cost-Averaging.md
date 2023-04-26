@@ -1,24 +1,37 @@
 **Disclaimer:**
 
-_I am a **programmer** and I am **NOT** an accredited financial expert. You
-should seek out an accredited financial expert for making serious investment
-decisions. Do NOT take investment advice from random internet strangers and
-always do your own research._
+_**I am a programmer and I am NOT an accredited financial expert. You should
+seek out an accredited financial expert for making serious investment decisions.
+Do NOT take investment advice from random internet strangers and always do your
+own research.**_
 
 # Dynamic Cost Averaging
 
-Dynamic Cost Averaging is similar to Cost Averaging. We set a Principal Amount
-and then purchase an asset with Principal Amount on a set interval based on Time
-Period.
+Dynamic Cost Averaging (DCA) is a variation of Cost Averaging that encourages
+both buying and selling. Like Cost Averaging, DCA involves setting a Principal
+Amount and purchasing an asset at a regular interval, called the Interval.
+However, DCA also includes selling assets when certain conditions are met.
 
-We include Target Value that assists in determining the amount to buy or sell
-based on a Purchase Factor of the Principal Amount that falls within Min Factor
-and Max Factor range. These expressions and variables are defined by the user.
+In DCA, a Target Value helps determine the amount to buy or sell based on a
+Multiplier of the Principal Amount. This Multiplier falls within a range defined
+by the Min Multiplier and Max Multiplier. These factors and variables can be
+customized by the user. Let's briefly describe each term:
 
-We need to define our columns: Date, Market Price, Current Target, Current
-Value, Principal Amount, Factor Purchase, Factor Amount, Total Factor Amount,
-Order Size, Total Order Size, and Time Period. This will allow us to keep track
-of the relevant data and show the evaluated expressions as its set of results.
+-   Principal Amount: The initial investment or the base amount for purchasing
+    the asset.
+-   Interval: The regular interval at which the asset is bought or sold.
+-   Target Value: A predefined value that helps determine when to buy or sell.
+-   Multiplier: A multiplier applied to the Principal Amount to calculate the
+    buying or selling amount.
+-   Min Multiplier and Max Multiplier: The lower and upper bounds of the
+    Multiplier range, respectively.
+
+# Algorithm
+
+We need to define our columns: Datetime, Market Price, Current Target, Current
+Value, Principal Amount, Multiplier, Trade Amount, Total Trade Amount, Order
+Size, Total Order Size, and Interval. This will allow us to keep track of the
+relevant data and show the evaluated expressions as its set of results.
 
 We define the sequence of steps, as well as the expressions used, to evaluate
 each value as the following:
@@ -27,36 +40,36 @@ each value as the following:
 
         Principal Amount = Constant Float Value
 
-2.  Define Factor Range
+2.  Define Multiplier Range
 
-        Min Factor = Constant Integer Value of 1 or greater sets lower limit
-        Max Factor = Constant Integer Value greater than Min Factor sets upper limit
+        Min Multiplier = 1 (sets lower limit)
+        Max Multiplier = Constant Integer Value greater than Min Multiplier sets upper limit (default is 5)
 
-3.  Get Date
+3.  Get Datetime
 
-        Date = Current Date
+        Datetime = Current Date
 
 4.  Get Market Price
 
         Market Price = Current Market Price
 
-5.  Get Time Period
+5.  Get Interval
 
-        IF NOT Time Period
-                THEN Time Period = 0
-        WHERE increment(Time Period) for each inserted record
-                Time Period = 1 + Time Period
+        IF no previous records
+            THEN Interval = 1
+        ELSE
+            Interval = Previous Record Interval + 1
 
 6.  Get Current Target
 
-        Current Target = Principal Amount * Time Period
+        Current Target = Principal Amount * Interval
 
 7.  Get Previous Total Order Size
 
-        IF NOT Previous Total Order Size
-                THEN Previous Total Order Size = 0
-        WHERE Previous Total Order Size = Total Order Size for each inserted record
-                Previous Total Order Size = 0 or total sum (Σ) of Order Size column excluding current record
+        IF no previous records
+            THEN Previous Total Order Size = 0
+        ELSE
+            Previous Total Order Size = sum of Order Size column for all previous records
 
 8.  Get Order Size
 
@@ -68,87 +81,207 @@ each value as the following:
 
 10. Get Current Value
 
-    Current Value = Market Price \* Previous Total Order Size
+        Current Value = Market Price * Previous Total Order Size
 
-11. Get Factor Purchase
+11. Get Multiplier
 
     How much should be bought or sold to get back to the Target Value.
 
         Target Difference = Current Target - Current Value
 
-    Factor Purchase represents a value that is used to determine the size of the
-    next trade.
+    Multiplier represents a value that is used to determine the size of the next
+    trade.
 
-        Factor Purchase = Target Difference / Principal Amount
+        Multiplier = Target Difference / Principal Amount
 
-    We also need to enforce the Min Factor and Max Factor limits.
+    We also need to enforce the Min Multiplier and Max Multiplier limits.
 
-        IF Factor Purchase = 0
+        IF Multiplier = 0
             THEN RETURN 1
-        IF Factor Purchase = 0
-            THEN RETURN 1
-        # Enforce Min Factor and Max Factor
-        IF NOT -(Max Factor) <= Factor Purchase <= Max Factor
-            IF Factor Purchase > Max Factor
-                THEN RETURN Max Factor
-            IF Factor Purchase < -(Max Factor)
-                THEN RETURN -(Max Factor)
-        RETURN min(max(Factor Purchase, Min Factor), Max Factor)
+        IF Multiplier > Max Multiplier
+            THEN RETURN Max Multiplier
+        IF Multiplier < -Max Multiplier
+            THEN RETURN -Max Multiplier
+        RETURN max(Min Multiplier, min(Multiplier, Max Multiplier))
 
-12. Get Factor Amount
+12. Get Trade Amount
 
-        Factor Amount = Purchase Factor * Principal Amount
+        Trade Amount = Multiplier * Principal Amount
 
-13. Get Previous Total Factor Amount
+13. Get Previous Total Trade Amount
 
-        IF NOT Previous Total Factor Amount
-                THEN Previous Total Factor Amount = 0
-        WHERE Previous Total Factor Amount = 0 or total sum (Σ) of Factor Amount column excluding current record
+        IF no previous records
+            THEN Previous Total Trade Amount = 0
+        ELSE
+            Previous Total Trade Amount = sum of Trade Amount column for all previous records
 
-14. Get Total Factor Amount
+14. Get Total Trade Amount
 
-        Total Factor Amount = Factor Amount + Previous Total Factor Amount
+        Total Trade Amount = Trade Amount + Previous Total Trade Amount
 
-15. Update Previous Total Factor Amount and Previous Total Order Size
+15. Update Previous Total Trade Amount and Previous Total Order Size
 
-        Previous Total Factor Amount = Total Factor Amount
+        Previous Total Trade Amount = Total Trade Amount
         Previous Total Order Size = Total Order Size
 
-Let's set Time Period, Previous Total Order Size, and Previous Total Factor
-Amount to 0.
+## Walkthrough
 
-    Time Period = 0
-    Previous Total Factor Amount = 0
-    Previous Total Order Size = 0
+I want to paper trade a Value Averaging strategy, investing $10 per month in the
+BTC-USD trading pair over a 1-year period. I will make the investments on the
+first day of each month in 2020.
 
-Example of how to calculate Target Difference, Factor Purchase, and Factor
-Amount to buy:
+The smallest units for US dollars are denominated in "cents" and will use a
+precision of:
 
-    Target Difference = 200 - 91.11 = 108.89 (positive value is a buy signal)
-    Factor Purchase = 108.89 / 100 ≈ 1.09 ≈ 1 (rounded to the nearest integer)
-    Amount = 1 * 100 = 100 (buy $100)
+        1 * 10 ^ -2 = 0.01
 
-Example of how to calculate Difference, Purchase Factor, and Amount to sell:
+The smallest units for Bitcoin are denominated in "satoshis" and will use a
+precision of:
 
-    Target Difference = 200 - 302.43 = -102.43 (inverse value is a sell signal)
-    Purchase Factor = -102.43 / 100 ≈ -1.0243 ≈ -1 (rounded to the nearest integer)
-    Amount = -1 * 100 = -100 (sell $100)
+        1 * 10 ^ -8 = 0.00000001
 
-Now we can tabulate our Current Target, Current Value, Factor Purchase, Factor
-Amount, Total Factor Amount, Amount*, \_Size*, _Total Size_, and _Period_. This
-allows us to track the progress of our investment and gives us a "_birds eye_"
-view of its performance over time.
+### Creating the Initial Record
 
-I want to paper trade $100 per month on a yearly basis. I will paper trade $100
-per month using the BTC-USD trade pair over a 1 year period. The 1 year period
-will take place in 2020 on the first day of each month.
+Let's initialize the table and calculate the first record:
 
-| Date       | Market Price | Current Target | Current Value | Principal Amount | Factor Purchase | Factor Amount | Total Factor Amount | Order Size | Total Order Size | Time Period |
-| ---------- | ------------ | -------------- | ------------- | ---------------- | --------------- | ------------- | ------------------- | ---------- | ---------------- | ----------- |
-| 2020-01-01 | 7174.33      | 100.00         | 0.00          | 100.00           | 1.00            | 100.00        | 100.00              | 0.01393858 | 0.01393858       | 1           |
-| 2020-02-01 | 9380.18      | 200.00         | 130.75        |                  |                 |               |                     |            |                  | 2           |
-| 2020-03-01 | 8522.31      | 300.00         | 209.64        |                  |                 |               |                     |            |                  | 3           |
-| 2020-04-01 | 6666.11      | 400.00         | 242.20        |                  |                 |               |                     |            |                  | 4           |
+1.  Initialize Interval, Previous Total Order Size, and Previous Total Trade
+    Amount. There are no previous records and we set the following variables as
+    a result. This omits steps 5 (Set or Calculate Interval), 7 (Set or
+    Calculate Previous Total Order Size), and step 13 (Get Previous Total Trade
+    Amount).
+
+        Interval = 1
+        Previous Total Order Size = 0
+        Previous Total Trade Amount = 0
+
+2.  Define the Multiplier Range for the algorithm
+
+        Min Multiplier = 1 (sets lower limit)
+        Max Multiplier = Constant Integer Value greater than Min Multiplier sets upper limit (default is 5)
+
+        Min Multiplier = 1
+        Max Multiplier = 5
+
+3.  Set the Principal Amount for the investment
+
+        Principal Amount = Constant Float Value
+        Principal Amount = 10.00
+
+4.  Initialize Datetime with the date of the first record
+
+        Datetime = Current Date
+        Datetime = "2020-01-01"
+
+5.  Get the Market Price for the first record
+
+        Market Price = Current Market Price
+        Market Price = 9334.98
+
+6.  Calculate the Current Target
+
+        Current Target = Principal Amount * Interval
+        Current Target = 10 * 1 = 10
+
+7.  Calculate the Order Size
+
+        Order Size = Principal Amount / Market Price
+        Order Size = 10 / 9334.98 ≈ 0.0010712395741608446 ≈ 0.00107124
+
+8.  Calculate the Total Order Size
+
+        Total Order Size = Order Size + Previous Total Order Size
+        Total Order Size = 0.00107124 + 0 = 0.00107124
+
+9.  Calculate the Current Value
+
+        Current Value = Market Price * Previous Total Order Size
+        Current Value = 9334.98 * 0 = 0
+
+10. Calculate the Multiplier
+
+    Determine how much should be bought or sold to get back to the Target Value.
+
+    Target Difference = Current Target - Current Value Target Difference = 10 -
+    0 = 10
+
+    Multiplier represents a value that is used to determine the size of the next
+    trade.
+
+        Multiplier = Target Difference / Principal Amount
+        Multiplier = 10 / 10 = 1
+
+    Enforce the Min Multiplier and Max Multiplier limits.
+
+        IF Multiplier = 0
+            THEN RETURN 1
+        IF Multiplier > Max Multiplier
+            THEN RETURN Max Multiplier
+        IF Multiplier < -Max Multiplier
+            THEN RETURN -Max Multiplier
+        RETURN max(Min Multiplier, min(Multiplier, Max Multiplier))
+
+    In this case, the Multiplier is within the limits:
+
+        Multiplier = 1
+
+11. Get Trade Amount
+
+        Trade Amount = Multiplier * Principal Amount
+        Trade Amount = 1 * 10 = 10
+
+-   Example of how to calculate Target Difference, Multiplier, and Trade Amount
+    to buy:
+
+        Target Difference = 20 - 9.11 = 10.89 (positive value is a buy signal)
+        Multiplier = 10.89 / 10 ≈ 1.09 ≈ 1 (rounded to the nearest integer)
+        Trade Amount = 1 * 10 = 10 (buy $10 worth)
+
+-   Example of how to calculate Target Difference, Multiplier, and Trade Amount
+    to sell:
+
+        Target Difference = 20 - 30.24 = -10.24 (negative value is a sell signal)
+        Multiplier = -10.24 / 10 ≈ -1.024 ≈ -1 (rounded to the nearest integer)
+        Trade Amount = -1 * 10 = -10 (sell $10 worth)
+
+12. Get Previous Total Trade Amount
+
+        Since there are no previous records:
+        Previous Total Trade Amount = 0
+
+13. Get Total Trade Amount
+
+        Total Trade Amount = Trade Amount + Previous Total Trade Amount
+        Total Trade Amount = 10 + 0 = 10
+
+14. Update Previous Total Trade Amount and Previous Total Order Size
+
+        Previous Total Trade Amount = Total Trade Amount
+        Previous Total Trade Amount = 10
+
+        Previous Total Order Size = Total Order Size
+        Previous Total Order Size = 0.00107124
+
+### Calculating Record Entries
+
+Now we can tabulate our Current Target, Current Value, Multiplier, Trade Amount,
+Total Trade Amount, Principal Amount, Order Size, Total Order Size, and
+Interval. This allows us to track the progress of our investment and gives us a
+bird's-eye view of its performance over time.
+
+Holding is usually enforced via a minimum or maximum trade amount and varies
+amongst brokerages and is outside of the scope of this strategy.
+
+**Note:** When implementing this strategy, be aware of the specific minimum and
+maximum trade amounts enforced by the exchange you are using. These limits can
+affect the execution of trades and should be taken into account when developing
+your trading bot. Consider adding an environment variable or configuration
+setting to handle these requirements, allowing you to easily adjust the values
+based on the exchange's rules and restrictions.
+
+| Datetime   | Market Price | Current Target | Current Value | Principal Amount | Multiplier | Trade Amount | Total Trade Amount | Order Size | Total Order Size | Interval |
+| ---------- | ------------ | -------------- | ------------- | ---------------- | ---------- | ------------ | ------------------ | ---------- | ---------------- | -------- |
+| 2020-01-01 | 9334.98      | 10.00          | 0.00          | 10.00            | 1.00       | 10.00        | 10.00              | 0.00107124 | 0.00107124       | 1        |
+| 2020-02-01 | 9334.98      | 20.00          |               |                  |            |              |                    |            |                  | 2        |
 
 ---
 
