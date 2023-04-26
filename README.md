@@ -41,10 +41,10 @@ along with this program.  If not, see https://www.gnu.org/licenses/.
 -   [x] Generate Gains and Losses (GL) from IR data.
 -   [x] Generate Form-8949 from GL data.
 -   [x] Generate Form-8949 from Form-1099.
--   [ ] Manage `systemd` services and timers.
 -   [x] Generate Cost Average transactions.
 -   [ ] Generate Dynamic Cost Average transactions.
--   [ ] Generate Value Average transactions.
+-   [x] Generate Value Average transactions.
+-   [ ] Manage `systemd` services and timers.
 
 ## Supported Exchanges
 
@@ -63,6 +63,9 @@ provided examples and updating the `parser_factory` in `archive/ir/factory.py`.
 -   Gains and losses are calculated by a
     [Weighted Average](https://www.investopedia.com/ask/answers/09/weighted-average-fifo-lilo-accounting.asp).
 -   Cost Averaging is determined by the principal amount.
+-   Dynamic Cost Averaging is determined by the principal amount, predefined
+    rules for adjusting the trade frequency and size, and the min and max
+    multipliers.
 -   Value Averaging is determined by the principal amount, interest rate, and
     interval.
 
@@ -71,8 +74,8 @@ provided examples and updating the `parser_factory` in `archive/ir/factory.py`.
 ```sh
 git clone https://github.com/teleprint-me/archive.git
 cd archive
-chmod +x init.sh
-./init.sh
+chmod +x scripts/shell/setup_dev_environment.sh
+./scripts/shell/setup_dev_environment.sh
 ```
 
 ## Usage
@@ -244,10 +247,9 @@ Here is a list of environment variables that can be set using the
 -   `PRINCIPAL_AMOUNT`: The amount of money to invest in each purchase.
 -   `FREQUENCY`: The frequency of the averaging strategy (e.g. 'daily',
     'weekly', 'monthly').
--   `MIN_TRADE_AMOUNT`: The minimum amount to trade (default is 5).
--   `MAX_FACTOR`: The maximum factor for dynamic averaging (default is 5).
+-   `MAX_MULTIPLIER`: The maximum factor for dynamic averaging (default is 5).
 -   `INTEREST_RATE`: The interest rate for calculating the growth rate in the
-    value averaging strategy.
+    value averaging strategy (default is 0.05).
 
 You can set or unset these variables using the `env_manager.py` script as shown
 in the previous section. Make sure to store the variables in a secure location,
@@ -288,13 +290,48 @@ your environment variables are configured correctly.
 
 ### Dynamic Cost Average Bot
 
-    TODO
+The Dynamic Cost Average Bot helps you automate your dynamic cost averaging
+strategy by placing orders at a variable frequency based on market conditions,
+allowing you to buy more when prices are low and sell when prices are high.
+
+To set up the Dynamic Cost Average Bot, you need to have the environment
+variables configured (as described in the Environment Variables section). Ensure
+you have the `EXCHANGE`, `PRODUCT_ID`, `PRINCIPAL_AMOUNT`, `FREQUENCY`, and
+`MAX_MULTIPLIER` variables set.
+
+To execute the bot manually, run the following command:
+
+```sh
+python post_dynamic_cost_average.py
+```
+
+This will simulate an order based on your configured environment variables and
+update the records file without actually placing the order. By default, the
+records file is `data/average/dynamic_cost_average_records.csv`. You can change
+the file path by passing the `-f` or `--file` option followed by the desired
+file path.
+
+To actually place the order using the configured exchange API, use the `-x` or
+`--execute` flag:
+
+```sh
+python post_dynamic_cost_average.py -x
+```
+
+Please note that executing the script with the `-x` flag will place a real order
+and update the records file accordingly. Use this option with caution and ensure
+your environment variables are configured correctly.
 
 ### Value Average Bot
 
-The Value Average Bot helps you automate your value averaging strategy by placing orders at a specified frequency, taking into account the growth rate based on the provided interest rate and frequency.
+The Value Average Bot helps you automate your value averaging strategy by
+placing orders at a specified frequency, taking into account the growth rate
+based on the provided interest rate and frequency.
 
-To set up the Value Average Bot, you need to have the environment variables configured (as described in the Environment Variables section). Ensure you have the `EXCHANGE`, `PRODUCT_ID`, `PRINCIPAL_AMOUNT`, `INTEREST_RATE`, and `FREQUENCY` variables set.
+To set up the Value Average Bot, you need to have the environment variables
+configured (as described in the Environment Variables section). Ensure you have
+the `EXCHANGE`, `PRODUCT_ID`, `PRINCIPAL_AMOUNT`, `INTEREST_RATE`, and
+`FREQUENCY` variables set.
 
 To execute the bot manually, run the following command:
 
@@ -302,15 +339,24 @@ To execute the bot manually, run the following command:
 python post_value_average.py
 ```
 
-This will simulate an order based on your configured environment variables and update the records file without actually placing the order. By default, the records file is `data/average/value_average_records.csv`. You can change the file path by passing the `-f` or `--file` option followed by the desired file path.
+This will simulate an order based on your configured environment variables and
+update the records file without actually placing the order. By default, the
+records file is `data/average/value_average_records.csv`. You can change the
+file path by passing the `-f` or `--file` option followed by the desired file
+path.
 
-To actually place the order using the configured exchange API, use the `-x` or `--execute` flag:
+To actually place the order using the configured exchange API, use the `-x` or
+`--execute` flag:
 
 ```sh
 python post_value_average.py -x
 ```
 
-Please note that executing the script with the `-x` flag will place a real order and update the records file accordingly. Use this option with caution and ensure your environment variables are configured correctly.
+Please note that executing the script with the `-x` flag will place a real order
+and update the records file accordingly. Use this option with caution and ensure
+your environment variables are configured correctly.
+
+## Bot Automation
 
 ### Manual Setup
 
@@ -431,16 +477,16 @@ of the output in Google Sheets.
 
 Each script is labeled as such:
 
--   `format-form-8949.js` - Formats the current active sheet containing
-    Form-8949 data.
--   `format-gains-and-losses.js` - Formats the current active sheet containing
-    Gains and Losses data.
--   `format-cost-average.js` - Formats the current active sheet containing Cost
-    Averaging data.
--   `format-dynamic-average.js` - Formats the current active sheet containing
-    Dynamic Cost Averaging data.
--   `format-value-average.js` - Formats the current active sheet containing
-    Value Averaging data.
+-   [x] `format-form-8949.js` - Formats the current active sheet containing
+        Form-8949 data.
+-   [x] `format-gains-and-losses.js` - Formats the current active sheet
+        containing Gains and Losses data.
+-   [ ] `format-cost-average.js` - Formats the current active sheet containing
+        Cost Averaging data.
+-   [ ] `format-dynamic-average.js` - Formats the current active sheet
+        containing Dynamic Cost Averaging data.
+-   [ ] `format-value-average.js` - Formats the current active sheet containing
+        Value Averaging data.
 
 1. Create a new sheet.
 2. File > Import > Upload > Browse > Open > Import Location: Insert new

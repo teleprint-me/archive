@@ -1,7 +1,7 @@
 [tool.poetry]
 name               = "archive"
 version            = "0.1.9"
-description        = "Convert brokerage CSV transactions to a unified format, Calculate gains and losses, and create Form-8949 for filing taxes."
+description        = "Command-line tools for managing cryptocurrency investments."
 authors            = ["77757836+teleprint-me@users.noreply.github.com"]
 license            = "AGPL"
 

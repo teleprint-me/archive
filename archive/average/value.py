@@ -241,9 +241,9 @@ def execute_value_average(file: str, execute: bool = False) -> None:
     # Check if the trade amount is below the minimum trade amount
     if abs(trade_amount) < min_trade_amount:
         print(
-            f"Skipping the order as the calculated trade amount ({trade_amount}) is below the minimum trade amount ({min_trade_amount})."
+            f"Hold: Calculated trade amount ({trade_amount}) is below the minimum trade amount ({min_trade_amount})."
         )
-        return
+        return None
 
     # Determine the side based on the trade amount's sign
     side = "SELL" if trade_amount < 0 else "BUY"
