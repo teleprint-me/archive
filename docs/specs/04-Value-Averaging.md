@@ -1,19 +1,19 @@
 **Disclaimer:**
 
-_I am a **programmer** and I am **NOT** an accredited financial expert. You
-should seek out an accredited financial expert for making serious investment
-decisions. Do NOT take investment advice from random internet strangers and
-always do your own research._
+_**I am a programmer and I am NOT an accredited financial expert. You should
+seek out an accredited financial expert for making serious investment decisions.
+Do NOT take investment advice from random internet strangers and always do your
+own research.**_
 
 # Value Averaging
 
 Value Averaging is similar to Cost Averaging. We set a Principal Amount and then
-purchase an asset with the Principal Amount on a set interval based on Time
-Period and Growth Rate.
+purchase an asset with the Principal Amount based on a set Interval and Growth
+Rate.
 
 We need to define our columns: Datetime, Market Price, Current Target, Current
-Value, Trade Amount, Total Trade Amount, Order Size, Total Order Size, and Time
-Period. This will allow us to keep track of the relevant data and show the
+Value, Trade Amount, Total Trade Amount, Order Size, Total Order Size, and
+Interval. This will allow us to keep track of the relevant data and show the
 evaluated expressions as its set of results.
 
 ## Algorithm
@@ -124,8 +124,7 @@ precision of:
 Let's initialize the table and calculate the first record: Initialize the table
 and calculate the first record:
 
-1.  Set Interval, Previous Total Order Size, and Previous Total Trade Amount to
-    0
+1.  Set Interval, Previous Total Order Size, and Previous Total Trade Amount
 
         Interval = 1
         Previous Total Order Size = 0
