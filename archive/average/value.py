@@ -114,10 +114,10 @@ def convert_records_to_csv(
 
 
 def calculate_trade_amount(
-    broker: Broker,
-    last_record: Optional[ValueAverageRecord],
     principal_amount: float,
     product_id: str,
+    broker: Broker,
+    last_record: Optional[ValueAverageRecord],
 ) -> float:
     frequency = {"daily": 365, "weekly": 52, "monthly": 12}.get(
         getenv("FREQUENCY") or "monthly", 12
@@ -235,7 +235,7 @@ def execute_value_average(file: str, execute: bool = False) -> None:
 
     # Calculate the trade amount using the helper function
     trade_amount = calculate_trade_amount(
-        broker, last_record, principal_amount, product_id
+        principal_amount, product_id, broker, last_record
     )
 
     # Check if the trade amount is below the minimum trade amount
