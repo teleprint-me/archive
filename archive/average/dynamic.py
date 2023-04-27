@@ -123,12 +123,23 @@ def calculate_trade_amount_and_multiplier(
     broker: Broker,
     last_record: Optional[DynamicAverageRecord],
 ) -> tuple[float, int]:
+    """Calculate the trade amount and multiplier for the current Dynamic Cost Averaging operation.
+
+    Args:
+        principal_amount (float): The principal amount to be used in the algorithm.
+        product_id (str): The identifier for the asset.
+        broker (Broker): The broker instance to interact with the market.
+        last_record (Optional[DynamicAverageRecord]): The last DynamicAverageRecord in the series, or None if there's no previous record.
+
+    Returns:
+        A tuple containing the calculated trade amount and multiplier.
+    """
+
     max_multiplier = int(getenv("MAX_MULTIPLIER") or 5)
     min_multiplier = 1
 
-    # Simulate the order to get the current market price
-    simulated_order = broker.get_simulated_order(principal_amount, product_id)
-    market_price = float(simulated_order["market_price"])
+    # Get the current market price using the broker's get_price method
+    market_price = broker.get_price(product_id)
 
     # Set default values if no previous record exists
     last_total_order_size = last_record.total_order_size if last_record else 0
