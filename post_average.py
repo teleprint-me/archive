@@ -2,7 +2,7 @@ import sys
 from argparse import ArgumentParser, Namespace
 
 from archive.average.cost import execute_cost_average
-from archive.average.dynamic import execute_dynamic_average
+from archive.average.dynamic import execute_dynamic_cost_average
 from archive.average.value import execute_value_average
 
 
@@ -52,7 +52,7 @@ def main():
     args = get_arguments()
 
     if args.dynamic_average:
-        execute_dynamic_average(args.file, args.execute)
+        execute_dynamic_cost_average(args.file, args.execute)
     elif args.value_average:
         execute_value_average(args.file, args.execute)
     else:
