@@ -42,7 +42,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/.
 -   [x] Generate Form-8949 from GL data.
 -   [x] Generate Form-8949 from Form-1099.
 -   [x] Generate Cost Average transactions.
--   [ ] Generate Dynamic Cost Average transactions.
+-   [x] Generate Dynamic Cost Average transactions.
 -   [x] Generate Value Average transactions.
 -   [ ] Manage `systemd` services and timers.
 
