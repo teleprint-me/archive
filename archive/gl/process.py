@@ -37,6 +37,7 @@ def process_gl(
     asset: str,
     label: str,
     directory: Union[str, Path],
+    output_dir: Union[str, Path],
 ) -> Union[str, Path]:
     # Format user input
     asset = asset.upper()
@@ -56,7 +57,7 @@ def process_gl(
     csv_gl_transactions = get_gl_csv_table(gl_transactions)
     print_csv(csv_gl_transactions, width=320)
 
-    output_file_path = Path(f"data/gl/gl-{label}.csv")
+    output_file_path = Path(output_dir, f"gl-{label}.csv")
     write_csv(output_file_path, csv_gl_transactions)
 
     return output_file_path

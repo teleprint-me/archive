@@ -14,6 +14,7 @@ from archive.tools.sort import sort_csv
 
 
 def process_form_link(
+    output_dir: Union[str, Path],
     f8949_directory: Union[str, Path],
     f1099_directory: Union[str, Path, None] = None,
     year: str = "",
@@ -22,11 +23,6 @@ def process_form_link(
     if not year:
         current_year = datetime.now().year
         year = str(current_year - 1)
-
-    if label:
-        filepath = f"data/form-8949-{year}-{label}.csv"
-    else:
-        filepath = f"data/form-8949-{year}.csv"
 
     # Step 1: Read all Form-8949 and Form-1099 CSV files and combine their data
     f8949_transactions = link_f8949_transactions(f8949_directory)
@@ -48,4 +44,6 @@ def process_form_link(
 
     # Step 4: Print and write the CSV table to a file
     print_csv(sorted_csv)
-    write_csv(filepath, sorted_csv)
+
+    output_file_path = Path(output_dir, f"form-8949-{year}-{label}.csv")
+    write_csv(output_file_path, sorted_csv)

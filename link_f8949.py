@@ -10,6 +10,13 @@ def get_arguments() -> Namespace:
     )
 
     parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="data/out",
+        help="The output directory path for the linked Form-8949 files.",
+    )
+
+    parser.add_argument(
         "--form8949",
         type=str,
         required=True,
@@ -44,6 +51,7 @@ def main():
     args = get_arguments()
 
     process_form_link(
+        output_dir=args.output_dir,
         f8949_directory=args.form8949,
         f1099_directory=args.form1099,
         year=args.year,

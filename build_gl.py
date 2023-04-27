@@ -16,6 +16,13 @@ def get_arguments() -> Namespace:
     )
 
     parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="data/gl",
+        help="The output directory path for the GL files.",
+    )
+
+    parser.add_argument(
         "--asset",
         type=str,
         default="BTC",
@@ -35,7 +42,7 @@ def get_arguments() -> Namespace:
 def main():
     args = get_arguments()
 
-    process_gl(args.asset, args.label, args.directory)
+    process_gl(args.asset, args.label, args.directory, args.output_dir)
 
 
 if __name__ == "__main__":

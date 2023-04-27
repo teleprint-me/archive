@@ -24,6 +24,13 @@ def get_arguments() -> Namespace:
     )
 
     parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="data/f1099",
+        help="The output directory path for the Form 1099 files.",
+    )
+
+    parser.add_argument(
         "--asset",
         type=str,
         default="BTC",
@@ -62,6 +69,7 @@ def main():
         robinhood1099_filepath=args.robinhood1099,
         asset=args.asset,
         label=args.label,
+        output_dir=args.output_dir,
         start_date=args.start_date,
         end_date=args.end_date,
     )

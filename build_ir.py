@@ -16,6 +16,13 @@ def get_arguments() -> Namespace:
     )
 
     parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="data/ir",
+        help="The output directory path for the IR files.",
+    )
+
+    parser.add_argument(
         "--asset",
         type=str,
         default="BTC",
@@ -36,7 +43,9 @@ def main():
     args = get_arguments()
 
     for exchange, file_path in args.exchange_file:
-        process_ir(args.asset, args.label, exchange, file_path)
+        process_ir(
+            args.asset, args.label, exchange, file_path, args.output_dir
+        )
 
 
 if __name__ == "__main__":

@@ -16,6 +16,13 @@ def get_arguments() -> Namespace:
     )
 
     parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="data/f8949",
+        help="The output directory path for the Form 8949 files.",
+    )
+
+    parser.add_argument(
         "--label",
         type=str,
         default="bitcoin",
@@ -42,7 +49,13 @@ def get_arguments() -> Namespace:
 def main():
     args = get_arguments()
 
-    process_f8949(args.filepath, args.label, args.start_date, args.end_date)
+    process_f8949(
+        args.filepath,
+        args.label,
+        args.output_dir,
+        args.start_date,
+        args.end_date,
+    )
 
 
 if __name__ == "__main__":

@@ -13,6 +13,7 @@ from archive.tools.io import print_csv, write_csv
 def process_f8949(
     file_path: Union[str, Path],
     label: str,
+    output_dir: Union[str, Path],
     start_date: Optional[str] = "",
     end_date: Optional[str] = "",
 ) -> Union[str, Path]:
@@ -29,7 +30,7 @@ def process_f8949(
     csv_f8949_transactions = get_f8949_csv_table(formatted_transactions)
     print_csv(csv_f8949_transactions)
 
-    output_file_path = Path(f"data/f8949/f8949-{label}.csv")
+    output_file_path = Path(output_dir, f"f8949-{label}.csv")
     write_csv(output_file_path, csv_f8949_transactions)
 
     return output_file_path

@@ -17,6 +17,7 @@ def process_f1099(
     robinhood1099_filepath: str,
     asset: str,
     label: str,
+    output_dir: Union[str, Path],
     start_date: str = "",
     end_date: str = "",
 ) -> None:
@@ -53,4 +54,6 @@ def process_f1099(
 
     # Step 7: Print and/or write the CSV table to a file
     print_csv(sorted_csv_table)
-    write_csv(f"data/f1099/f1099-{label}.csv", sorted_csv_table)
+
+    output_file_path = Path(output_dir, f"f1099-{label}.csv")
+    write_csv(output_file_path, sorted_csv_table)

@@ -52,30 +52,65 @@ def get_arguments() -> Namespace:
         help="The end date for transactions to be included (YYYY-MM-DD).",
     )
 
+    parser.add_argument(
+        "--ir-output-dir",
+        type=str,
+        default="data/ir",
+        help="The output directory path for intermediate representation files.",
+    )
+
+    parser.add_argument(
+        "--gl-output-dir",
+        type=str,
+        default="data/gl",
+        help="The output directory path for gains and losses files.",
+    )
+
+    parser.add_argument(
+        "--f8949-output-dir",
+        type=str,
+        default="data/f8949",
+        help="The output directory path for Form-8949 files.",
+    )
+
+    parser.add_argument(
+        "--f1099-output-dir",
+        type=str,
+        default="data/f1099",
+        help="The output directory path for Form-1099 files.",
+    )
+
     return parser.parse_args(sys.argv[1:])
 
 
 def main() -> None:
-    # CSV: Comma Separated Values
-    # IR: Intermediate Representation
-    # GL: Gains and Losses
-    # F8949: Form-8949
-    # F1099: Form-1099
     args = get_arguments()
 
     # Step 1: Process exchange CSV files for each exchange
     for exchange, file_path in args.exchange_file:
-        process_ir(args.asset, args.label, exchange, file_path)
+        process_ir(
+            args.asset,
+            args.label,
+            exchange,
+            file_path,
+            args.ir_output_dir,
+        )
 
     # Step 2: Process IR transactions and generate GL transactions
-    gl_file_path = process_gl(args.asset, args.label, "data/ir/")
+    gl_file_path = process_gl(
+        args.asset, args.label, "data/ir/", args.gl_output_dir
+    )
 
     if not gl_file_path:
         return None
 
     # Step 3: Process GL transactions and generate Form-8949 CSV
     f8949_file_path = process_f8949(
-        gl_file_path, args.label, args.start_date, args.end_date
+        gl_file_path,
+        args.label,
+        args.f8949_output_dir,
+        args.start_date,
+        args.end_date,
     )
 
     # Step 4: Process Form-1099 Transactions and generate Form-8949 CSV
@@ -85,6 +120,7 @@ def main() -> None:
             args.robinhood1099,
             args.asset,
             args.label,
+            args.f1099_output_dir,
             args.start_date,
             args.end_date,
         )

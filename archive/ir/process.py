@@ -14,6 +14,7 @@ def process_ir(
     label: str,
     exchange: str,
     file_path: Union[str, Path],
+    output_dir: Union[str, Path],
 ) -> None:
     # Format user input
     asset = asset.upper()
@@ -41,5 +42,5 @@ def process_ir(
     csv_sorted = sort_csv(csv_transactions, column=2)
     print_csv(csv_sorted)
 
-    output_file_path = Path(f"data/ir/ir-{exchange}-{label}.csv")
+    output_file_path = Path(output_dir, f"ir-{exchange}-{label}.csv")
     write_csv(output_file_path, csv_sorted)
