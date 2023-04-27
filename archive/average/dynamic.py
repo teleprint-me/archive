@@ -232,7 +232,7 @@ def create_dynamic_cost_average_record(
     )
 
 
-def execute_dynamic_cost_averaging(file: str, execute: bool = False) -> None:
+def execute_dynamic_cost_average(file: str, execute: bool = False) -> None:
     """Execute a dynamic cost averaging order, update the records, and write the results to a CSV file.
 
     Args:
