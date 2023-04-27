@@ -356,6 +356,44 @@ Please note that executing the script with the `-x` flag will place a real order
 and update the records file accordingly. Use this option with caution and ensure
 your environment variables are configured correctly.
 
+### Post Average Bot
+
+The Post Average Bot serves as a single entry point for all the other averaging
+strategies (Cost Averaging, Dynamic Cost Averaging, and Value Averaging). It
+allows you to easily switch between strategies by passing command-line
+arguments.
+
+To set up the Post Average Bot, you need to have the environment variables
+configured (as described in the Environment Variables section). Ensure you have
+the necessary variables set based on the strategy you want to use.
+
+To execute the bot manually, run the following command with the desired strategy
+flag:
+
+```sh
+python post_average.py -c  # for cost averaging
+python post_average.py -d  # for dynamic cost averaging
+python post_average.py -v  # for value averaging
+```
+
+This will simulate an order based on your configured environment variables and
+update the records file without actually placing the order. By default, the
+records file is `data/average/average_records.csv`. You can change the file path
+by passing the `-f` or `--file` option followed by the desired file path.
+
+To actually place the order using the configured exchange API, use the `-x` or
+`--execute` flag:
+
+```sh
+python post_average.py -c -x  # for cost averaging
+python post_average.py -d -x  # for dynamic cost averaging
+python post_average.py -v -x  # for value averaging
+```
+
+Please note that executing the script with the `-x` flag will place a real order
+and update the records file accordingly. Use this option with caution and ensure
+your environment variables are configured correctly.
+
 ## Bot Automation
 
 ### Manual Setup
