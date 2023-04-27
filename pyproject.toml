@@ -1,6 +1,6 @@
 [tool.poetry]
 name               = "archive"
-version            = "0.2.0"
+version            = "0.2.1"
 description        = "Command-line tools for managing cryptocurrency investments."
 authors            = ["77757836+teleprint-me@users.noreply.github.com"]
 license            = "AGPL"
