@@ -85,7 +85,7 @@ chmod +x scripts/shell/setup_dev_environment.sh
 The `main.py` script processes input CSV files for each exchange, generates
 intermediate results (IR), processes the IR transactions to generate gains and
 losses (GL) transactions, and then processes the GL transactions to generate the
-Form-8949 CSV output. Additionally, it also processes the Robinhood Form-1099
+Form-8949 CSV output. Additionally, it processes the Robinhood Form-1099
 CSV if provided.
 
 #### Arguments
@@ -100,6 +100,8 @@ CSV if provided.
     "bitcoin").
 -   `--start-date`: The start date for transactions to be included (optional).
 -   `--end-date`: The end date for transactions to be included (optional).
+
+For a complete list of options, run `python main.py --help`.
 
 #### Example
 
@@ -124,6 +126,8 @@ results (IR) in a unified format.
 -   `--label`: A label to be appended to the output file name (default is
     "bitcoin").
 
+For a complete list of options, run `python build_ir.py --help`.
+
 #### Example
 
 ```sh
@@ -141,6 +145,8 @@ in a unified format.
 -   `--asset`: The base asset symbol (default is "BTC").
 -   `--label`: A label to be appended to the output file name (default is
     "bitcoin").
+
+For a complete list of options, run `python build_gl.py --help`.
 
 #### Example
 
@@ -161,6 +167,8 @@ CSV output.
     optional).
 -   `--end_date`: The end date for the range of transactions (YYYY-MM-DD,
     optional).
+
+For a complete list of options, run `python build_f8949.py --help`.
 
 #### Example
 
@@ -184,6 +192,8 @@ The `build_f1099.py` script merges the Form 8949 and Robinhood 1099 datasets.
 -   `--end_date`: The end date for the range of transactions (YYYY-MM-DD,
     optional).
 
+For a complete list of options, run `python build_f1099.py --help`.
+
 #### Example
 
 ```sh
@@ -201,6 +211,8 @@ outputs a single unified Form-8949.
 -   `--form1099`: The directory containing the Form-1099 CSV files.
 -   `--year YEAR`: The year for the range of transactions (YYYY).
 -   `--label`: A label to append to the output file name.
+
+For a complete list of options, run `python link_f8949.py --help`.
 
 #### Example
 
