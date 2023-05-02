@@ -109,9 +109,9 @@ For a complete list of options, run `python main.py --help`.
 python main.py --exchange-file coinbase_transaction data/in/coinbase.csv --robinhood1099 data/in/robinhood-1099.csv --asset BTC
 ```
 
-### build_ir.py
+### archive_ir.py
 
-The `build_ir.py` script processes exchange CSV files to generate intermediate
+The `archive_ir.py` script processes exchange CSV files to generate intermediate
 results (IR) in a unified format.
 
 #### Arguments
@@ -127,12 +127,12 @@ results (IR) in a unified format.
 -   `--asset`: The base asset symbol (default is "BTC").
 -   `--label`: A label to be appended to the output file name (default is "bitcoin").
 
-For a complete list of options, run `python build_ir.py --help`.
+For a complete list of options, run `python archive_ir.py --help`.
 
 #### Example
 
 ```sh
-python build_ir.py --input-src exchange_name source_name data/in/exchange_data_set.csv --asset BTC --label bitcoin --output-mode csv
+python archive_ir.py --input-src exchange_name source_name data/in/exchange_data_set.csv --asset BTC --label bitcoin --output-mode csv
 ```
 
 In this example, replace `exchange_name` with one of the allowed exchanges (e.g., `coinbase`, `coinbase_pro`, or `kraken`) and `source_name` with one of the allowed sources (e.g., `transaction`, `fill`, `account`, `trade`, or `ledger`).
