@@ -37,7 +37,7 @@
         }
     },
     "isort.args": ["--profile", "black"],
-    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.defaultFormatter": null,
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     }

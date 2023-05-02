@@ -1,5 +1,40 @@
+# archive/ir/models.py
 from dataclasses import dataclass
 from enum import Enum
+
+from peewee import CharField, FloatField, Model, SqliteDatabase
+
+# Define the database connection
+db = SqliteDatabase("transactions.db")
+
+
+class IRTransactionModel(Model):
+    exchange = CharField()
+    product = CharField()
+    datetime = CharField()
+    transaction_type = CharField()
+    order_size = FloatField()
+    market_price = FloatField()
+    order_fee = FloatField(default=0.0)
+    order_note = CharField(default="")
+
+    class Meta:
+        database = db
+        indexes = (
+            (
+                (
+                    "exchange",
+                    "product",
+                    "datetime",
+                    "transaction_type",
+                    "order_size",
+                    "market_price",
+                    "order_fee",
+                    "order_note",
+                ),
+                True,
+            ),
+        )
 
 
 class IRColumn(Enum):

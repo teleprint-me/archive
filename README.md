@@ -116,23 +116,26 @@ results (IR) in a unified format.
 
 #### Arguments
 
--   `--exchange-file`: A list of exchange names and file paths for their
-    respective input CSV files.
-    -   Allowed exchanges are: `coinbase_transaction`, `coinbase_pro_fill`,
-        `coinbase_pro_account`, `kraken_trade`, and `kraken_ledger`.
-        -   `coinbase_pro_account` only handles conversions.
-        -   `kraken_ledger` only handles staking.
+-   `--input-src`: A list of exchange names, source names, and file paths for their
+    respective input CSV files. Repeat this argument for multiple exchanges.
+    -   Allowed exchanges are: `coinbase`, `coinbase_pro`, and `kraken`.
+    -   Allowed sources are: `transaction`, `fill`, `account`, `trade`, and `ledger`.
+        -   `coinbase_pro account` only handles conversions.
+        -   `kraken ledger` only handles staking.
+-   `--output-mode`: The output mode for processed data. Choices are 'print', 'csv', or 'db' (default: csv).
+-   `--output-dir`: The CSV output directory path for the Intermediary Representation files (default: data/ir).
 -   `--asset`: The base asset symbol (default is "BTC").
--   `--label`: A label to be appended to the output file name (default is
-    "bitcoin").
+-   `--label`: A label to be appended to the output file name (default is "bitcoin").
 
 For a complete list of options, run `python build_ir.py --help`.
 
 #### Example
 
 ```sh
-python build_ir.py --exchange-file exchange_name data/in/exchange_name.csv --asset BTC
+python build_ir.py --input-src exchange_name source_name data/in/exchange_data_set.csv --asset BTC --label bitcoin --output-mode csv
 ```
+
+In this example, replace `exchange_name` with one of the allowed exchanges (e.g., `coinbase`, `coinbase_pro`, or `kraken`) and `source_name` with one of the allowed sources (e.g., `transaction`, `fill`, `account`, `trade`, or `ledger`).
 
 ### build_gl.py
 

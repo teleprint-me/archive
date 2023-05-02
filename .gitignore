@@ -3,6 +3,7 @@
 #
 # local files
 output.txt
+transactions.db
 
 # local directories
 data/

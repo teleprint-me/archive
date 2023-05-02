@@ -86,18 +86,25 @@ class Robinhood1099(BaseParser):
         raise NotImplementedError()
 
 
-def parser_factory(dataset_type):
-    if dataset_type == "coinbase_transaction":
-        return Coinbase()
-    elif dataset_type == "coinbase_pro_fill":
-        return CoinbaseProFill()
-    elif dataset_type == "coinbase_pro_account":
-        return CoinbaseProAccount()
-    elif dataset_type == "kraken_trade":
-        return KrakenTrade()
-    elif dataset_type == "kraken_ledger":
-        return KrakenLedger()
-    elif dataset_type == "robinhood_1099":
-        return Robinhood1099()
-    else:
-        raise ValueError(f"Invalid dataset type: {dataset_type}")
+def parser_factory(exchange: str, source: str) -> BaseParser:
+    parser_map = {
+        "coinbase": {
+            "transaction": Coinbase,
+        },
+        "coinbase_pro": {
+            "fill": CoinbaseProFill,
+            "account": CoinbaseProAccount,
+        },
+        "kraken": {
+            "trade": KrakenTrade,
+            "ledger": KrakenLedger,
+        },
+        "robinhood": {
+            "1099": Robinhood1099,
+        },
+    }
+
+    try:
+        return parser_map[exchange][source]()
+    except KeyError:
+        raise ValueError(f"Invalid dataset type: {exchange} and {source}")
