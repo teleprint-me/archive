@@ -1,13 +1,22 @@
 from os import scandir
 from pathlib import Path
+from typing import List
 
 from archive.ir.models import IRColumn, IRTransaction
 from archive.tools.io import read_csv
 
 
-def build_ir_csv_table(
-    transactions: list[IRTransaction],
-) -> list[list[str]]:
+def build_csv_ir_table(
+    transactions: List[IRTransaction],
+) -> List[List[str]]:
+    """Convert a list of IRTransaction objects into a CSV table.
+
+    Args:
+        transactions (List[IRTransaction]): A list of IRTransaction objects.
+
+    Returns:
+        List[List[str]]: A nested list representing a CSV table.
+    """
     body = []
 
     header = [
@@ -40,7 +49,17 @@ def build_ir_csv_table(
     return header + body
 
 
-def build_ir_transactions(csv_table: list[list[str]]) -> list[IRTransaction]:
+def build_ir_transactions_from_csv(
+    csv_table: List[List[str]],
+) -> List[IRTransaction]:
+    """Convert a CSV table into a list of IRTransaction objects.
+
+    Args:
+        csv_table (List[List[str]]): A nested list representing a CSV table.
+
+    Returns:
+        List[IRTransaction]: A list of IRTransaction objects.
+    """
     transactions = []
 
     for row in csv_table[1:]:  # Skip the header row
@@ -60,9 +79,17 @@ def build_ir_transactions(csv_table: list[list[str]]) -> list[IRTransaction]:
     return transactions
 
 
-def scan_ir_transactions(directory: str | Path) -> list[list[str]]:
-    header: list[list[str]] = []
-    body: list[list[str]] = []
+def scan_csv_ir_transactions(directory: str | Path) -> List[List[str]]:
+    """Scan a directory for CSV files and combine their content into a single CSV table.
+
+    Args:
+        directory (str | Path): The directory to scan for CSV files.
+
+    Returns:
+        List[List[str]]: A nested list representing a combined CSV table.
+    """
+    header: List[List[str]] = []
+    body: List[List[str]] = []
 
     for entry in scandir(directory):
         if entry.is_file:
@@ -72,7 +99,7 @@ def scan_ir_transactions(directory: str | Path) -> list[list[str]]:
                 header = [csv_table[0]]
 
             # NOTE: Trailing spaces and newlines at EOF can cause empty lists
-            # to be added to the body. We check if the list is valid first to
+            # to be added to the body. We check if the List is valid first to
             # avoid this issue.
             if csv_table[1:]:
                 body.extend(csv_table[1:])

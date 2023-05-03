@@ -9,7 +9,7 @@ def get_arguments() -> Namespace:
     parser = ArgumentParser(description="Process exchange CSV files.")
 
     parser.add_argument(
-        "-i",
+        "-is",
         "--input-src",
         action="append",
         nargs=3,
@@ -18,16 +18,16 @@ def get_arguments() -> Namespace:
     )
 
     parser.add_argument(
-        "-m",
+        "-om",
         "--output-mode",
         type=str,
         choices=["print", "csv", "db"],
-        default="csv",
-        help="The output mode for processed data. Choices are 'print', 'csv', or 'db' (default: csv).",
+        default="db",
+        help="The output mode for processed data. Choices are 'print', 'csv', or 'db' (default: db).",
     )
 
     parser.add_argument(
-        "-o",
+        "-od",
         "--output-dir",
         type=str,
         default="data/ir",
@@ -39,7 +39,7 @@ def get_arguments() -> Namespace:
         "--asset",
         type=str,
         default="BTC",
-        help="The base asset symbol to be calculated (default: BTC; e.g., ETH, LTC).",
+        help="The base asset symbol to be calculated (e.g., ETH, LTC; default: BTC).",
     )
 
     parser.add_argument(
