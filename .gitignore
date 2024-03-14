@@ -3,6 +3,7 @@
 #
 # local files
 output.txt
+*.db
 
 # local directories
 data/
