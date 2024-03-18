@@ -1,5 +1,7 @@
 from typing import Optional
 
+import dateutil
+
 from archive.exchange.coinbase.api import get_spot_price
 from archive.exchange.coinbase.models import CoinbaseTransaction
 
@@ -77,16 +79,21 @@ def parse_coinbase(
     processed_transactions = []
 
     buy_types = [
+        "Advance Trade Buy",
         "Advanced Trade Buy",
         "Buy",
         "CardBuyBack",
+        "Card Buy Back",
         "Learning Reward",
         "Rewards Income",
+        "Staking Income",
     ]
 
     sell_types = [
+        "Advance Trade Sell",
         "Advanced Trade Sell",
         "CardSpend",
+        "Card Spend",
         "Convert",
         "Sell",
     ]
@@ -94,13 +101,20 @@ def parse_coinbase(
     skip_types = [
         "Send",
         "Receive",
+        "Withdrawal",
+        "Exchange Withdrawal",
+        "Deposit",
+        "Exchange Deposit",
     ]
 
     transaction_types = [
         "CardBuyBack",
+        "Card Buy Back",
         "CardSpend",
+        "Card Spend",
         "Rewards Income",
         "Learning Reward",
+        "Staking Income",
     ]
 
     # Filter transactions by asset and type
@@ -140,5 +154,12 @@ def parse_coinbase(
             continue
         else:
             raise ValueError(f"Unknown transaction type: {original_type}")
+
+    # Convert timestamps to iso format
+    for transaction in processed_transactions:
+        # Ensure the datetime string is converted to a datetime object
+        converted_timestamp = dateutil.parser.parse(transaction.timestamp)
+        # This API expects iso8601 compatible format
+        transaction.timestamp = converted_timestamp.isoformat()
 
     return processed_transactions
