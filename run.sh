@@ -53,6 +53,8 @@ declare -A assets=(
     ["ZEC"]="zcash"
 )
 
+mkdir -p data/{in,out,log,ir,gl,f1099,f8949}
+
 for asset in "${!assets[@]}"; do
     label="${assets[$asset]}"
 
