@@ -35,7 +35,14 @@ def process_ir(
         datetime = iso8601.parse_date(transaction.datetime)
         transaction.datetime = datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
         # Format transaction type
-        transaction_type = transaction.transaction_type.capitalize()
+        transaction_type = ""
+        # NOTE: Some transactions have more than a single word
+        elements = transaction.transaction_type.split()
+        # Cycle through the list of words
+        for element in elements:
+            # Format the words individual and append them
+            transaction_type += element.capitalize()
+        # Update the transaction type
         transaction.transaction_type = transaction_type
 
     csv_transactions = build_ir_csv_table(transactions)
