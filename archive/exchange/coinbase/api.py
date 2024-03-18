@@ -8,6 +8,7 @@ from typing import Any, Optional, Union
 # NOTE: Always generate uuid4 for privacy!
 from uuid import uuid4
 
+import dateutil
 import requests
 from dotenv import load_dotenv
 from requests import RequestException
@@ -203,14 +204,19 @@ def get_spot_price(
         url = f"{__coinbase__}/prices/{currency_pair}/spot"
 
         if datetime:
-            response = get(url, data={"date": datetime})
+            # Ensure the datetime string is converted to a datetime object
+            timestamp = dateutil.parser.parse(datetime)
+            # The API expects the format YYYY-MM-DD, but we have YYYY-MM-DDTHH:MM:SS
+            date = timestamp.date().isoformat()
+            # We need to convert the date object back into a API compatible string
+            response = get(url, data={"date": date})
         else:
             response = get(url)
 
         if "data" in response and "amount" in response["data"]:
             return float(response["data"]["amount"])
         else:
-            raise RequestException("Invalid response from the API")
+            raise RequestException(response["error"])
 
     except RequestException as error:
         raise RequestException(f"Error retrieving spot price: {error}")
