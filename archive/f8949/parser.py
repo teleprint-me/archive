@@ -46,6 +46,10 @@ def format_datetime(
     transactions: list[F8949Transaction],
 ) -> list[F8949Transaction]:
     for transaction in transactions:
+        # TODO: Track down what causes this happen
+        if not transaction.date_acquired:
+            continue  # skip empty columns
+
         try:
             date_acquired = iso8601.parse_date(transaction.date_acquired)
         except (ParseError,):
