@@ -13,7 +13,14 @@ def build_coinbase_ir(
     ir_transactions = []
 
     if excluded_types is None:
-        excluded_types = ["Send", "Receive"]
+        excluded_types = [
+            "Send",
+            "Receive",
+            "Withdrawal",
+            "Exchange Withdrawal",
+            "Deposit",
+            "Exchange Deposit",
+        ]
 
     if excluded_types and "Convert" in excluded_types:
         parsed_transactions = parse_coinbase(
