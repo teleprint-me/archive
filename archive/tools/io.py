@@ -1,4 +1,5 @@
 import csv
+import logging
 from pathlib import Path
 from typing import Union
 
@@ -6,7 +7,7 @@ import texttable
 
 from archive.tools.logger import setup_logger
 
-logger = setup_logger("io_logger", "data/log/io.log")
+logger = setup_logger("io_logger", "data/log/io.log", logging.DEBUG)
 
 
 def read_csv(filepath: Union[str, Path]) -> list[list[str]]:
