@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from typing import Union
 
@@ -6,7 +7,11 @@ from archive.ir.builder import build_ir_transactions, scan_ir_transactions
 from archive.ir.models import IRTransaction
 from archive.tools.logger import setup_logger
 
-logger = setup_logger("scanner_logger", "data/log/scan_gl.log")
+logger = setup_logger(
+    "scanner_logger",
+    "data/log/scan_gl.log",
+    logging.DEBUG,
+)
 
 
 def get_gl_csv_table(

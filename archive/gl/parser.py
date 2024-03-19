@@ -1,7 +1,13 @@
+import logging
+
 from archive.gl.models import GLTotalTransaction, GLTransaction
 from archive.tools.logger import setup_logger
 
-logger = setup_logger("parser_logger", "data/log/parse_gl.log")
+logger = setup_logger(
+    "parser_logger",
+    "data/log/parse_gl.log",
+    logging.DEBUG,
+)
 
 
 def calculate_buy_cost_basis(transaction: GLTransaction) -> GLTransaction:

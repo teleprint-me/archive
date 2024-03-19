@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from typing import Union
 
@@ -9,7 +10,11 @@ from archive.gl.scanner import get_gl_csv_table, scan_gl_transactions
 from archive.tools.io import print_csv, write_csv
 from archive.tools.logger import setup_logger
 
-logger = setup_logger("parser_logger", "data/log/process_gl.log")
+logger = setup_logger(
+    "parser_logger",
+    "data/log/process_gl.log",
+    logging.DEBUG,
+)
 
 
 def format_transactions(
