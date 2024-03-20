@@ -86,7 +86,7 @@ class Robinhood1099(BaseParser):
         raise NotImplementedError()
 
 
-def parser_factory(dataset_type):
+def parser_factory(dataset_type) -> BaseParser:
     if dataset_type == "coinbase_transaction":
         return Coinbase()
     elif dataset_type == "coinbase_pro_fill":
