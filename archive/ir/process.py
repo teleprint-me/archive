@@ -45,6 +45,9 @@ def process_ir(
         # Update the transaction type
         transaction.transaction_type = transaction_type
 
+    # Keep only the transactions specified by the user
+    transactions = [tx for tx in transactions if tx.should_keep([asset])]
+
     csv_transactions = build_ir_csv_table(transactions)
     csv_sorted = sort_csv(csv_transactions, column=2)
     print_csv(csv_sorted)

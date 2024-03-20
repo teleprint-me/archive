@@ -46,3 +46,11 @@ class IRTransaction:
     @property
     def is_sell(self) -> bool:
         return self.transaction_type == "Sell"
+
+    def should_keep(self, included_assets: list[str]) -> bool:
+        """
+        Returns True if the transaction involves any of the specified assets.
+
+        NOTE: This method only checks the base asset which is specified by the user.
+        """
+        return self.product.split("-")[0] in included_assets
