@@ -13,7 +13,7 @@ python-dotenv      = "^1.0.1"
 pytz               = "^2024.1"
 peewee             = "^3.17.1"
 iso8601            = "^2.1.0"
-requests           = "^2.32.0"
+requests           = "^2.32.4"
 
 [tool.poetry.dev-dependencies]
 bpython            = "^0.24"
